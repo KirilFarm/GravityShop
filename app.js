@@ -9,6 +9,7 @@ const currencyRates = {
 };
 
 let currentCurrency = 'RUB';
+let userBalanceRub = 0.00; // Баланс пользователя в рублях
 
 // Каталог товаров
 const products = [
@@ -92,12 +93,35 @@ if (tg) {
         const profileUser = document.getElementById('profile-username');
         const profileId = document.getElementById('profile-id');
         const profileAvatar = document.getElementById('profile-avatar');
+        const cardHolder = document.getElementById('card-holder-name');
+        const cardNum = document.getElementById('card-virtual-number');
 
         if (profileName) profileName.innerText = fullName;
         if (profileUser) profileUser.innerText = user.username ? `@${user.username}` : '';
         if (profileId) profileId.innerText = `ID: ${user.id}`;
         if (profileAvatar && user.photo_url) profileAvatar.src = user.photo_url;
+        
+        if (cardHolder) cardHolder.innerText = (user.first_name || 'USER').toUpperCase();
+        if (cardNum && user.id) {
+            const last4 = String(user.id).slice(-4);
+            cardNum.innerText = `•••• ${last4}`;
+        }
     }
+}
+
+// Обновление отображения баланса на карте, в профиле и уровнях
+function updateBalanceDisplays() {
+    const converted = (userBalanceRub * currencyRates[currentCurrency].rate).toFixed(2);
+    const symbol = currencyRates[currentCurrency].symbol;
+    const formatted = `${converted} ${symbol}`;
+
+    const cardBal = document.getElementById('virtual-card-balance');
+    const profBal = document.getElementById('profile-balance');
+    const turnoverVal = document.getElementById('level-turnover-val');
+
+    if (cardBal) cardBal.innerText = formatted;
+    if (profBal) profBal.innerText = formatted;
+    if (turnoverVal) turnoverVal.innerText = formatted;
 }
 
 // Отрисовка каталога товаров
@@ -174,6 +198,7 @@ function changeCurrency(val) {
         'Discord': 'discord'
     };
     renderProducts(revMap[catTitle] || 'all');
+    updateBalanceDisplays();
 }
 
 // Добавление в корзину
@@ -189,6 +214,25 @@ function addToCart(id) {
         tg.showAlert(`Товар "${item.title}" добавлен в корзину!`);
     } else {
         alert(`Товар "${item.title}" добавлен в корзину!`);
+    }
+}
+
+// Открытие чата с поддержкой / менеджером
+function openManager() {
+    const managerUrl = 'https://t.me/your_manager_username'; // Укажите юзернейм менеджера
+    if (tg?.openTelegramLink) {
+        tg.openTelegramLink(managerUrl);
+    } else {
+        window.open(managerUrl, '_blank');
+    }
+}
+
+// Окно пополнения баланса
+function openDepositModal() {
+    if (tg?.showAlert) {
+        tg.showAlert('Для пополнения баланса выберите удобный способ оплаты через менеджера.');
+    } else {
+        alert('Для пополнения баланса обратитесь к менеджеру.');
     }
 }
 
@@ -230,7 +274,7 @@ function switchTab(tabId, el) {
         const map = {
             'tab-home': 0,
             'tab-levels': 1,
-            'tab-buy': 2,
+            'tab-balance': 2,
             'tab-custom': 3,
             'tab-profile': 4
         };
@@ -269,4 +313,5 @@ function copyApi() {
 // Первоначальный запуск
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts('all');
+    updateBalanceDisplays();
 });
