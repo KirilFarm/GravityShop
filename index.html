@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Gravity Shop</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css?v=5">
+    <link rel="stylesheet" href="style.css?v=6">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <!-- Заголовок и селектор валют -->
+            <!-- Заголовок и кастомный селектор валют -->
             <div class="catalog-header">
                 <div class="category-indicator">
                     <button id="back-all-btn" class="back-btn hidden" onclick="filterCategory('all')">
@@ -212,7 +212,7 @@
                 </div>
             </div>
 
-            <!-- Действия с балансом -->
+            <!-- Кнопки действий с балансом -->
             <div class="balance-actions-grid">
                 <button type="button" class="balance-btn deposit-btn" onclick="openManager()">
                     <i class="fa-solid fa-arrow-down-left"></i>
@@ -224,6 +224,7 @@
                 </button>
             </div>
 
+            <!-- История транзакций -->
             <div class="card card-history-box">
                 <div class="history-title">
                     <i class="fa-solid fa-clock-rotate-left"></i>
@@ -352,6 +353,6 @@
         </nav>
     </div>
 
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=9"></script>
 </body>
 </html>
