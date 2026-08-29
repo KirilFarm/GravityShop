@@ -1,4 +1,4 @@
-const API_URL = "https://round-term-6524.kirilfarm23.workers.dev/"; // Вставьте сюда адрес вашего бэкенда (без слеша на конце)
+const API_URL = "https://gravityshopbot.onrender.com"; // Вставьте сюда адрес вашего бэкенда (без слеша на конце)
 
 const tg = window.Telegram?.WebApp;
 
