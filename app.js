@@ -1,4 +1,4 @@
-const API_URL = "http://0.0.0.0:8000"; // Вставьте сюда адрес вашего бэкенда (без слеша на конце)
+const API_URL = "http://fi14.bot-hosting.cloud:25971"; // Вставьте сюда адрес вашего бэкенда (без слеша на конце)
 
 const tg = window.Telegram?.WebApp;
 
