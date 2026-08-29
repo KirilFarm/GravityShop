@@ -181,41 +181,61 @@
             </div>
         </main>
 
-        <!-- Вкладка 3: Баланс (Банковская Карта) -->
+        <!-- Вкладка 3: Баланс (Интерактивная 3D карта) -->
         <main id="tab-balance" class="tab-content">
             <h1 class="page-title">Мой Баланс</h1>
-            <p class="page-subtitle">Виртуальная карта аккаунта Gravity</p>
+            <p class="page-subtitle">Нажмите на карту, чтобы перевернуть</p>
 
-            <!-- Банковская карта магазина -->
-            <div class="bank-card-container">
-                <div class="bank-card">
-                    <div class="card-glass-glow"></div>
-                    <div class="bank-card-header">
-                        <div class="card-brand-label">
-                            <i class="fa-solid fa-bolt"></i>
-                            <span>GRAVITY CARD</span>
+            <!-- 3D Контейнер карты с переворотом -->
+            <div class="bank-card-container" onclick="flipCard(this)">
+                <div class="bank-card-inner" id="bankCard">
+                    
+                    <!-- Лицевая сторона -->
+                    <div class="bank-card front-card">
+                        <div class="card-glass-glow"></div>
+                        <div class="bank-card-header">
+                            <div class="card-brand-label">
+                                <i class="fa-solid fa-bolt"></i>
+                                <span>GRAVITY BANK</span>
+                            </div>
+                            <span class="card-type-text">CREDIT CARD</span>
                         </div>
-                        <div class="contactless-icon">
-                            <i class="fa-solid fa-wifi"></i>
+
+                        <div class="card-middle-row">
+                            <div class="card-chip"></div>
+                            <div class="card-number-sim" id="card-virtual-number">001 1234 5678 9101</div>
+                        </div>
+
+                        <div class="bank-card-footer">
+                            <div>
+                                <span class="card-holder-label">CARDHOLDER NAME</span>
+                                <span class="card-holder-name" id="card-holder-name">USER</span>
+                            </div>
+                            <div>
+                                <span class="card-holder-label">EXPIRES</span>
+                                <span class="card-expiry">12/28</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="card-chip"></div>
-
-                    <div class="card-balance-box">
-                        <span class="card-label">ДОСТУПНЫЙ БАЛАНС</span>
-                        <div class="card-balance-val" id="virtual-card-balance">0.00 ₽</div>
+                    <!-- Обратная сторона -->
+                    <div class="bank-card back-card">
+                        <div class="card-glass-glow"></div>
+                        <div class="card-black-stripe"></div>
+                        
+                        <div class="card-back-content">
+                            <div class="card-balance-box">
+                                <span class="card-label">ДОСТУПНЫЙ БАЛАНС</span>
+                                <div class="card-balance-val" id="virtual-card-balance">0.00 ₽</div>
+                            </div>
+                            <div class="card-cvv-section">
+                                <div class="cvv-label">CUSTOMER SERVICE</div>
+                                <div class="cvv-number">1-800-GRAVITY</div>
+                                <div class="cvv-box">410</div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="bank-card-footer">
-                        <div class="card-holder-info">
-                            <span class="card-holder-label">ВЛАДЕЛЕЦ</span>
-                            <span class="card-holder-name" id="card-holder-name">USER</span>
-                        </div>
-                        <div class="card-number-info">
-                            <span class="card-number-masked" id="card-virtual-number">•••• 4410</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
