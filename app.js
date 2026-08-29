@@ -103,8 +103,21 @@ if (tg) {
         
         if (cardHolder) cardHolder.innerText = (user.first_name || 'USER').toUpperCase();
         if (cardNum && user.id) {
-            const last4 = String(user.id).slice(-4);
-            cardNum.innerText = `•••• ${last4}`;
+            const uidStr = String(user.id);
+            const p1 = uidStr.slice(0, 4) || '5188';
+            const p2 = uidStr.slice(-4) || '9101';
+            cardNum.innerText = `001 ${p1} •••• ${p2}`;
+        }
+    }
+}
+
+// 3D переворот банковской карты
+function flipCard(container) {
+    const cardInner = container.querySelector('#bankCard');
+    if (cardInner) {
+        cardInner.classList.toggle('flipped');
+        if (tg?.HapticFeedback) {
+            tg.HapticFeedback.impactOccurred('light');
         }
     }
 }
@@ -217,9 +230,9 @@ function addToCart(id) {
     }
 }
 
-// Открытие чата с поддержкой / менеджером
+// Открытие чата с поддержкой / менеджером @Fambod
 function openManager() {
-    const managerUrl = 'https://t.me/your_manager_username'; // Укажите юзернейм менеджера
+    const managerUrl = 'https://t.me/Fambod';
     if (tg?.openTelegramLink) {
         tg.openTelegramLink(managerUrl);
     } else {
@@ -230,9 +243,9 @@ function openManager() {
 // Окно пополнения баланса
 function openDepositModal() {
     if (tg?.showAlert) {
-        tg.showAlert('Для пополнения баланса выберите удобный способ оплаты через менеджера.');
+        tg.showAlert('Для пополнения баланса напишите нашему менеджеру: @Fambod');
     } else {
-        alert('Для пополнения баланса обратитесь к менеджеру.');
+        alert('Для пополнения баланса напишите нашему менеджеру: @Fambod');
     }
 }
 
