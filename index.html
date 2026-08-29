@@ -16,13 +16,13 @@
                 <div class="store-logo-box"><i class="fa-solid fa-bolt"></i></div>
                 <span class="store-brand-title">Gravity Shop</span>
             </div>
-            <a href="https://t.me/Fambod" target="_blank" class="manager-btn">
+            <button onclick="openManager()" class="manager-btn">
                 <i class="fa-solid fa-rocket"></i>
                 <span>Написать менеджеру</span>
-            </a>
+            </button>
         </header>
 
-        <!-- Вкладка 1: Главная (Магазин и каталог) -->
+        <!-- Вкладка 1: Магазин / Главная -->
         <main id="tab-home" class="tab-content active">
             <!-- Слайдер баннеров -->
             <div class="promo-slider">
@@ -146,7 +146,7 @@
                 <div class="level-badge-text">Уровня пока нет</div>
                 <div class="turnover-row">
                     <span>Оборот за последние 60 дней</span>
-                    <span class="fw-bold" id="level-turnover">0.00 ₽</span>
+                    <span class="fw-bold" id="level-turnover-val">0.00 ₽</span>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-label">
@@ -181,21 +181,64 @@
             </div>
         </main>
 
-        <!-- Вкладка 3: Купить бусты -->
-        <main id="tab-buy" class="tab-content">
-            <h1 class="page-title">Купить бусты Discord</h1>
-            <p class="page-subtitle">Выберите длительность подписки для сервера</p>
+        <!-- Вкладка 3: Баланс (Банковская Карта) -->
+        <main id="tab-balance" class="tab-content">
+            <h1 class="page-title">Мой Баланс</h1>
+            <p class="page-subtitle">Виртуальная карта аккаунта Gravity</p>
 
-            <div class="grid-cards">
-                <div class="card product-card active">
-                    <div class="duration">1 месяц</div>
-                    <div class="price" data-rub="13.80">13.80 ₽</div>
-                    <div class="stock">1754 На складе</div>
+            <!-- Банковская карта магазина -->
+            <div class="bank-card-container">
+                <div class="bank-card">
+                    <div class="card-glass-glow"></div>
+                    <div class="bank-card-header">
+                        <div class="card-brand-label">
+                            <i class="fa-solid fa-bolt"></i>
+                            <span>GRAVITY CARD</span>
+                        </div>
+                        <div class="contactless-icon">
+                            <i class="fa-solid fa-wifi"></i>
+                        </div>
+                    </div>
+
+                    <div class="card-chip"></div>
+
+                    <div class="card-balance-box">
+                        <span class="card-label">ДОСТУПНЫЙ БАЛАНС</span>
+                        <div class="card-balance-val" id="virtual-card-balance">0.00 ₽</div>
+                    </div>
+
+                    <div class="bank-card-footer">
+                        <div class="card-holder-info">
+                            <span class="card-holder-label">ВЛАДЕЛЕЦ</span>
+                            <span class="card-holder-name" id="card-holder-name">USER</span>
+                        </div>
+                        <div class="card-number-info">
+                            <span class="card-number-masked" id="card-virtual-number">•••• 4410</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="card product-card disabled">
-                    <div class="duration">3 месяца</div>
-                    <div class="price" data-rub="49.00">49.00 ₽</div>
-                    <div class="stock">0 На складе</div>
+            </div>
+
+            <!-- Действия с балансом -->
+            <div class="balance-actions-grid">
+                <button class="balance-btn deposit-btn" onclick="openDepositModal()">
+                    <i class="fa-solid fa-arrow-down-left"></i>
+                    <span>Пополнить</span>
+                </button>
+                <button class="balance-btn transfer-btn" onclick="openManager()">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Перевод</span>
+                </button>
+            </div>
+
+            <!-- История транзакций -->
+            <div class="card card-history-box">
+                <div class="history-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>История операций</span>
+                </div>
+                <div class="history-empty">
+                    <p>Транзакций пока нет</p>
                 </div>
             </div>
         </main>
@@ -273,11 +316,11 @@
                     </div>
                 </div>
 
-                <div class="card action-item">
-                    <div class="action-icon blue-dark"><i class="fa-solid fa-bars"></i></div>
+                <div class="card action-item" onclick="switchTab('tab-balance')">
+                    <div class="action-icon cyan"><i class="fa-solid fa-credit-card"></i></div>
                     <div class="action-info">
-                        <h3>История заказов</h3>
-                        <p>Все заказы и пополнения</p>
+                        <h3>Банковская карта</h3>
+                        <p>Управление счетом и пополнение</p>
                     </div>
                     <i class="fa-solid fa-chevron-right arrow-btn"></i>
                 </div>
@@ -298,9 +341,9 @@
                 <i class="fa-solid fa-crown"></i>
                 <span>Уровни</span>
             </button>
-            <button class="nav-item" onclick="switchTab('tab-buy', this)">
-                <i class="fa-solid fa-bag-shopping"></i>
-                <span>Бусты</span>
+            <button class="nav-item" onclick="switchTab('tab-balance', this)">
+                <i class="fa-solid fa-credit-card"></i>
+                <span>Баланс</span>
             </button>
             <button class="nav-item" onclick="switchTab('tab-custom', this)">
                 <i class="fa-solid fa-pen"></i>
