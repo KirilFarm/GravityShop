@@ -1,3 +1,5 @@
+const API_URL = "http://0.0.0.0:8000"; // Вставьте сюда адрес вашего бэкенда (без слеша на конце)
+
 const tg = window.Telegram?.WebApp;
 
 // Курсы валют и знаки
@@ -11,6 +13,7 @@ const currencyRates = {
 let currentCurrency = 'RUB';
 let currentLanguage = 'ru';
 let userBalanceRub = 0.00;
+let userTransactions = [];
 
 // Локализация всех текстов интерфейса
 const translations = {
@@ -233,6 +236,97 @@ if (tg) {
     }
 }
 
+// Получение баланса и транзакций с бэкенда
+async function initUserData() {
+    if (!tg?.initDataUnsafe?.user) {
+        updateBalanceDisplays();
+        return;
+    }
+
+    const user = tg.initDataUnsafe.user;
+    try {
+        const res = await fetch(`${API_URL}/api/user/init`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: user.id,
+                username: user.username || "",
+                full_name: `${user.first_name || ""} ${user.last_name || ""}`.trim()
+            })
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            userBalanceRub = data.balance || 0.00;
+            userTransactions = data.transactions || [];
+            updateBalanceDisplays();
+            renderTransactions();
+        }
+    } catch (err) {
+        console.error("Ошибка подключения к серверу:", err);
+        updateBalanceDisplays();
+    }
+}
+
+// Отрисовка истории операций под картой
+function renderTransactions() {
+    const list = document.querySelector('.card-history-box');
+    if (!list) return;
+
+    if (!userTransactions.length) {
+        list.innerHTML = `
+            <div class="history-title">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+                <span data-lang="history_title">${translations[currentLanguage].history_title}</span>
+            </div>
+            <div class="history-empty">
+                <p data-lang="no_tx_yet">${translations[currentLanguage].no_tx_yet}</p>
+            </div>
+        `;
+        return;
+    }
+
+    let itemsHtml = userTransactions.map(t => {
+        const isPlus = t.type === 'plus';
+        const sign = isPlus ? '+' : '-';
+        const color = isPlus ? '#22c55e' : '#ef4444';
+        return `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.06);">
+                <div>
+                    <div style="font-size: 0.82rem; font-weight: 700; color: #fff;">${t.title}</div>
+                    <div style="font-size: 0.65rem; color: var(--text-muted); margin-top: 2px;">${t.date}</div>
+                </div>
+                <div style="font-size: 0.88rem; font-weight: 800; color: ${color};">
+                    ${sign}${t.amount} ${t.currency}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    list.innerHTML = `
+        <div class="history-title" style="margin-bottom: 8px;">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>${translations[currentLanguage].history_title}</span>
+        </div>
+        <div class="history-list">${itemsHtml}</div>
+    `;
+}
+
+// Обновление баланса на всех элементах страницы
+function updateBalanceDisplays() {
+    const converted = (userBalanceRub * currencyRates[currentCurrency].rate).toFixed(2);
+    const symbol = currencyRates[currentCurrency].symbol;
+    const formatted = `${converted} ${symbol}`;
+
+    const cardBal = document.getElementById('virtual-card-balance');
+    const profBal = document.getElementById('profile-balance');
+    const turnoverVal = document.getElementById('level-turnover-val');
+
+    if (cardBal) cardBal.innerText = formatted;
+    if (profBal) profBal.innerText = formatted;
+    if (turnoverVal) turnoverVal.innerText = formatted;
+}
+
 // Переключение языка
 function setLanguage(lang) {
     currentLanguage = lang;
@@ -250,6 +344,7 @@ function setLanguage(lang) {
 
     renderProducts('all');
     updateBalanceDisplays();
+    renderTransactions();
 }
 
 // Переворот 3D карты
@@ -261,7 +356,7 @@ function flipCard(container) {
     }
 }
 
-// Открытие чата с @Fambod
+// Открытие чата с менеджером @Fambod
 function openManager() {
     const link = 'https://t.me/Fambod';
     if (window.Telegram?.WebApp?.openTelegramLink) {
@@ -291,7 +386,6 @@ function selectCurrency(code, flag, text) {
     updateBalanceDisplays();
 }
 
-// Закрывать выпадающий список валют при клике вне его
 document.addEventListener('click', (e) => {
     if (!e.target.closest('.custom-currency-select')) {
         const dropdown = document.getElementById('curr-dropdown');
@@ -299,7 +393,6 @@ document.addEventListener('click', (e) => {
     }
 });
 
-// Выбор опции кастомизации
 function selectCustomCard(label) {
     document.querySelectorAll('.custom-opt-item').forEach(item => {
         item.classList.remove('active');
@@ -312,21 +405,6 @@ function selectCustomCard(label) {
     if (input) input.checked = true;
 
     if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
-}
-
-// Обновление баланса
-function updateBalanceDisplays() {
-    const converted = (userBalanceRub * currencyRates[currentCurrency].rate).toFixed(2);
-    const symbol = currencyRates[currentCurrency].symbol;
-    const formatted = `${converted} ${symbol}`;
-
-    const cardBal = document.getElementById('virtual-card-balance');
-    const profBal = document.getElementById('profile-balance');
-    const turnoverVal = document.getElementById('level-turnover-val');
-
-    if (cardBal) cardBal.innerText = formatted;
-    if (profBal) profBal.innerText = formatted;
-    if (turnoverVal) turnoverVal.innerText = formatted;
 }
 
 // Рендер каталога товаров
@@ -362,7 +440,6 @@ function renderProducts(cat = 'all') {
     });
 }
 
-// Фильтрация категорий
 function filterCategory(cat, el) {
     if (el) {
         document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
@@ -382,12 +459,54 @@ function filterCategory(cat, el) {
     renderProducts(cat);
 }
 
-function addToCart(id) {
+// Покупка товара и создание транзакции
+async function addToCart(id) {
     const item = products.find(p => p.id === id);
     if (!item) return;
-    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-    if (tg?.showAlert) tg.showAlert(`Товар "${item.title}" добавлен в корзину!`);
-    else alert(`Товар "${item.title}" добавлен в корзину!`);
+
+    if (!tg?.initDataUnsafe?.user) {
+        alert("Откройте магазин через Telegram-бота.");
+        return;
+    }
+
+    if (userBalanceRub < item.priceRub) {
+        if (tg?.showAlert) {
+            tg.showAlert("❌ Недостаточно средств на балансе. Пополните счёт через кнопку «Пополнить»!");
+        } else {
+            alert("Недостаточно средств на балансе.");
+        }
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_URL}/api/buy`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user_id: tg.initDataUnsafe.user.id,
+                product_id: item.id,
+                title: item.title,
+                price_rub: item.priceRub,
+                currency: currentCurrency,
+                currency_rate: currencyRates[currentCurrency].rate
+            })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+            userBalanceRub = data.new_balance;
+            if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            
+            if (tg?.showAlert) {
+                tg.showAlert(`✅ Заказ #${data.order_id} оформлен!\n\nТовар: ${item.title}\nДетали отправлены в личные сообщения бота.`);
+            }
+            initUserData();
+        } else {
+            alert(data.detail || "Ошибка оформления заказа.");
+        }
+    } catch (e) {
+        alert("Ошибка связи с сервером.");
+    }
 }
 
 // Слайдер
@@ -436,5 +555,5 @@ function copyApi() {
 
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts('all');
-    updateBalanceDisplays();
+    initUserData();
 });
