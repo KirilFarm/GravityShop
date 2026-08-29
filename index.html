@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Boost Store</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Иконки FontAwesome / Lucide -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка -->
+        <header class="app-header">
+            <div class="brand-badge">
+                <i class="fa-solid fa-bolt icon-gradient"></i>
+                <span class="brand-title">RabbitBoost</span>
+            </div>
+        </header>
+
+        <!-- Вкладка: Главная -->
+        <main id="tab-home" class="tab-content active">
+            <div class="card user-welcome-card">
+                <div class="avatar-box">
+                    <img id="user-avatar" src="https://via.placeholder.com/60" alt="Avatar">
+                </div>
+                <div class="welcome-text">
+                    <h2 id="welcome-username">Привет, Пользователь!</h2>
+                    <p>Чем займёмся сегодня?</p>
+                </div>
+            </div>
+
+            <div class="card balance-card">
+                <span class="label">БАЛАНС</span>
+                <div class="amount" id="home-balance">0.00 ₽</div>
+            </div>
+
+            <div class="action-list">
+                <div class="card action-item" onclick="switchTab('tab-buy')">
+                    <div class="action-icon purple"><i class="fa-solid fa-bag-shopping"></i></div>
+                    <div class="action-info">
+                        <h3>Купить бусты</h3>
+                        <p>Быстрые бусты для твоего Discord-сервера</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
+                </div>
+
+                <div class="card action-item">
+                    <div class="action-icon cyan"><i class="fa-solid fa-credit-card"></i></div>
+                    <div class="action-info">
+                        <h3>Пополнить баланс</h3>
+                        <p>Пополни баланс любым удобным способом</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
+                </div>
+
+                <div class="card action-item" onclick="switchTab('tab-profile')">
+                    <div class="action-icon blue"><i class="fa-solid fa-user"></i></div>
+                    <div class="action-info">
+                        <h3>Профиль</h3>
+                        <p>API-ключ и настройки аккаунта</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
+                </div>
+
+                <div class="card action-item" onclick="switchTab('tab-custom')">
+                    <div class="action-icon green"><i class="fa-solid fa-pen"></i></div>
+                    <div class="action-info">
+                        <h3>Кастомизация</h3>
+                        <p>Настройте профиль ботов-бустеров</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
+                </div>
+
+                <div class="card action-item">
+                    <div class="action-icon blue-dark"><i class="fa-solid fa-bars"></i></div>
+                    <div class="action-info">
+                        <h3>История заказов</h3>
+                        <p>Все заказы и пополнения</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
+                </div>
+            </div>
+        </main>
+
+        <!-- Вкладка: Уровни -->
+        <main id="tab-levels" class="tab-content">
+            <h1 class="page-title">Уровни</h1>
+            <h3 class="page-subtitle">Больше оборот — ниже цена</h3>
+            <p class="page-desc">Программа лояльности для реселлеров: больше оборот — ниже цена. Уровень даёт бонус к пополнению баланса. Оборот считается за последние 60 дней.</p>
+
+            <div class="card level-status-card">
+                <div class="level-top">
+                    <span class="label">ТЕКУЩИЙ УРОВЕНЬ</span>
+                    <span class="level-dash">—</span>
+                </div>
+                <div class="level-badge-text">Уровня пока нет</div>
+                <div class="turnover-row">
+                    <span>Оборот (за 60 дней)</span>
+                    <span class="fw-bold">0.00 ₽</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-label">
+                        <span>До уровня 1 (+3%)</span>
+                        <span>осталось 10000.00 ₽</span>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" style="width: 0%;"></div></div>
+                </div>
+            </div>
+
+            <div class="levels-list">
+                <div class="card level-row">
+                    <div class="level-name"><i class="fa-solid fa-crown"></i> Уровень 1 <span class="sub">от 10000.00 ₽</span></div>
+                    <div class="badge-percent">+3%</div>
+                </div>
+                <div class="card level-row">
+                    <div class="level-name"><i class="fa-solid fa-award"></i> Уровень 2 <span class="sub">от 20000.00 ₽</span></div>
+                    <div class="badge-percent">+5%</div>
+                </div>
+                <div class="card level-row">
+                    <div class="level-name"><i class="fa-regular fa-star"></i> Уровень 3 <span class="sub">от 30000.00 ₽</span></div>
+                    <div class="badge-percent">+8%</div>
+                </div>
+                <div class="card level-row">
+                    <div class="level-name"><i class="fa-regular fa-gem"></i> Уровень 4 <span class="sub">от 50000.00 ₽</span></div>
+                    <div class="badge-percent">+10%</div>
+                </div>
+                <div class="card level-row">
+                    <div class="level-name"><i class="fa-solid fa-trophy"></i> Уровень 5 <span class="sub">от 80000.00 ₽</span></div>
+                    <div class="badge-percent">+15%</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Вкладка: Купить -->
+        <main id="tab-buy" class="tab-content">
+            <h1 class="page-title">Купить бусты</h1>
+            <p class="page-subtitle">Выберите длительность</p>
+
+            <div class="grid-cards">
+                <div class="card product-card active">
+                    <div class="duration">1 месяц</div>
+                    <div class="price">13.80 ₽</div>
+                    <div class="stock">1754 На складе</div>
+                </div>
+                <div class="card product-card disabled">
+                    <div class="duration">3 месяца</div>
+                    <div class="price">49.00 ₽</div>
+                    <div class="stock">0 На складе</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Вкладка: Кастом -->
+        <main id="tab-custom" class="tab-content">
+            <h1 class="page-title">Кастомизация</h1>
+            <p class="page-subtitle">Как выглядят бустеры на твоём сервере</p>
+
+            <div class="custom-options">
+                <label class="card option-card checked">
+                    <input type="radio" name="custom_type" checked>
+                    <div class="option-content">
+                        <div class="opt-head">
+                            <span class="opt-title">Кастомизировать профили бустеров</span>
+                            <span class="badge-percent">+10%</span>
+                        </div>
+                        <p class="opt-desc">Персональный аватар, баннер и ник. Доплата +10% к каждому заказу</p>
+                    </div>
+                </label>
+
+                <label class="card option-card">
+                    <input type="radio" name="custom_type">
+                    <div class="option-content">
+                        <div class="opt-head">
+                            <span class="opt-title">Спрашивать</span>
+                            <span class="badge-percent">+10%</span>
+                        </div>
+                        <p class="opt-desc">Спросим при покупке. При согласии доплата +10% к заказу</p>
+                    </div>
+                </label>
+
+                <label class="card option-card">
+                    <input type="radio" name="custom_type">
+                    <div class="option-content">
+                        <div class="opt-head">
+                            <span class="opt-title">Оставить рекламу сервиса</span>
+                        </div>
+                        <p class="opt-desc">Без доплаты. Бустеры показывают рекламу сервиса</p>
+                    </div>
+                </label>
+            </div>
+        </main>
+
+        <!-- Вкладка: Профиль -->
+        <main id="tab-profile" class="tab-content">
+            <h1 class="page-title">Профиль</h1>
+
+            <div class="card profile-main-card">
+                <div class="avatar-wrapper">
+                    <img id="profile-avatar" src="https://via.placeholder.com/80" alt="Avatar">
+                </div>
+                <h2 id="profile-name">Пользователь</h2>
+                <div class="user-handle" id="profile-username">@username</div>
+                <div class="user-id" id="profile-id">ID: 000000000</div>
+                <div class="balance-title">БАЛАНС</div>
+                <div class="balance-big" id="profile-balance">0.00 ₽</div>
+            </div>
+
+            <div class="profile-settings">
+                <span class="label">API ключ</span>
+                <div class="card api-field">
+                    <input type="password" value="c17c669438902fa5aa" readonly id="api-key">
+                    <div class="field-actions">
+                        <button onclick="toggleApi()"><i class="fa-regular fa-eye"></i></button>
+                        <button onclick="copyApi()"><i class="fa-regular fa-copy"></i></button>
+                    </div>
+                </div>
+
+                <div class="card setting-row">
+                    <div class="setting-title"><i class="fa-solid fa-globe"></i> Язык</div>
+                    <div class="lang-switch">
+                        <button class="active">РУС</button>
+                        <button>ENG</button>
+                    </div>
+                </div>
+
+                <div class="card action-item">
+                    <div class="action-icon blue-dark"><i class="fa-solid fa-bars"></i></div>
+                    <div class="action-info">
+                        <h3>История заказов</h3>
+                        <p>Все заказы и пополнения</p>
+                    </div>
+                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
+                </div>
+
+                <div class="card setting-row danger">
+                    <div class="setting-title"><i class="fa-solid fa-arrow-right-from-bracket"></i> Выйти</div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Нижний навигационный бар -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="switchTab('tab-home', this)">
+                <i class="fa-solid fa-house"></i>
+                <span>Главная</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('tab-levels', this)">
+                <i class="fa-solid fa-crown"></i>
+                <span>Уровни</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('tab-buy', this)">
+                <i class="fa-solid fa-bag-shopping"></i>
+                <span>Купить</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('tab-custom', this)">
+                <i class="fa-solid fa-pen"></i>
+                <span>Кастом</span>
+            </button>
+            <button class="nav-item" onclick="switchTab('tab-profile', this)">
+                <i class="fa-solid fa-user"></i>
+                <span>Профиль</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
