@@ -242,11 +242,7 @@ function openManager() {
 
 // Окно пополнения баланса
 function openDepositModal() {
-    if (tg?.showAlert) {
-        tg.showAlert('Для пополнения баланса напишите нашему менеджеру: @Fambod');
-    } else {
-        alert('Для пополнения баланса напишите нашему менеджеру: @Fambod');
-    }
+    openManager();
 }
 
 // Переключение слайдера баннеров
