@@ -1,17 +1,139 @@
 const tg = window.Telegram?.WebApp;
 
-// Курсы валют относительно RUB
+// Курсы валют и знаки
 const currencyRates = {
     RUB: { symbol: '₽', rate: 1 },
-    UAH: { symbol: 'гривны', rate: 0.44 },
+    UAH: { symbol: '₴', rate: 0.44 },
     USD: { symbol: '$', rate: 0.011 },
     EUR: { symbol: '€', rate: 0.010 }
 };
 
 let currentCurrency = 'RUB';
-let userBalanceRub = 0.00; // Баланс пользователя в рублях
+let currentLanguage = 'ru';
+let userBalanceRub = 0.00;
 
-// Каталог товаров
+// Локализация всех текстов интерфейса
+const translations = {
+    ru: {
+        write_manager: 'Написать менеджеру',
+        promo_badge: 'Акция',
+        hit_badge: 'Хит',
+        slide1_desc: 'Дешевле, чем в приложении',
+        slide2_desc: 'Моментальная доставка на аккаунт',
+        check_btn: 'Проверить',
+        buy_nitro_btn: 'Купить Nitro',
+        tick_games: 'ИГРЫ И ЦИФРОВЫЕ ТОВАРЫ',
+        tick_guarantee: 'ГАРАНТИЯ И ПОДДЕРЖКА КЛИЕНТОВ',
+        tick_fast: 'БЫСТРАЯ ДОСТАВКА',
+        home_title: 'Главная',
+        cat_all: 'Все',
+        useful_links: 'Полезные ссылки',
+        f_delivery: 'Доставка',
+        f_payment: 'Оплата',
+        f_contacts: 'Контакты',
+        f_reviews: 'Отзывы',
+        f_refund: 'Возврат',
+        f_guarantee: 'Гарантия',
+        f_terms: 'Оферта',
+        our_socials: 'Наши соцсети',
+        levels_title: 'Уровни',
+        levels_sub: 'Больше оборот — ниже цена',
+        levels_desc: 'Программа лояльности для покупателей и реселлеров: больше оборот — ниже цена. Уровень даёт постоянный бонус к пополнению баланса.',
+        current_level: 'ТЕКУЩИЙ УРОВЕНЬ',
+        no_level_yet: 'Уровня пока нет',
+        turnover_60d: 'Оборот за последние 60 дней',
+        lvl1: 'Уровень 1', lvl1_from: 'от 10,000 ₽',
+        lvl2: 'Уровень 2', lvl2_from: 'от 20,000 ₽',
+        lvl3: 'Уровень 3', lvl3_from: 'от 30,000 ₽',
+        my_balance_title: 'Мой Баланс',
+        card_flip_hint: 'Нажмите на карту, чтобы перевернуть',
+        avail_balance: 'ДОСТУПНЫЙ БАЛАНС',
+        deposit_btn: 'Пополнить',
+        transfer_btn: 'Перевод',
+        history_title: 'История операций',
+        no_tx_yet: 'Транзакций пока нет',
+        custom_title: 'Кастомизация',
+        custom_sub: 'Как выглядят бустеры на твоём сервере',
+        c_opt1_title: 'Кастомизировать профили бустеров',
+        c_opt1_desc: 'Персональный аватар, баннер и ник. Доплата +10% к каждому заказу',
+        c_opt2_title: 'Спрашивать при покупке',
+        c_opt2_desc: 'Спросим при покупке. При согласии доплата +10% к заказу',
+        c_opt3_title: 'Оставить рекламу сервиса',
+        c_opt3_desc: 'Без доплаты. Бустеры показывают рекламу сервиса',
+        profile_title: 'Профиль',
+        p_balance_label: 'БАЛАНС',
+        lang_label: 'Язык',
+        bank_card_item: 'Банковская карта',
+        bank_card_desc: 'Управление счетом и пополнение',
+        logout: 'Выйти',
+        nav_shop: 'Магазин',
+        nav_levels: 'Уровни',
+        nav_balance: 'Баланс',
+        nav_custom: 'Кастом',
+        nav_profile: 'Профиль',
+        add_to_cart: 'В корзину'
+    },
+    en: {
+        write_manager: 'Contact Manager',
+        promo_badge: 'Promo',
+        hit_badge: 'Hit',
+        slide1_desc: 'Cheaper than in-app',
+        slide2_desc: 'Instant delivery to account',
+        check_btn: 'Check now',
+        buy_nitro_btn: 'Buy Nitro',
+        tick_games: 'GAMES & DIGITAL GOODS',
+        tick_guarantee: 'WARRANTY & CLIENT SUPPORT',
+        tick_fast: 'FAST DELIVERY',
+        home_title: 'Main',
+        cat_all: 'All',
+        useful_links: 'Useful Links',
+        f_delivery: 'Delivery',
+        f_payment: 'Payment',
+        f_contacts: 'Contacts',
+        f_reviews: 'Reviews',
+        f_refund: 'Refund',
+        f_guarantee: 'Guarantee',
+        f_terms: 'Terms',
+        our_socials: 'Our Socials',
+        levels_title: 'Levels',
+        levels_sub: 'Higher turnover — lower price',
+        levels_desc: 'Loyalty program for customers and resellers: level gives a permanent bonus to top-ups.',
+        current_level: 'CURRENT LEVEL',
+        no_level_yet: 'No level yet',
+        turnover_60d: 'Turnover in last 60 days',
+        lvl1: 'Level 1', lvl1_from: 'from 10,000 ₽',
+        lvl2: 'Level 2', lvl2_from: 'from 20,000 ₽',
+        lvl3: 'Level 3', lvl3_from: 'from 30,000 ₽',
+        my_balance_title: 'My Balance',
+        card_flip_hint: 'Tap card to flip',
+        avail_balance: 'AVAILABLE BALANCE',
+        deposit_btn: 'Top Up',
+        transfer_btn: 'Transfer',
+        history_title: 'Transaction History',
+        no_tx_yet: 'No transactions yet',
+        custom_title: 'Customization',
+        custom_sub: 'How boosters look on your server',
+        c_opt1_title: 'Customize booster profiles',
+        c_opt1_desc: 'Personal avatar, banner and nickname. +10% extra per order',
+        c_opt2_title: 'Ask on purchase',
+        c_opt2_desc: 'We will ask upon purchase. If agreed +10% extra',
+        c_opt3_title: 'Leave service ads',
+        c_opt3_desc: 'No extra fee. Boosters show service branding',
+        profile_title: 'Profile',
+        p_balance_label: 'BALANCE',
+        lang_label: 'Language',
+        bank_card_item: 'Bank Card',
+        bank_card_desc: 'Account balance and management',
+        logout: 'Log Out',
+        nav_shop: 'Shop',
+        nav_levels: 'Levels',
+        nav_balance: 'Balance',
+        nav_custom: 'Custom',
+        nav_profile: 'Profile',
+        add_to_cart: 'Add to Cart'
+    }
+};
+
 const products = [
     {
         id: 1,
@@ -19,7 +141,7 @@ const products = [
         title: '50 Telegram Stars',
         categoryName: 'Telegram Stars',
         priceRub: 120,
-        badge1: '🔥 Хит продаж',
+        badge1: '🔥 Хит',
         badge2: '⚡ Быстро',
         image: 'https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=300&auto=format&fit=crop&q=60'
     },
@@ -29,8 +151,8 @@ const products = [
         title: '100 Telegram Stars',
         categoryName: 'Telegram Stars',
         priceRub: 230,
-        badge1: '🔥 Хит продаж',
-        badge2: '✨ Берут чаще',
+        badge1: '🔥 Хит',
+        badge2: '✨ Топ',
         image: 'https://images.unsplash.com/photo-1614680376593-902f749f7ffc?w=300&auto=format&fit=crop&q=60'
     },
     {
@@ -39,7 +161,7 @@ const products = [
         title: 'Discord Nitro Full 1 Месяц',
         categoryName: 'Discord Nitro',
         priceRub: 650,
-        badge1: '🔥 Хит продаж',
+        badge1: '🔥 Хит',
         image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=300&auto=format&fit=crop&q=60'
     },
     {
@@ -80,7 +202,7 @@ const products = [
     }
 ];
 
-// Инициализация Telegram WebApp
+// Инициализация WebApp
 if (tg) {
     tg.expand();
     tg.ready();
@@ -106,23 +228,93 @@ if (tg) {
             const uidStr = String(user.id);
             const p1 = uidStr.slice(0, 4) || '5188';
             const p2 = uidStr.slice(-4) || '9101';
-            cardNum.innerText = `001 ${p1} •••• ${p2}`;
+            cardNum.innerText = `001 ${p1} 4841 ${p2}`;
         }
     }
 }
 
-// 3D переворот банковской карты
+// Переключение языка
+function setLanguage(lang) {
+    currentLanguage = lang;
+    document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+    
+    const activeBtn = document.getElementById(`btn-lang-${lang}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    document.querySelectorAll('[data-lang]').forEach(el => {
+        const key = el.getAttribute('data-lang');
+        if (translations[lang] && translations[lang][key]) {
+            el.innerText = translations[lang][key];
+        }
+    });
+
+    renderProducts('all');
+    updateBalanceDisplays();
+}
+
+// Переворот 3D карты
 function flipCard(container) {
-    const cardInner = container.querySelector('#bankCard');
-    if (cardInner) {
-        cardInner.classList.toggle('flipped');
-        if (tg?.HapticFeedback) {
-            tg.HapticFeedback.impactOccurred('light');
-        }
+    const card = container.querySelector('#bankCard');
+    if (card) {
+        card.classList.toggle('flipped');
+        if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
     }
 }
 
-// Обновление отображения баланса на карте, в профиле и уровнях
+// Открытие чата с @Fambod
+function openManager() {
+    const link = 'https://t.me/Fambod';
+    if (window.Telegram?.WebApp?.openTelegramLink) {
+        window.Telegram.WebApp.openTelegramLink(link);
+    } else {
+        window.open(link, '_blank');
+    }
+}
+
+// Селектор валют
+function toggleCurrencyMenu() {
+    const dropdown = document.getElementById('curr-dropdown');
+    if (dropdown) dropdown.classList.toggle('show');
+}
+
+function selectCurrency(code, flag, text) {
+    currentCurrency = code;
+    const flagEl = document.getElementById('curr-flag');
+    const codeEl = document.getElementById('curr-code');
+    const dropdown = document.getElementById('curr-dropdown');
+
+    if (flagEl) flagEl.innerText = flag;
+    if (codeEl) codeEl.innerText = text;
+    if (dropdown) dropdown.classList.remove('show');
+    
+    renderProducts('all');
+    updateBalanceDisplays();
+}
+
+// Закрывать выпадающий список валют при клике вне его
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.custom-currency-select')) {
+        const dropdown = document.getElementById('curr-dropdown');
+        if (dropdown) dropdown.classList.remove('show');
+    }
+});
+
+// Выбор опции кастомизации
+function selectCustomCard(label) {
+    document.querySelectorAll('.custom-opt-item').forEach(item => {
+        item.classList.remove('active');
+        const radio = item.querySelector('input[type="radio"]');
+        if (radio) radio.checked = false;
+    });
+
+    label.classList.add('active');
+    const input = label.querySelector('input[type="radio"]');
+    if (input) input.checked = true;
+
+    if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+}
+
+// Обновление баланса
 function updateBalanceDisplays() {
     const converted = (userBalanceRub * currencyRates[currentCurrency].rate).toFixed(2);
     const symbol = currencyRates[currentCurrency].symbol;
@@ -137,17 +329,17 @@ function updateBalanceDisplays() {
     if (turnoverVal) turnoverVal.innerText = formatted;
 }
 
-// Отрисовка каталога товаров
+// Рендер каталога товаров
 function renderProducts(cat = 'all') {
     const grid = document.getElementById('products-grid');
     if (!grid) return;
-    
     grid.innerHTML = '';
-    const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
 
+    const filtered = cat === 'all' ? products : products.filter(p => p.category === cat);
     filtered.forEach(p => {
         const convertedPrice = (p.priceRub * currencyRates[currentCurrency].rate).toFixed(2);
         const symbol = currencyRates[currentCurrency].symbol;
+        const btnText = translations[currentLanguage].add_to_cart;
 
         const card = document.createElement('div');
         card.className = 'product-card';
@@ -163,7 +355,7 @@ function renderProducts(cat = 'all') {
                 <div class="product-price">${convertedPrice} ${symbol}</div>
                 <div class="product-title">${p.title}</div>
                 <div class="product-category-name">${p.categoryName}</div>
-                <button class="add-to-cart-btn" onclick="addToCart(${p.id})">В корзину</button>
+                <button class="add-to-cart-btn" onclick="addToCart(${p.id})">${btnText}</button>
             </div>
         `;
         grid.appendChild(card);
@@ -176,99 +368,44 @@ function filterCategory(cat, el) {
         document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
     }
-
     const backBtn = document.getElementById('back-all-btn');
     const title = document.getElementById('catalog-title');
 
     if (cat === 'all') {
         if (backBtn) backBtn.classList.add('hidden');
-        if (title) title.innerText = 'Главная';
+        if (title) title.innerText = translations[currentLanguage].home_title;
     } else {
         if (backBtn) backBtn.classList.remove('hidden');
-        const names = {
-            standoff: 'Standoff 2',
-            warthunder: 'War Thunder',
-            steam: 'Steam',
-            telegram: 'Telegram',
-            discord: 'Discord'
-        };
+        const names = { standoff: 'Standoff 2', warthunder: 'War Thunder', steam: 'Steam', telegram: 'Telegram', discord: 'Discord' };
         if (title) title.innerText = names[cat] || 'Каталог';
     }
-
     renderProducts(cat);
 }
 
-// Смена валюты с пересчетом цен
-function changeCurrency(val) {
-    currentCurrency = val;
-    const catTitle = document.getElementById('catalog-title')?.innerText || 'Главная';
-    const revMap = {
-        'Главная': 'all',
-        'Standoff 2': 'standoff',
-        'War Thunder': 'warthunder',
-        'Steam': 'steam',
-        'Telegram': 'telegram',
-        'Discord': 'discord'
-    };
-    renderProducts(revMap[catTitle] || 'all');
-    updateBalanceDisplays();
-}
-
-// Добавление в корзину
 function addToCart(id) {
     const item = products.find(p => p.id === id);
     if (!item) return;
-
-    if (tg?.HapticFeedback) {
-        tg.HapticFeedback.impactOccurred('medium');
-    }
-
-    if (tg?.showAlert) {
-        tg.showAlert(`Товар "${item.title}" добавлен в корзину!`);
-    } else {
-        alert(`Товар "${item.title}" добавлен в корзину!`);
-    }
+    if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    if (tg?.showAlert) tg.showAlert(`Товар "${item.title}" добавлен в корзину!`);
+    else alert(`Товар "${item.title}" добавлен в корзину!`);
 }
 
-// Открытие чата с поддержкой / менеджером @Fambod
-function openManager() {
-    const managerUrl = 'https://t.me/Fambod';
-    if (tg?.openTelegramLink) {
-        tg.openTelegramLink(managerUrl);
-    } else {
-        window.open(managerUrl, '_blank');
-    }
-}
-
-// Окно пополнения баланса
-function openDepositModal() {
-    openManager();
-}
-
-// Переключение слайдера баннеров
+// Слайдер
 let slideIndex = 0;
 function showSlide(idx) {
     const slides = document.querySelectorAll('.slide');
     const dots = document.querySelectorAll('.dot');
     if (!slides.length) return;
-
     slides.forEach(s => s.classList.remove('active'));
     dots.forEach(d => d.classList.remove('active'));
-    
     slideIndex = idx >= slides.length ? 0 : (idx < 0 ? slides.length - 1 : idx);
     slides[slideIndex].classList.add('active');
     if (dots[slideIndex]) dots[slideIndex].classList.add('active');
 }
+function setSlide(idx) { showSlide(idx); }
+setInterval(() => { showSlide(slideIndex + 1); }, 4500);
 
-function setSlide(idx) {
-    showSlide(idx);
-}
-
-setInterval(() => {
-    showSlide(slideIndex + 1);
-}, 4500);
-
-// Переключение вкладок нижнего меню
+// Переключение табов
 function switchTab(tabId, el) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
@@ -276,50 +413,27 @@ function switchTab(tabId, el) {
     const targetTab = document.getElementById(tabId);
     if (targetTab) targetTab.classList.add('active');
 
-    if (el) {
-        el.classList.add('active');
-    } else {
+    if (el) el.classList.add('active');
+    else {
         const navButtons = document.querySelectorAll('.nav-item');
-        const map = {
-            'tab-home': 0,
-            'tab-levels': 1,
-            'tab-balance': 2,
-            'tab-custom': 3,
-            'tab-profile': 4
-        };
-        if (map[tabId] !== undefined && navButtons[map[tabId]]) {
-            navButtons[map[tabId]].classList.add('active');
-        }
+        const map = { 'tab-home': 0, 'tab-levels': 1, 'tab-balance': 2, 'tab-custom': 3, 'tab-profile': 4 };
+        if (map[tabId] !== undefined && navButtons[map[tabId]]) navButtons[map[tabId]].classList.add('active');
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Работа с API-ключом в профиле
 function toggleApi() {
     const input = document.getElementById('api-key');
-    if (input) {
-        input.type = input.type === 'password' ? 'text' : 'password';
-    }
+    if (input) input.type = input.type === 'password' ? 'text' : 'password';
 }
 
 function copyApi() {
     const input = document.getElementById('api-key');
     if (!input) return;
-
     navigator.clipboard.writeText(input.value);
-    
-    if (tg?.HapticFeedback) {
-        tg.HapticFeedback.notificationOccurred('success');
-    }
-
-    if (tg?.showAlert) {
-        tg.showAlert('API ключ скопирован!');
-    } else {
-        alert('API ключ скопирован!');
-    }
+    if (tg?.showAlert) tg.showAlert('API ключ скопирован!');
 }
 
-// Первоначальный запуск
 document.addEventListener('DOMContentLoaded', () => {
     renderProducts('all');
     updateBalanceDisplays();
