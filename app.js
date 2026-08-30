@@ -41,7 +41,7 @@ setInterval(() => {
 // Категории
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
-  { id: 'tiktok', name: 'TikTok', icon: '⚡', img: 'тик ток.jpg' },
+  { id: 'tiktok', name: 'TikTok', icon: '⚡', img: 'tiktok.jpg' },
   { id: 'stars', name: 'Stars', icon: '⭐', img: '' },
   { id: 'discord', name: 'Discord', icon: '🟣', img: '' },
   { id: 'steam', name: 'Steam', icon: '🎮', img: '' },
