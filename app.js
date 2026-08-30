@@ -1,11 +1,9 @@
-// Инициализация Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
 }
 
-// Категории
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡' },
   { id: 'stars', name: 'Stars', icon: '⭐' },
@@ -16,86 +14,21 @@ const categories = [
   { id: 'pubg', name: 'PUBG', icon: '🎯' }
 ];
 
-// Список товаров
 const products = [
-  {
-    id: 1,
-    cat: 'stars',
-    name: '50 Telegram Stars',
-    price: 50,
-    badge: '🔥 Хіт продажів',
-    badgeType: 'badge-fire',
-    sub: 'Telegram Stars'
-  },
-  {
-    id: 2,
-    cat: 'stars',
-    name: '100 Telegram Stars',
-    price: 85,
-    badge: '⚡ Швидка доставка',
-    badgeType: 'badge-fast',
-    sub: 'Telegram Stars'
-  },
-  {
-    id: 3,
-    cat: 'discord',
-    name: 'Discord Nitro 1 Місяць',
-    price: 300,
-    badge: '🔥 Хіт продажів',
-    badgeType: 'badge-fire',
-    sub: 'Discord Nitro'
-  },
-  {
-    id: 4,
-    cat: 'discord',
-    name: 'Discord Nitro 3 Місяці',
-    price: 1150,
-    badge: '💎 Вигідна ціна',
-    badgeType: 'badge-deal',
-    sub: 'Discord Nitro'
-  },
-  {
-    id: 5,
-    cat: 'steam',
-    name: '200 грн на Steam',
-    price: 250,
-    badge: '⚡ Швидка доставка',
-    badgeType: 'badge-fast',
-    sub: 'Поповнення балансу'
-  },
-  {
-    id: 6,
-    cat: 'standoff',
-    name: '100 Gold Standoff 2',
-    price: 40,
-    badge: '🔥 Хіт продажів',
-    badgeType: 'badge-fire',
-    sub: 'Голда'
-  },
-  {
-    id: 7,
-    cat: 'standoff',
-    name: '200 Gold Standoff 2',
-    price: 80,
-    badge: '⚡ Популярне',
-    badgeType: 'badge-fast',
-    sub: 'Голда'
-  },
-  {
-    id: 8,
-    cat: 'spotify',
-    name: 'Spotify Premium 1 Міс',
-    price: 120,
-    badge: '💎 Найкраща ціна',
-    badgeType: 'badge-deal',
-    sub: 'Індивідуальна підписка'
-  }
+  { id: 1, cat: 'stars', name: '50 Telegram Stars', price: 50, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: 'Telegram Stars' },
+  { id: 2, cat: 'stars', name: '100 Telegram Stars', price: 85, badge: '⚡ Швидка доставка', badgeType: 'badge-fast', sub: 'Telegram Stars' },
+  { id: 3, cat: 'discord', name: 'Discord Nitro 1 Місяць', price: 300, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: 'Discord Nitro' },
+  { id: 4, cat: 'discord', name: 'Discord Nitro 3 Місяці', price: 1150, badge: '💎 Вигідна ціна', badgeType: 'badge-deal', sub: 'Discord Nitro' },
+  { id: 5, cat: 'steam', name: '200 грн на Steam', price: 250, badge: '⚡ Швидка доставка', badgeType: 'badge-fast', sub: 'Поповнення балансу' },
+  { id: 6, cat: 'standoff', name: '100 Gold Standoff 2', price: 40, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: 'Голда' },
+  { id: 7, cat: 'standoff', name: '200 Gold Standoff 2', price: 80, badge: '⚡ Популярне', badgeType: 'badge-fast', sub: 'Голда' },
+  { id: 8, cat: 'spotify', name: 'Spotify Premium 1 Міс', price: 120, badge: '💎 Найкраща ціна', badgeType: 'badge-deal', sub: 'Індивідуальна підписка' }
 ];
 
+// Корзина: [{ id, name, price, count }]
 let cart = [];
 let currentCategory = 'all';
 
-// Отрисовка списка категорий
 function renderCategories() {
   const bar = document.getElementById('categoriesBar');
   bar.innerHTML = categories.map(c => `
@@ -106,14 +39,12 @@ function renderCategories() {
   `).join('');
 }
 
-// Переключение категории
 function selectCategory(catId) {
   currentCategory = catId;
   renderCategories();
   renderProducts();
 }
 
-// Отрисовка карточек товаров
 function renderProducts() {
   const grid = document.getElementById('productsGrid');
   const filtered = currentCategory === 'all' 
@@ -137,63 +68,102 @@ function renderProducts() {
   `).join('');
 }
 
-// Добавление в корзину
 function addToCart(id) {
   const item = products.find(p => p.id === id);
-  if (item) {
-    cart.push(item);
-    document.getElementById('cartCount').innerText = cart.length;
-    
-    // Telegram тактильный отклик (Haptic Feedback)
-    if (tg && tg.HapticFeedback) {
-      tg.HapticFeedback.impactOccurred('light');
-    }
+  if (!item) return;
+
+  const existing = cart.find(i => i.id === id);
+  if (existing) {
+    existing.count += 1;
+  } else {
+    cart.push({ ...item, count: 1 });
   }
+
+  updateCartBadge();
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
-// Открытие и оформление корзины
-function openCart() {
+function updateCartBadge() {
+  const totalCount = cart.reduce((sum, i) => sum + i.count, 0);
+  document.getElementById('cartCount').innerText = totalCount;
+}
+
+// Управление окном корзины
+function openCartModal() {
+  renderCartModal();
+  document.getElementById('cartModal').classList.add('active');
+}
+
+function closeCartModal() {
+  document.getElementById('cartModal').classList.remove('active');
+}
+
+function renderCartModal() {
+  const listContainer = document.getElementById('cartItemsList');
+  const totalDisplay = document.getElementById('cartTotalDisplay');
+
   if (cart.length === 0) {
-    if (tg) tg.showAlert("Ваш кошик порожній");
-    else alert("Ваш кошик порожній");
+    listContainer.innerHTML = '<div class="empty-cart-msg">Ваш кошик порожній 🛒</div>';
+    totalDisplay.innerText = '0 гривны';
     return;
   }
 
-  const total = cart.reduce((sum, item) => sum + item.price, 0);
-  const itemsText = cart.map((i, idx) => `${idx + 1}. ${i.name} (${i.price} гривны)`).join('\n');
+  listContainer.innerHTML = cart.map((item, index) => `
+    <div class="cart-item-row">
+      <div class="cart-item-details">
+        <span class="cart-item-title">${item.name}</span>
+        <span class="cart-item-sub">${item.price} гривны × ${item.count} шт. = ${item.price * item.count} гривны</span>
+      </div>
+      <div class="cart-item-actions">
+        <button class="btn-remove-item" onclick="removeFromCart(${index})">Видалити</button>
+      </div>
+    </div>
+  `).join('');
 
-  const confirmed = confirm(`Ваше замовлення:\n${itemsText}\n\nРазом: ${total} гривны\n\nПідтвердити оформлення?`);
-  
-  if (confirmed) {
-    const payload = {
-      action: "order",
-      items: cart,
-      total: total
-    };
-    
-    if (tg) {
-      tg.sendData(JSON.stringify(payload));
-    } else {
-      alert("Замовлення надіслано боту!");
-      cart = [];
-      document.getElementById('cartCount').innerText = 0;
-    }
+  const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
+  totalDisplay.innerText = `${total} гривны`;
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  updateCartBadge();
+  renderCartModal();
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+}
+
+function clearCart() {
+  cart = [];
+  updateCartBadge();
+  renderCartModal();
+}
+
+function checkoutOrder() {
+  if (cart.length === 0) {
+    if (tg) tg.showAlert("Додайте хоча б один товар до кошика!");
+    else alert("Додайте хоча б один товар до кошика!");
+    return;
+  }
+
+  const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
+
+  const payload = {
+    action: "order",
+    items: cart,
+    total: total
+  };
+
+  if (tg) {
+    tg.sendData(JSON.stringify(payload));
+  } else {
+    alert("Замовлення надіслано боту!");
+    clearCart();
+    closeCartModal();
   }
 }
 
-// Связь с менеджером и соцсети
-function openManager() {
-  if (tg) tg.openTelegramLink('https://t.me/your_manager_username');
-  else window.open('https://t.me/your_manager_username', '_blank');
-}
-
-function openTelegramChannel() {
-  if (tg) tg.openTelegramLink('https://t.me/your_channel_username');
-  else window.open('https://t.me/your_channel_username', '_blank');
-}
-
-function openInstagram() {
-  window.open('https://instagram.com/your_shop', '_blank');
+function openManagerDirect() {
+  if (tg) tg.openTelegramLink('https://t.me/Fambod');
+  else window.open('https://t.me/Fambod', '_blank');
 }
 
 function scrollToCatalog() {
@@ -203,9 +173,9 @@ function scrollToCatalog() {
 function switchTab(tab) {
   if (tab === 'menu') {
     selectCategory('all');
+    closeCartModal();
   }
 }
 
-// Старт
 renderCategories();
 renderProducts();
