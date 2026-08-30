@@ -9,33 +9,24 @@
 </head>
 <body>
 
-  <!-- Loading Splash Screen -->
+  <!-- Loading Splash Screen (4 секунди з анімацією менеджера) -->
   <div id="loader" class="loader-overlay">
     <div class="loader-card">
-      <div class="character-container">
-        <!-- Анимированный персонаж Wumpus / Маскот -->
-        <div class="character-glow"></div>
-        <div class="character-avatar">
-          <svg class="char-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="50" r="45" fill="url(#char-grad)" stroke="#3b82f6" stroke-width="2"/>
-            <circle cx="36" cy="42" r="5" fill="#ffffff" class="eye-left"/>
-            <circle cx="64" cy="42" r="5" fill="#ffffff" class="eye-right"/>
-            <path d="M 40 60 Q 50 70 60 60" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
-            <path d="M 22 28 Q 15 15 28 20" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
-            <path d="M 78 28 Q 85 15 72 20" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
-            <defs>
-              <linearGradient id="char-grad" x1="0" y1="0" x2="100" y2="100">
-                <stop offset="0%" stop-color="#5865F2"/>
-                <stop offset="100%" stop-color="#1e1b4b"/>
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
+      <div class="manager-avatar-wrapper">
+        <div class="manager-glow"></div>
+        <div class="manager-ring"></div>
+        
+        <!-- Сюди можна вставити посилання на фото менеджера або назву локального файлу в src -->
+        <img src="https://i.postimg.cc/wBWBnxfK/image-Photoroom-(3).png" id="managerPhoto" class="manager-avatar" alt="Manager">
+        
+        <div class="manager-badge">Онлайн ⚡</div>
       </div>
+      
       <div class="loader-title">Gravity Shop</div>
-      <div class="loader-status">Завантаження каталогу...</div>
-      <div class="loader-bar-bg">
-        <div class="loader-bar-fill"></div>
+      <div class="loader-status">Завантаження каталогу послуг...</div>
+      
+      <div class="loader-progress-track">
+        <div class="loader-progress-bar"></div>
       </div>
     </div>
   </div>
@@ -58,10 +49,10 @@
       <div class="banner">
         <div class="banner-decor-circle"></div>
         <div class="banner-content">
-          <span class="banner-tag">🔥 Ексклюзивні товари</span>
-          <h2 class="banner-title">Каталог NFT та Stars</h2>
-          <p class="banner-subtitle">Миттєва видача та гарантія якості</p>
-          <button class="banner-btn" onclick="scrollToCatalog()">До товарів</button>
+          <span class="banner-tag">🔥 Популярні послуги</span>
+          <h2 class="banner-title">TikTok, Stars та Nitro</h2>
+          <p class="banner-subtitle">Миттєва накрутка та цифрові товари</p>
+          <button class="banner-btn" onclick="scrollToCatalog()">Переглянути все</button>
         </div>
       </div>
     </section>
@@ -71,7 +62,7 @@
       <div class="ticker">
         <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b></span>
         <span>⭐ ПОНАД 1000 ЗАДОВОЛЕНИХ КЛІЄНТІВ <b>GRAVITY</b></span>
-        <span>🚀 ЕКОСИСТЕМА ЦИФРОВИХ ТОВАРІВ <b>GRAVITY</b></span>
+        <span>🚀 ШВИДКА НАКРУТКА TIKTOK <b>GRAVITY</b></span>
         <span>💎 НАЙВИГІДНІШІ ЦІНИ <b>GRAVITY</b></span>
       </div>
     </div>
@@ -116,7 +107,7 @@
       <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
         <div class="p-item-left">
           <span class="p-icon">💬</span>
-          <span>Підтримка / Менеджер (@Fambod)</span>
+          <span>Зв'язок з менеджером (@Fambod)</span>
         </div>
         <span class="p-arrow">›</span>
       </a>
@@ -136,7 +127,7 @@
       <div class="cart-footer">
         <div class="cart-total-row">
           <span>Разом:</span>
-          <span class="cart-total-price" id="cartTotalDisplay">0 гривны</span>
+          <span class="cart-total-price" id="cartTotalDisplay">0 грн</span>
         </div>
         <div class="cart-actions">
           <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
@@ -156,7 +147,7 @@
       <div class="receipt-content">
         <div class="receipt-icon-pulse">✨</div>
         <div class="receipt-number" id="receiptNumber">#000000</div>
-        <p class="receipt-text">Чек успішно створено! Надішліть його менеджеру для оплати та швидкого отримання:</p>
+        <p class="receipt-text">Чек створено! Надішліть його менеджеру для отримання послуги:</p>
         <div class="receipt-summary" id="receiptSummary"></div>
       </div>
       <div class="cart-footer">
@@ -171,14 +162,14 @@
       <div class="footer-col">
         <h4>Інформація</h4>
         <ul>
-          <li>🚚 Швидка доставка</li>
+          <li>🚚 Швидка видача</li>
           <li>💳 Зручна оплата</li>
-          <li><a href="https://t.me/Fambod" target="_blank" style="color: inherit; text-decoration: none;">📞 Підтримка (@Fambod)</a></li>
-          <li>✅ Гарантія якості</li>
+          <li><a href="https://t.me/Fambod" target="_blank" style="color: inherit; text-decoration: none;">📞 Менеджер (@Fambod)</a></li>
+          <li>✅ Гарантія надійності</li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Контакти</h4>
+        <h4>Соцмережі</h4>
         <div class="social-icons">
           <a href="https://t.me/Fambod" target="_blank" class="social-btn">✈️</a>
           <a href="https://instagram.com" target="_blank" class="social-btn">📸</a>
