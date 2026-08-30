@@ -1,358 +1,112 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Gravity Shop</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <link rel="stylesheet" href="style.css?v=6">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Grynx Store</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <!-- Шапка -->
-        <header class="store-topbar">
-            <div class="store-brand">
-                <div class="store-logo-box"><i class="fa-solid fa-bolt"></i></div>
-                <span class="store-brand-title">Gravity Shop</span>
-            </div>
-            <button type="button" onclick="openManager()" class="manager-btn">
-                <i class="fa-solid fa-rocket"></i>
-                <span data-lang="write_manager">Написать менеджеру</span>
-            </button>
-        </header>
 
-        <!-- Вкладка 1: Магазин -->
-        <main id="tab-home" class="tab-content active">
-            <div class="promo-slider">
-                <div class="slides-container" id="slides-container">
-                    <div class="slide active">
-                        <div class="slide-badge" data-lang="promo_badge">Акция</div>
-                        <h2>TELEGRAM STARS & PREMIUM</h2>
-                        <p class="slide-highlight" data-lang="slide1_desc">Дешевле, чем в приложении</p>
-                        <button class="slide-btn" onclick="filterCategory('telegram')" data-lang="check_btn">Проверить</button>
-                    </div>
-                    <div class="slide">
-                        <div class="slide-badge" data-lang="hit_badge">Хит</div>
-                        <h2>DISCORD NITRO FULL & CLASSIC</h2>
-                        <p class="slide-highlight" data-lang="slide2_desc">Моментальная доставка на аккаунт</p>
-                        <button class="slide-btn" onclick="filterCategory('discord')" data-lang="buy_nitro_btn">Купить Nitro</button>
-                    </div>
-                </div>
-                <div class="slider-dots" id="slider-dots">
-                    <span class="dot active" onclick="setSlide(0)"></span>
-                    <span class="dot" onclick="setSlide(1)"></span>
-                </div>
-            </div>
-
-            <div class="ticker-wrapper">
-                <div class="ticker-track">
-                    <span>🎮 <span data-lang="tick_games">ИГРЫ И ЦИФРОВЫЕ ТОВАРЫ</span></span>
-                    <span class="highlight">GRAVITY</span>
-                    <span>🛡️ <span data-lang="tick_guarantee">ГАРАНТИЯ И ПОДДЕРЖКА КЛИЕНТОВ</span></span>
-                    <span class="highlight">GRAVITY</span>
-                    <span>⚡ <span data-lang="tick_fast">БЫСТРАЯ ДОСТАВКА</span></span>
-                    <span class="highlight">GRAVITY</span>
-                </div>
-            </div>
-
-            <!-- Заголовок и кастомный селектор валют -->
-            <div class="catalog-header">
-                <div class="category-indicator">
-                    <button id="back-all-btn" class="back-btn hidden" onclick="filterCategory('all')">
-                        <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                    <h2 id="catalog-title" data-lang="home_title">Главная</h2>
-                </div>
-                
-                <div class="custom-currency-select">
-                    <div class="selected-currency" onclick="toggleCurrencyMenu()">
-                        <span id="curr-flag">🇷🇺</span>
-                        <span id="curr-code">RUB (₽)</span>
-                        <i class="fa-solid fa-chevron-down arrow-curr"></i>
-                    </div>
-                    <div class="currency-options-list" id="curr-dropdown">
-                        <div class="curr-opt" onclick="selectCurrency('RUB', '🇷🇺', 'RUB (₽)')">🇷🇺 RUB (₽)</div>
-                        <div class="curr-opt" onclick="selectCurrency('UAH', '🇺🇦', 'UAH (₴)')">🇺🇦 UAH (₴)</div>
-                        <div class="curr-opt" onclick="selectCurrency('USD', '🇺🇸', 'USD ($)')">🇺🇸 USD ($)</div>
-                        <div class="curr-opt" onclick="selectCurrency('EUR', '🇪🇺', 'EUR (€)')">🇪🇺 EUR (€)</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Горизонтальные категории -->
-            <div class="categories-scroll">
-                <div class="cat-item active" onclick="filterCategory('all', this)">
-                    <div class="cat-icon all-icon"><i class="fa-solid fa-border-all"></i></div>
-                    <span data-lang="cat_all">Все</span>
-                </div>
-                <div class="cat-item" onclick="filterCategory('standoff', this)">
-                    <div class="cat-icon bg-standoff"><i class="fa-solid fa-crosshairs"></i></div>
-                    <span>Standoff 2</span>
-                </div>
-                <div class="cat-item" onclick="filterCategory('warthunder', this)">
-                    <div class="cat-icon bg-wt"><i class="fa-solid fa-plane"></i></div>
-                    <span>War Thunder</span>
-                </div>
-                <div class="cat-item" onclick="filterCategory('steam', this)">
-                    <div class="cat-icon bg-steam"><i class="fa-brands fa-steam"></i></div>
-                    <span>Steam</span>
-                </div>
-                <div class="cat-item" onclick="filterCategory('telegram', this)">
-                    <div class="cat-icon bg-tg"><i class="fa-brands fa-telegram"></i></div>
-                    <span>Telegram</span>
-                </div>
-                <div class="cat-item" onclick="filterCategory('discord', this)">
-                    <div class="cat-icon bg-discord"><i class="fa-brands fa-discord"></i></div>
-                    <span>Discord</span>
-                </div>
-            </div>
-
-            <div class="products-grid" id="products-grid"></div>
-
-            <footer class="store-footer">
-                <div class="footer-col">
-                    <h4 data-lang="useful_links">Полезные ссылки</h4>
-                    <ul>
-                        <li><i class="fa-solid fa-truck"></i> <span data-lang="f_delivery">Доставка</span></li>
-                        <li><i class="fa-solid fa-credit-card"></i> <span data-lang="f_payment">Оплата</span></li>
-                        <li><i class="fa-solid fa-phone"></i> <span data-lang="f_contacts">Контакты</span></li>
-                        <li><i class="fa-solid fa-pen-to-square"></i> <span data-lang="f_reviews">Отзывы</span></li>
-                        <li><i class="fa-solid fa-rotate-left"></i> <span data-lang="f_refund">Возврат</span></li>
-                        <li><i class="fa-solid fa-shield-check"></i> <span data-lang="f_guarantee">Гарантия</span></li>
-                        <li><i class="fa-solid fa-book"></i> <span data-lang="f_terms">Оферта</span></li>
-                    </ul>
-                </div>
-                <div class="footer-col">
-                    <h4 data-lang="our_socials">Наши соцсети</h4>
-                    <div class="social-links">
-                        <button type="button" onclick="openManager()" class="social-btn instagram"><i class="fa-brands fa-instagram"></i></button>
-                        <button type="button" onclick="openManager()" class="social-btn telegram"><i class="fa-brands fa-telegram"></i></button>
-                    </div>
-                </div>
-            </footer>
-        </main>
-
-        <!-- Вкладка 2: Уровни -->
-        <main id="tab-levels" class="tab-content">
-            <h1 class="page-title" data-lang="levels_title">Уровни</h1>
-            <h3 class="page-subtitle" data-lang="levels_sub">Больше оборот — ниже цена</h3>
-            <p class="page-desc" data-lang="levels_desc">Программа лояльности для покупателей и реселлеров: больше оборот — ниже цена. Уровень даёт постоянный бонус к пополнению баланса.</p>
-
-            <div class="card level-status-card">
-                <div class="level-top">
-                    <span class="label" data-lang="current_level">ТЕКУЩИЙ УРОВЕНЬ</span>
-                    <span class="level-dash">—</span>
-                </div>
-                <div class="level-badge-text" data-lang="no_level_yet">Уровня пока нет</div>
-                <div class="turnover-row">
-                    <span data-lang="turnover_60d">Оборот за последние 60 дней</span>
-                    <span class="fw-bold" id="level-turnover-val">0.00 ₽</span>
-                </div>
-            </div>
-
-            <div class="levels-list">
-                <div class="card level-row">
-                    <div class="level-name"><i class="fa-solid fa-crown"></i> <span data-lang="lvl1">Уровень 1</span> <span class="sub" data-lang="lvl1_from">от 10,000 ₽</span></div>
-                    <div class="badge-percent">+3%</div>
-                </div>
-                <div class="card level-row">
-                    <div class="level-name"><i class="fa-solid fa-award"></i> <span data-lang="lvl2">Уровень 2</span> <span class="sub" data-lang="lvl2_from">от 20,000 ₽</span></div>
-                    <div class="badge-percent">+5%</div>
-                </div>
-                <div class="card level-row">
-                    <div class="level-name"><i class="fa-regular fa-star"></i> <span data-lang="lvl3">Уровень 3</span> <span class="sub" data-lang="lvl3_from">от 30,000 ₽</span></div>
-                    <div class="badge-percent">+8%</div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Вкладка 3: Баланс (Стеклянная 3D Карта) -->
-        <main id="tab-balance" class="tab-content">
-            <h1 class="page-title" data-lang="my_balance_title">Мой Баланс</h1>
-            <p class="page-subtitle" data-lang="card_flip_hint">Нажмите на карту, чтобы перевернуть</p>
-
-            <div class="glass-card-stage" onclick="flipCard(this)">
-                <div class="glass-card-3d" id="bankCard">
-                    <!-- Лицевая сторона -->
-                    <div class="glass-card-side glass-front">
-                        <div class="card-glow-effect"></div>
-                        <div class="card-top-bar">
-                            <div class="card-chip-gold"></div>
-                            <div class="card-type-tag">CREDIT CARD</div>
-                        </div>
-                        <div class="card-number-glass" id="card-virtual-number">001 5188 4841 9101</div>
-                        <div class="card-bottom-bar">
-                            <div class="card-user-info">
-                                <span class="card-tiny-label">CARDHOLDER NAME</span>
-                                <span class="card-user-name" id="card-holder-name">USER</span>
-                            </div>
-                            <div class="card-exp-info">
-                                <span class="card-tiny-label">EXPIRES</span>
-                                <span class="card-exp-val">12/28</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Обратная сторона -->
-                    <div class="glass-card-side glass-back">
-                        <div class="card-glow-effect"></div>
-                        <div class="black-magnetic-stripe"></div>
-                        <div class="card-back-inner">
-                            <div class="card-balance-glass">
-                                <span class="card-tiny-label" data-lang="avail_balance">ДОСТУПНЫЙ БАЛАНС</span>
-                                <div class="card-balance-number" id="virtual-card-balance">0.00 ₽</div>
-                            </div>
-                            <div class="cvv-row">
-                                <span class="bank-tag-text">GRAVITY BANK</span>
-                                <div class="cvv-white-box">410</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Кнопки действий с балансом -->
-            <div class="balance-actions-grid">
-                <button type="button" class="balance-btn deposit-btn" onclick="openManager()">
-                    <i class="fa-solid fa-arrow-down-left"></i>
-                    <span data-lang="deposit_btn">Пополнить</span>
-                </button>
-                <button type="button" class="balance-btn transfer-btn" onclick="openManager()">
-                    <i class="fa-solid fa-paper-plane"></i>
-                    <span data-lang="transfer_btn">Перевод</span>
-                </button>
-            </div>
-
-            <!-- История транзакций -->
-            <div class="card card-history-box">
-                <div class="history-title">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span data-lang="history_title">История операций</span>
-                </div>
-                <div class="history-empty">
-                    <p data-lang="no_tx_yet">Транзакций пока нет</p>
-                </div>
-            </div>
-        </main>
-
-        <!-- Вкладка 4: Кастомизация -->
-        <main id="tab-custom" class="tab-content">
-            <h1 class="page-title" data-lang="custom_title">Кастомизация</h1>
-            <p class="page-subtitle" data-lang="custom_sub">Как выглядят бустеры на твоём сервере</p>
-
-            <div class="custom-card-stack">
-                <label class="custom-opt-item active" onclick="selectCustomCard(this)">
-                    <div class="opt-radio-circle"></div>
-                    <input type="radio" name="custom_type" checked>
-                    <div class="opt-text-wrap">
-                        <div class="opt-title-line">
-                            <span class="opt-main-title" data-lang="c_opt1_title">Кастомизировать профили бустеров</span>
-                            <span class="badge-percent">+10%</span>
-                        </div>
-                        <p class="opt-sub-desc" data-lang="c_opt1_desc">Персональный аватар, баннер и ник. Доплата +10% к каждому заказу</p>
-                    </div>
-                </label>
-
-                <label class="custom-opt-item" onclick="selectCustomCard(this)">
-                    <div class="opt-radio-circle"></div>
-                    <input type="radio" name="custom_type">
-                    <div class="opt-text-wrap">
-                        <div class="opt-title-line">
-                            <span class="opt-main-title" data-lang="c_opt2_title">Спрашивать при покупке</span>
-                            <span class="badge-percent">+10%</span>
-                        </div>
-                        <p class="opt-sub-desc" data-lang="c_opt2_desc">Спросим при покупке. При согласии доплата +10% к заказу</p>
-                    </div>
-                </label>
-
-                <label class="custom-opt-item" onclick="selectCustomCard(this)">
-                    <div class="opt-radio-circle"></div>
-                    <input type="radio" name="custom_type">
-                    <div class="opt-text-wrap">
-                        <div class="opt-title-line">
-                            <span class="opt-main-title" data-lang="c_opt3_title">Оставить рекламу сервиса</span>
-                        </div>
-                        <p class="opt-sub-desc" data-lang="c_opt3_desc">Без доплаты. Бустеры показывают рекламу сервиса</p>
-                    </div>
-                </label>
-            </div>
-        </main>
-
-        <!-- Вкладка 5: Профиль -->
-        <main id="tab-profile" class="tab-content">
-            <h1 class="page-title" data-lang="profile_title">Профиль</h1>
-
-            <div class="card profile-main-card">
-                <div class="avatar-wrapper">
-                    <img id="profile-avatar" src="https://via.placeholder.com/80" alt="Avatar">
-                </div>
-                <h2 id="profile-name">Пользователь</h2>
-                <div class="user-handle" id="profile-username">@username</div>
-                <div class="user-id" id="profile-id">ID: 000000000</div>
-                <div class="balance-title" data-lang="p_balance_label">БАЛАНС</div>
-                <div class="balance-big" id="profile-balance">0.00 ₽</div>
-            </div>
-
-            <div class="profile-settings">
-                <span class="label">API ключ</span>
-                <div class="card api-field">
-                    <input type="password" value="c17c669438902fa5aa" readonly id="api-key">
-                    <div class="field-actions">
-                        <button type="button" onclick="toggleApi()"><i class="fa-regular fa-eye"></i></button>
-                        <button type="button" onclick="copyApi()"><i class="fa-regular fa-copy"></i></button>
-                    </div>
-                </div>
-
-                <!-- Переключатель языка -->
-                <div class="card setting-row">
-                    <div class="setting-title"><i class="fa-solid fa-globe"></i> <span data-lang="lang_label">Язык</span></div>
-                    <div class="lang-switch-container">
-                        <button type="button" class="lang-btn active" id="btn-lang-ru" onclick="setLanguage('ru')">РУС</button>
-                        <button type="button" class="lang-btn" id="btn-lang-en" onclick="setLanguage('en')">ENG</button>
-                    </div>
-                </div>
-
-                <div class="card action-item" onclick="switchTab('tab-balance')">
-                    <div class="action-icon cyan"><i class="fa-solid fa-credit-card"></i></div>
-                    <div class="action-info">
-                        <h3 data-lang="bank_card_item">Банковская карта</h3>
-                        <p data-lang="bank_card_desc">Управление счетом и пополнение</p>
-                    </div>
-                    <i class="fa-solid fa-chevron-right arrow-btn"></i>
-                </div>
-
-                <div class="card setting-row danger" onclick="openManager()">
-                    <div class="setting-title"><i class="fa-solid fa-arrow-right-from-bracket"></i> <span data-lang="logout">Выйти</span></div>
-                </div>
-            </div>
-        </main>
-
-        <!-- Нижний навигационный бар -->
-        <nav class="bottom-nav">
-            <button class="nav-item active" onclick="switchTab('tab-home', this)">
-                <i class="fa-solid fa-shop"></i>
-                <span data-lang="nav_shop">Магазин</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('tab-levels', this)">
-                <i class="fa-solid fa-crown"></i>
-                <span data-lang="nav_levels">Уровни</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('tab-balance', this)">
-                <i class="fa-solid fa-credit-card"></i>
-                <span data-lang="nav_balance">Баланс</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('tab-custom', this)">
-                <i class="fa-solid fa-pen"></i>
-                <span data-lang="nav_custom">Кастом</span>
-            </button>
-            <button class="nav-item" onclick="switchTab('tab-profile', this)">
-                <i class="fa-solid fa-user"></i>
-                <span data-lang="nav_profile">Профиль</span>
-            </button>
-        </nav>
+  <!-- Header -->
+  <header class="header">
+    <div class="brand">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-name">Grynx Store</span>
     </div>
+    <div class="header-actions">
+      <a href="https://t.me/Fambod" target="_blank" class="btn-manager" style="text-decoration: none; display: inline-block;">🚀 Написати менеджеру</a>
+    </div>
+  </header>
 
-    <script src="app.js?v=9"></script>
+  <!-- Banner -->
+  <section class="banner-section">
+    <div class="banner">
+      <div class="banner-content">
+        <span class="banner-tag">Категорія NFT</span>
+        <h2 class="banner-title">Каталог усіх подарунків</h2>
+        <p class="banner-subtitle">ПРОДАЖ ТА ОРЕНДА NFT ПОДАРУНКІВ</p>
+        <button class="banner-btn" onclick="scrollToCatalog()">Дізнатись ціни</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Running Ticker -->
+  <div class="ticker-wrap">
+    <div class="ticker">
+      <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRYNX</b></span>
+      <span>⭐ ПОНАД 1000 ЗАДОВОЛЕНИХ КЛІЄНТІВ <b>GRYNX</b></span>
+      <span>🚀 ЕКОСИСТЕМА ЦИФРОВИХ ТОВАРІВ <b>GRYNX</b></span>
+      <span>💎 НАЙВИГІДНІШІ ЦІНИ <b>GRYNX</b></span>
+    </div>
+  </div>
+
+  <!-- Page Title & Language -->
+  <div class="page-header">
+    <h1 class="page-title" id="sectionTitle">Головна</h1>
+    <div class="lang-selector">
+      <span class="flag">🇺🇦</span>
+      <span>UK</span>
+    </div>
+  </div>
+
+  <!-- Horizontal Categories Bar -->
+  <nav class="categories-bar" id="categoriesBar">
+    <!-- Populated via JS -->
+  </nav>
+
+  <!-- Products Grid -->
+  <main class="products-grid" id="productsGrid">
+    <!-- Populated via JS -->
+  </main>
+
+  <!-- Footer Links & Socials -->
+  <footer class="footer">
+    <div class="footer-columns">
+      <div class="footer-col">
+        <h4>Корисні посилання</h4>
+        <ul>
+          <li>🚚 Доставка</li>
+          <li>💳 Оплата</li>
+          <li><a href="https://t.me/Fambod" target="_blank" style="color: inherit; text-decoration: none;">📞 Контакти (@Fambod)</a></li>
+          <li>📝 Відгуки</li>
+          <li>🔄 Повернення</li>
+          <li>📄 Про компанію</li>
+          <li>✅ Гарантія</li>
+          <li>📖 Оферта</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Наші соцмережі</h4>
+        <div class="social-icons">
+          <a href="https://t.me/Fambod" target="_blank" class="social-btn" style="text-decoration: none;">✈️</a>
+          <a href="https://instagram.com" target="_blank" class="social-btn" style="text-decoration: none;">📸</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <div class="nav-btn active" onclick="switchTab('menu')">
+      <span class="nav-icon">☰</span>
+      <span class="nav-label">Меню</span>
+    </div>
+    <div class="nav-btn" onclick="switchTab('search')">
+      <span class="nav-icon">🔍</span>
+      <span class="nav-label">Пошук</span>
+    </div>
+    <div class="nav-btn" onclick="openCart()">
+      <span class="nav-icon">🛒</span>
+      <span class="nav-label">Кошик (<span id="cartCount">0</span>)</span>
+    </div>
+    <div class="nav-btn" onclick="switchTab('params')">
+      <span class="nav-icon">⚙️</span>
+      <span class="nav-label">Параметри</span>
+    </div>
+  </nav>
+
+  <script src="app.js"></script>
 </body>
 </html>
