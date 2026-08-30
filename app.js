@@ -1,10 +1,11 @@
+// Ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
 }
 
-// Плавный таймер загрузки на 4 секунды
+// Приховування екрану завантаження
 function hideLoader() {
   const loader = document.getElementById('loader');
   if (loader && !loader.classList.contains('hidden')) {
@@ -14,17 +15,20 @@ function hideLoader() {
     }, 500);
   }
 }
-setTimeout(hideLoader, 4000);
-window.addEventListener('load', () => setTimeout(hideLoader, 4000));
 
-// Live Feed (Имитация покупок в реальном времени)
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(hideLoader, 1500);
+});
+
+// Live Feed (Імітація покупок у реальному часі)
 const fakePurchases = [
   "Користувач @and*** щойно купив Discord Nitro 1 Місяць",
   "Користувач @vla*** поповнив 1000 підписників TikTok",
   "Користувач @nik*** придбав 100 Telegram Stars",
   "Користувач @dan*** оформив 10 000 переглядів TikTok",
-  "Користувач @art*** поповнив баланс Steam на 200 грн"
+  "Користувач @art*** поповнив баланс Steam на 200 гривен"
 ];
+
 let feedIdx = 0;
 setInterval(() => {
   const el = document.getElementById('liveFeedText');
@@ -38,7 +42,7 @@ setInterval(() => {
   }
 }, 5000);
 
-// Категории
+// Категорії
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
   { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
@@ -49,7 +53,7 @@ const categories = [
   { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
 ];
 
-// Товары
+// Список товарів
 const products = [
   { 
     id: 101, 
@@ -142,7 +146,7 @@ const products = [
   { 
     id: 5, 
     cat: 'steam', 
-    name: '200 грн на Steam', 
+    name: 'Поповнення Steam (200 грн)', 
     price: 250, 
     badge: '⚡ Авто-видача', 
     badgeType: 'badge-fast', 
@@ -178,8 +182,11 @@ let cart = [];
 let currentCategory = 'all';
 let ordersHistory = 0;
 
+// Відображення категорій
 function renderCategories() {
   const bar = document.getElementById('categoriesBar');
+  if (!bar) return;
+
   bar.innerHTML = categories.map(c => {
     const iconContent = c.img 
       ? `<img src="${c.img}" class="cat-custom-img" alt="${c.name}">` 
@@ -200,8 +207,11 @@ function selectCategory(catId) {
   renderProducts();
 }
 
+// Відображення товарів
 function renderProducts() {
   const grid = document.getElementById('productsGrid');
+  if (!grid) return;
+
   const filtered = currentCategory === 'all' 
     ? products 
     : products.filter(p => p.cat === currentCategory);
@@ -232,6 +242,7 @@ function renderProducts() {
   }).join('');
 }
 
+// Робота з кошиком
 function addToCart(id) {
   const item = products.find(p => p.id === id);
   if (!item) return;
@@ -244,20 +255,23 @@ function addToCart(id) {
   }
 
   updateCartState();
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
 function updateCartState() {
   const totalCount = cart.reduce((sum, i) => sum + i.count, 0);
   const totalPrice = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
   
-  document.getElementById('cartCount').innerText = totalCount;
+  const cartCountEl = document.getElementById('cartCount');
+  if (cartCountEl) cartCountEl.innerText = totalCount;
 
   const floatingBar = document.getElementById('floatingCartBar');
   if (floatingBar) {
     if (totalCount > 0) {
-      document.getElementById('floatingCartCount').innerText = totalCount;
-      document.getElementById('floatingCartTotal').innerText = `${totalPrice} грн`;
+      const fCount = document.getElementById('floatingCartCount');
+      const fTotal = document.getElementById('floatingCartTotal');
+      if (fCount) fCount.innerText = totalCount;
+      if (fTotal) fTotal.innerText = `${totalPrice} грн`;
       floatingBar.classList.add('visible');
     } else {
       floatingBar.classList.remove('visible');
@@ -267,20 +281,21 @@ function updateCartState() {
 
 function openCartModal() {
   renderCartModal();
-  document.getElementById('cartModal').classList.add('active');
+  document.getElementById('cartModal')?.classList.add('active');
 }
 
 function closeCartModal() {
-  document.getElementById('cartModal').classList.remove('active');
+  document.getElementById('cartModal')?.classList.remove('active');
 }
 
 function closeReceiptModal() {
-  document.getElementById('receiptModal').classList.remove('active');
+  document.getElementById('receiptModal')?.classList.remove('active');
 }
 
 function renderCartModal() {
   const listContainer = document.getElementById('cartItemsList');
   const totalDisplay = document.getElementById('cartTotalDisplay');
+  if (!listContainer || !totalDisplay) return;
 
   if (cart.length === 0) {
     listContainer.innerHTML = '<div class="empty-cart-msg">Ваш кошик порожній 🛒</div>';
@@ -306,7 +321,7 @@ function removeFromCart(index) {
   cart.splice(index, 1);
   updateCartState();
   renderCartModal();
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
 }
 
 function clearCart() {
@@ -324,6 +339,7 @@ function generateCheckId() {
   return res;
 }
 
+// Оформлення замовлення
 function checkoutOrder() {
   if (cart.length === 0) {
     if (tg) tg.showAlert("Додайте хоча б один товар до кошика!");
@@ -337,30 +353,36 @@ function checkoutOrder() {
 
   closeCartModal();
 
-  document.getElementById('receiptNumber').innerText = checkId;
-  document.getElementById('receiptSummary').innerText = `${itemsText}\n\nРазом: ${total} грн`;
+  const receiptNumEl = document.getElementById('receiptNumber');
+  const receiptSumEl = document.getElementById('receiptSummary');
+  if (receiptNumEl) receiptNumEl.innerText = checkId;
+  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом: ${total} грн`;
   
-  // Кодируем данные для автоматической регистрации чека ботом через deep-link
   const orderData = {
     id: checkId,
-    items: cart,
+    items: cart.map(i => ({ id: i.id, name: i.name, count: i.count, price: i.price })),
     total: total
   };
-  const encodedPayload = btoa(unescape(encodeURIComponent(JSON.stringify(orderData))));
   
+  const encodedPayload = btoa(encodeURIComponent(JSON.stringify(orderData)));
   const msgForManager = `Привіт! Мій чек на замовлення в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} грн\n\n(Посилання для реєстрації чека в базі: https://t.me/garavityshop_bot?start=order_${encodedPayload})`;
 
-  document.getElementById('btnSendManager').onclick = function() {
-    const url = `https://t.me/Fambod?text=${encodeURIComponent(msgForManager)}`;
-    if (tg) tg.openTelegramLink(url);
-    else window.open(url, '_blank');
-  };
+  const sendBtn = document.getElementById('btnSendManager');
+  if (sendBtn) {
+    sendBtn.onclick = function() {
+      const url = `https://t.me/Fambod?text=${encodeURIComponent(msgForManager)}`;
+      if (tg) tg.openTelegramLink(url);
+      else window.open(url, '_blank');
+    };
+  }
 
-  document.getElementById('receiptModal').classList.add('active');
+  document.getElementById('receiptModal')?.classList.add('active');
 
   try {
-    tg.sendData(JSON.stringify({ checkId, items: cart, total }));
-  } catch (e) {}
+    tg?.sendData(JSON.stringify({ checkId, items: cart, total }));
+  } catch (e) {
+    console.error("Помилка відправки tg.sendData:", e);
+  }
 
   ordersHistory += 1;
   const ordersCountEl = document.getElementById('userOrdersCount');
@@ -370,6 +392,7 @@ function checkoutOrder() {
   updateCartState();
 }
 
+// Навігація між вкладками
 function switchTab(tab) {
   const catalog = document.getElementById('catalogView');
   const profile = document.getElementById('profileView');
@@ -377,21 +400,22 @@ function switchTab(tab) {
   const profBtn = document.getElementById('navProfileBtn');
 
   if (tab === 'menu') {
-    catalog.style.display = 'block';
-    profile.style.display = 'none';
-    menuBtn.classList.add('active');
-    profBtn.classList.remove('active');
+    if (catalog) catalog.style.display = 'block';
+    if (profile) profile.style.display = 'none';
+    menuBtn?.classList.add('active');
+    profBtn?.classList.remove('active');
   } else if (tab === 'profile') {
-    catalog.style.display = 'none';
-    profile.style.display = 'block';
-    profBtn.classList.add('active');
-    menuBtn.classList.remove('active');
+    if (catalog) catalog.style.display = 'none';
+    if (profile) profile.style.display = 'block';
+    profBtn?.classList.add('active');
+    menuBtn?.classList.remove('active');
     loadProfileData();
   }
 }
 
+// Завантаження профілю
 function loadProfileData() {
-  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+  if (tg?.initDataUnsafe?.user) {
     const u = tg.initDataUnsafe.user;
     const nameEl = document.getElementById('userName');
     const userEl = document.getElementById('userUsername');
@@ -412,6 +436,7 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
+// Старт додатку
 renderCategories();
 renderProducts();
 loadProfileData();
