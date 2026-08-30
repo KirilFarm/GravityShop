@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Grynx Store</title>
+  <title>Gravity Shop</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
@@ -13,10 +13,10 @@
   <header class="header">
     <div class="brand">
       <span class="brand-icon">⚡</span>
-      <span class="brand-name">Grynx Store</span>
+      <span class="brand-name">Gravity Shop</span>
     </div>
     <div class="header-actions">
-      <a href="https://t.me/Fambod" target="_blank" class="btn-manager" style="text-decoration: none; display: inline-block;">🚀 Написати менеджеру</a>
+      <a href="https://t.me/Fambod" target="_blank" class="btn-manager">🚀 Написати менеджеру</a>
     </div>
   </header>
 
@@ -35,10 +35,10 @@
   <!-- Running Ticker -->
   <div class="ticker-wrap">
     <div class="ticker">
-      <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRYNX</b></span>
-      <span>⭐ ПОНАД 1000 ЗАДОВОЛЕНИХ КЛІЄНТІВ <b>GRYNX</b></span>
-      <span>🚀 ЕКОСИСТЕМА ЦИФРОВИХ ТОВАРІВ <b>GRYNX</b></span>
-      <span>💎 НАЙВИГІДНІШІ ЦІНИ <b>GRYNX</b></span>
+      <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b></span>
+      <span>⭐ ПОНАД 1000 ЗАДОВОЛЕНИХ КЛІЄНТІВ <b>GRAVITY</b></span>
+      <span>🚀 ЕКОСИСТЕМА ЦИФРОВИХ ТОВАРІВ <b>GRAVITY</b></span>
+      <span>💎 НАЙВИГІДНІШІ ЦІНИ <b>GRAVITY</b></span>
     </div>
   </div>
 
@@ -61,6 +61,31 @@
     <!-- Populated via JS -->
   </main>
 
+  <!-- Cart Modal Overlay -->
+  <div class="cart-modal-overlay" id="cartModal">
+    <div class="cart-modal">
+      <div class="cart-header">
+        <h2>🛒 Ваш кошик</h2>
+        <button class="btn-close-modal" onclick="closeCartModal()">✕</button>
+      </div>
+
+      <div class="cart-items-list" id="cartItemsList">
+        <!-- Rendered items in cart -->
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-total-row">
+          <span>Разом до сплати:</span>
+          <span class="cart-total-price" id="cartTotalDisplay">0 гривны</span>
+        </div>
+        <div class="cart-actions">
+          <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
+          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Оформити чек)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Footer Links & Socials -->
   <footer class="footer">
     <div class="footer-columns">
@@ -80,8 +105,8 @@
       <div class="footer-col">
         <h4>Наші соцмережі</h4>
         <div class="social-icons">
-          <a href="https://t.me/Fambod" target="_blank" class="social-btn" style="text-decoration: none;">✈️</a>
-          <a href="https://instagram.com" target="_blank" class="social-btn" style="text-decoration: none;">📸</a>
+          <a href="https://t.me/Fambod" target="_blank" class="social-btn">✈️</a>
+          <a href="https://instagram.com" target="_blank" class="social-btn">📸</a>
         </div>
       </div>
     </div>
@@ -93,17 +118,13 @@
       <span class="nav-icon">☰</span>
       <span class="nav-label">Меню</span>
     </div>
-    <div class="nav-btn" onclick="switchTab('search')">
-      <span class="nav-icon">🔍</span>
-      <span class="nav-label">Пошук</span>
-    </div>
-    <div class="nav-btn" onclick="openCart()">
+    <div class="nav-btn" onclick="openCartModal()">
       <span class="nav-icon">🛒</span>
       <span class="nav-label">Кошик (<span id="cartCount">0</span>)</span>
     </div>
-    <div class="nav-btn" onclick="switchTab('params')">
-      <span class="nav-icon">⚙️</span>
-      <span class="nav-label">Параметри</span>
+    <div class="nav-btn" onclick="openManagerDirect()">
+      <span class="nav-icon">💬</span>
+      <span class="nav-label">Менеджер</span>
     </div>
   </nav>
 
