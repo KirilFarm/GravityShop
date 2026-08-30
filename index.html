@@ -9,57 +9,119 @@
 </head>
 <body>
 
+  <!-- Loading Splash Screen -->
+  <div id="loader" class="loader-overlay">
+    <div class="loader-card">
+      <div class="character-container">
+        <!-- Анимированный персонаж Wumpus / Маскот -->
+        <div class="character-glow"></div>
+        <div class="character-avatar">
+          <svg class="char-svg" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="45" fill="url(#char-grad)" stroke="#3b82f6" stroke-width="2"/>
+            <circle cx="36" cy="42" r="5" fill="#ffffff" class="eye-left"/>
+            <circle cx="64" cy="42" r="5" fill="#ffffff" class="eye-right"/>
+            <path d="M 40 60 Q 50 70 60 60" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M 22 28 Q 15 15 28 20" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
+            <path d="M 78 28 Q 85 15 72 20" stroke="#60a5fa" stroke-width="4" stroke-linecap="round"/>
+            <defs>
+              <linearGradient id="char-grad" x1="0" y1="0" x2="100" y2="100">
+                <stop offset="0%" stop-color="#5865F2"/>
+                <stop offset="100%" stop-color="#1e1b4b"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+      <div class="loader-title">Gravity Shop</div>
+      <div class="loader-status">Завантаження каталогу...</div>
+      <div class="loader-bar-bg">
+        <div class="loader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
   <!-- Header -->
   <header class="header">
     <div class="brand">
-      <span class="brand-icon">⚡</span>
+      <span class="brand-glow-icon">⚡</span>
       <span class="brand-name">Gravity Shop</span>
     </div>
     <div class="header-actions">
-      <a href="https://t.me/Fambod" target="_blank" class="btn-manager">🚀 Написати менеджеру</a>
+      <a href="https://t.me/Fambod" target="_blank" class="btn-manager">🚀 Менеджер</a>
     </div>
   </header>
 
-  <!-- Banner -->
-  <section class="banner-section">
-    <div class="banner">
-      <div class="banner-content">
-        <span class="banner-tag">Категорія NFT</span>
-        <h2 class="banner-title">Каталог усіх подарунків</h2>
-        <p class="banner-subtitle">ПРОДАЖ ТА ОРЕНДА NFT ПОДАРУНКІВ</p>
-        <button class="banner-btn" onclick="scrollToCatalog()">Дізнатись ціни</button>
+  <!-- Main Catalog View -->
+  <div id="catalogView">
+    <!-- Banner -->
+    <section class="banner-section">
+      <div class="banner">
+        <div class="banner-decor-circle"></div>
+        <div class="banner-content">
+          <span class="banner-tag">🔥 Ексклюзивні товари</span>
+          <h2 class="banner-title">Каталог NFT та Stars</h2>
+          <p class="banner-subtitle">Миттєва видача та гарантія якості</p>
+          <button class="banner-btn" onclick="scrollToCatalog()">До товарів</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Running Ticker -->
+    <div class="ticker-wrap">
+      <div class="ticker">
+        <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b></span>
+        <span>⭐ ПОНАД 1000 ЗАДОВОЛЕНИХ КЛІЄНТІВ <b>GRAVITY</b></span>
+        <span>🚀 ЕКОСИСТЕМА ЦИФРОВИХ ТОВАРІВ <b>GRAVITY</b></span>
+        <span>💎 НАЙВИГІДНІШІ ЦІНИ <b>GRAVITY</b></span>
       </div>
     </div>
-  </section>
 
-  <!-- Running Ticker -->
-  <div class="ticker-wrap">
-    <div class="ticker">
-      <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b></span>
-      <span>⭐ ПОНАД 1000 ЗАДОВОЛЕНИХ КЛІЄНТІВ <b>GRAVITY</b></span>
-      <span>🚀 ЕКОСИСТЕМА ЦИФРОВИХ ТОВАРІВ <b>GRAVITY</b></span>
-      <span>💎 НАЙВИГІДНІШІ ЦІНИ <b>GRAVITY</b></span>
+    <!-- Page Title & Lang -->
+    <div class="page-header">
+      <h1 class="page-title" id="sectionTitle">Категорії</h1>
+      <div class="lang-selector">
+        <span class="flag">🇺🇦</span>
+        <span>UK</span>
+      </div>
     </div>
+
+    <!-- Categories Horizontal Bar -->
+    <nav class="categories-bar" id="categoriesBar"></nav>
+
+    <!-- Products Grid -->
+    <main class="products-grid" id="productsGrid"></main>
   </div>
 
-  <!-- Page Title & Language -->
-  <div class="page-header">
-    <h1 class="page-title" id="sectionTitle">Головна</h1>
-    <div class="lang-selector">
-      <span class="flag">🇺🇦</span>
-      <span>UK</span>
+  <!-- Profile View -->
+  <div id="profileView" class="profile-view" style="display: none;">
+    <div class="profile-card">
+      <div class="profile-avatar" id="userAvatar">👤</div>
+      <h2 class="profile-name" id="userName">Користувач</h2>
+      <span class="profile-username" id="userUsername">@username</span>
+      <div class="profile-id-box">ID: <span id="userId">00000000</span></div>
+    </div>
+
+    <div class="profile-stats">
+      <div class="stat-box">
+        <span class="stat-value" id="userOrdersCount">0</span>
+        <span class="stat-label">Замовлень</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value">Покупець</span>
+        <span class="stat-label">Статус</span>
+      </div>
+    </div>
+
+    <div class="profile-menu">
+      <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
+        <div class="p-item-left">
+          <span class="p-icon">💬</span>
+          <span>Підтримка / Менеджер (@Fambod)</span>
+        </div>
+        <span class="p-arrow">›</span>
+      </a>
     </div>
   </div>
-
-  <!-- Horizontal Categories Bar -->
-  <nav class="categories-bar" id="categoriesBar">
-    <!-- Populated via JS -->
-  </nav>
-
-  <!-- Products Grid -->
-  <main class="products-grid" id="productsGrid">
-    <!-- Populated via JS -->
-  </main>
 
   <!-- Cart Modal Overlay -->
   <div class="cart-modal-overlay" id="cartModal">
@@ -69,41 +131,54 @@
         <button class="btn-close-modal" onclick="closeCartModal()">✕</button>
       </div>
 
-      <div class="cart-items-list" id="cartItemsList">
-        <!-- Rendered items in cart -->
-      </div>
+      <div class="cart-items-list" id="cartItemsList"></div>
 
       <div class="cart-footer">
         <div class="cart-total-row">
-          <span>Разом до сплати:</span>
+          <span>Разом:</span>
           <span class="cart-total-price" id="cartTotalDisplay">0 гривны</span>
         </div>
         <div class="cart-actions">
           <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
-          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Оформити чек)</button>
+          <button class="btn-checkout" onclick="checkoutOrder()">Оформити чек</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Footer Links & Socials -->
+  <!-- Order Receipt Modal -->
+  <div class="cart-modal-overlay" id="receiptModal">
+    <div class="cart-modal receipt-modal">
+      <div class="cart-header">
+        <h2>🧾 Чек замовлення</h2>
+        <button class="btn-close-modal" onclick="closeReceiptModal()">✕</button>
+      </div>
+      <div class="receipt-content">
+        <div class="receipt-icon-pulse">✨</div>
+        <div class="receipt-number" id="receiptNumber">#000000</div>
+        <p class="receipt-text">Чек успішно створено! Надішліть його менеджеру для оплати та швидкого отримання:</p>
+        <div class="receipt-summary" id="receiptSummary"></div>
+      </div>
+      <div class="cart-footer">
+        <button class="btn-checkout" id="btnSendManager">🚀 Надіслати чек менеджеру @Fambod</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <footer class="footer">
     <div class="footer-columns">
       <div class="footer-col">
-        <h4>Корисні посилання</h4>
+        <h4>Інформація</h4>
         <ul>
-          <li>🚚 Доставка</li>
-          <li>💳 Оплата</li>
-          <li><a href="https://t.me/Fambod" target="_blank" style="color: inherit; text-decoration: none;">📞 Контакти (@Fambod)</a></li>
-          <li>📝 Відгуки</li>
-          <li>🔄 Повернення</li>
-          <li>📄 Про компанію</li>
-          <li>✅ Гарантія</li>
-          <li>📖 Оферта</li>
+          <li>🚚 Швидка доставка</li>
+          <li>💳 Зручна оплата</li>
+          <li><a href="https://t.me/Fambod" target="_blank" style="color: inherit; text-decoration: none;">📞 Підтримка (@Fambod)</a></li>
+          <li>✅ Гарантія якості</li>
         </ul>
       </div>
       <div class="footer-col">
-        <h4>Наші соцмережі</h4>
+        <h4>Контакти</h4>
         <div class="social-icons">
           <a href="https://t.me/Fambod" target="_blank" class="social-btn">✈️</a>
           <a href="https://instagram.com" target="_blank" class="social-btn">📸</a>
@@ -112,9 +187,9 @@
     </div>
   </footer>
 
-  <!-- Bottom Navigation Bar -->
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <div class="nav-btn active" onclick="switchTab('menu')">
+    <div class="nav-btn active" id="navMenuBtn" onclick="switchTab('menu')">
       <span class="nav-icon">☰</span>
       <span class="nav-label">Меню</span>
     </div>
@@ -122,9 +197,9 @@
       <span class="nav-icon">🛒</span>
       <span class="nav-label">Кошик (<span id="cartCount">0</span>)</span>
     </div>
-    <div class="nav-btn" onclick="openManagerDirect()">
-      <span class="nav-icon">💬</span>
-      <span class="nav-label">Менеджер</span>
+    <div class="nav-btn" id="navProfileBtn" onclick="switchTab('profile')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Профіль</span>
     </div>
   </nav>
 
