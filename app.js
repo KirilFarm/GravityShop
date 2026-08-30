@@ -4,18 +4,41 @@ if (tg) {
   tg.expand();
 }
 
-// 4 секунди затримки завантаження з плавною анімацією
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    const loader = document.getElementById('loader');
-    if (loader) {
-      loader.classList.add('hidden');
-      setTimeout(() => loader.style.display = 'none', 500);
-    }
-  }, 4000);
-});
+// Плавный таймер загрузки на 4 секунды
+function hideLoader() {
+  const loader = document.getElementById('loader');
+  if (loader && !loader.classList.contains('hidden')) {
+    loader.classList.add('hidden');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+}
+setTimeout(hideLoader, 4000);
+window.addEventListener('load', () => setTimeout(hideLoader, 4000));
 
-// Категорії: можна вказати посилання на власне фото в поле img (наприклад: 'img/tiktok.png')
+// Live Feed (Имитация покупок в реальном времени)
+const fakePurchases = [
+  "Користувач @and*** щойно купив Discord Nitro 1 Місяць",
+  "Користувач @vla*** поповнив 1000 підписників TikTok",
+  "Користувач @nik*** придбав 100 Telegram Stars",
+  "Користувач @dan*** оформив 10 000 переглядів TikTok",
+  "Користувач @art*** поповнив баланс Steam на 200 грн"
+];
+let feedIdx = 0;
+setInterval(() => {
+  const el = document.getElementById('liveFeedText');
+  if (el) {
+    feedIdx = (feedIdx + 1) % fakePurchases.length;
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.innerText = fakePurchases[feedIdx];
+      el.style.opacity = '1';
+    }, 300);
+  }
+}, 5000);
+
+// Категории
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
   { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
@@ -26,9 +49,8 @@ const categories = [
   { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
 ];
 
-// Список товарів: можна вказати посилання на власне фото картки в полі img
+// Товары
 const products = [
-  // Послуги TikTok
   { 
     id: 101, 
     cat: 'tiktok', 
@@ -37,6 +59,7 @@ const products = [
     badge: '🔥 Хіт продажів', 
     badgeType: 'badge-fire', 
     sub: '1000 якісних фоловерів',
+    icon: '👥',
     img: '' 
   },
   { 
@@ -46,7 +69,8 @@ const products = [
     price: 35, 
     badge: '⚡ Швидка доставка', 
     badgeType: 'badge-fast', 
-    sub: '10 000 переглядів',
+    sub: '10 000 переглядів у рекомендації',
+    icon: '👀',
     img: '' 
   },
   { 
@@ -57,6 +81,7 @@ const products = [
     badge: '💬 Активність', 
     badgeType: 'badge-deal', 
     sub: '50 позитивних коментарів',
+    icon: '💬',
     img: '' 
   },
   { 
@@ -64,12 +89,12 @@ const products = [
     cat: 'tiktok', 
     name: 'Накрутка репостів TikTok', 
     price: 45, 
-    badge: '🚀 У рекомендації', 
+    badge: '🚀 ТОП алгоритми', 
     badgeType: 'badge-fast', 
     sub: '500 репостів/поділів',
+    icon: '🔁',
     img: '' 
   },
-  // Stars & Discord & Games
   { 
     id: 1, 
     cat: 'stars', 
@@ -77,7 +102,8 @@ const products = [
     price: 50, 
     badge: '🔥 Хіт продажів', 
     badgeType: 'badge-fire', 
-    sub: 'Офіційні зірки',
+    sub: 'Офіційні зірки Telegram',
+    icon: '⭐',
     img: '' 
   },
   { 
@@ -85,9 +111,10 @@ const products = [
     cat: 'stars', 
     name: '100 Telegram Stars', 
     price: 85, 
-    badge: '⚡ Швидка доставка', 
+    badge: '⚡ Миттєво', 
     badgeType: 'badge-fast', 
-    sub: 'Офіційні зірки',
+    sub: 'Офіційні зірки Telegram',
+    icon: '⭐',
     img: '' 
   },
   { 
@@ -97,7 +124,8 @@ const products = [
     price: 300, 
     badge: '🔥 Хіт продажів', 
     badgeType: 'badge-fire', 
-    sub: 'Full Nitro з бустами',
+    sub: 'Full Nitro з 2 бустами',
+    icon: '🟣',
     img: '' 
   },
   { 
@@ -108,6 +136,7 @@ const products = [
     badge: '💎 Вигідна ціна', 
     badgeType: 'badge-deal', 
     sub: 'Full Nitro гарантія',
+    icon: '💎',
     img: '' 
   },
   { 
@@ -117,7 +146,8 @@ const products = [
     price: 250, 
     badge: '⚡ Авто-видача', 
     badgeType: 'badge-fast', 
-    sub: 'Поповнення балансу',
+    sub: 'Поповнення балансу акаунту',
+    icon: '🎮',
     img: '' 
   },
   { 
@@ -127,7 +157,8 @@ const products = [
     price: 40, 
     badge: '🔥 Топ ціна', 
     badgeType: 'badge-fire', 
-    sub: 'Голда по ринку',
+    sub: 'Голда по ринку з комісією',
+    icon: '🔫',
     img: '' 
   },
   { 
@@ -138,6 +169,7 @@ const products = [
     badge: '🎵 Без реклами', 
     badgeType: 'badge-deal', 
     sub: 'Індивідуальна підписка',
+    icon: '🎵',
     img: '' 
   }
 ];
@@ -177,7 +209,7 @@ function renderProducts() {
   grid.innerHTML = filtered.map(item => {
     const bannerMedia = item.img 
       ? `<img src="${item.img}" class="card-custom-img" alt="${item.name}">` 
-      : `<div class="card-title-white">${item.name}</div>`;
+      : `<div class="card-center-glow-icon">${item.icon || '⚡'}</div>`;
 
     return `
       <div class="product-card">
@@ -189,9 +221,11 @@ function renderProducts() {
         </div>
         <div class="card-info">
           <div class="card-title-bottom">${item.name}</div>
-          <div class="card-price">${item.price} грн</div>
-          <div class="card-category">${item.sub}</div>
-          <button class="btn-card" onclick="addToCart(${item.id})">У кошик</button>
+          <div class="card-sub-info">${item.sub}</div>
+          <div class="card-price-row">
+            <span class="card-price">${item.price} грн</span>
+            <button class="btn-card" onclick="addToCart(${item.id})">+ В кошик</button>
+          </div>
         </div>
       </div>
     `;
@@ -209,13 +243,24 @@ function addToCart(id) {
     cart.push({ ...item, count: 1 });
   }
 
-  updateCartBadge();
-  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+  updateCartState();
+  if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
-function updateCartBadge() {
+function updateCartState() {
   const totalCount = cart.reduce((sum, i) => sum + i.count, 0);
+  const totalPrice = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
+  
   document.getElementById('cartCount').innerText = totalCount;
+
+  const floatingBar = document.getElementById('floatingCartBar');
+  if (totalCount > 0) {
+    document.getElementById('floatingCartCount').innerText = totalCount;
+    document.getElementById('floatingCartTotal').innerText = `${totalPrice} грн`;
+    floatingBar.classList.add('visible');
+  } else {
+    floatingBar.classList.remove('visible');
+  }
 }
 
 function openCartModal() {
@@ -247,9 +292,7 @@ function renderCartModal() {
         <span class="cart-item-title">${item.name}</span>
         <span class="cart-item-sub">${item.price} грн × ${item.count} шт. = ${item.price * item.count} грн</span>
       </div>
-      <div class="cart-item-actions">
-        <button class="btn-remove-item" onclick="removeFromCart(${index})">Видалити</button>
-      </div>
+      <button class="btn-remove-item" onclick="removeFromCart(${index})">Видалити</button>
     </div>
   `).join('');
 
@@ -259,21 +302,21 @@ function renderCartModal() {
 
 function removeFromCart(index) {
   cart.splice(index, 1);
-  updateCartBadge();
+  updateCartState();
   renderCartModal();
   if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
 }
 
 function clearCart() {
   cart = [];
-  updateCartBadge();
+  updateCartState();
   renderCartModal();
 }
 
 function generateCheckId() {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  let res = '#';
-  for (let i = 0; i < 6; i++) {
+  let res = '#GR-';
+  for (let i = 0; i < 5; i++) {
     res += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return res;
@@ -312,7 +355,7 @@ function checkoutOrder() {
   ordersHistory += 1;
   document.getElementById('userOrdersCount').innerText = ordersHistory;
   cart = [];
-  updateCartBadge();
+  updateCartState();
 }
 
 function switchTab(tab) {
