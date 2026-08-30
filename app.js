@@ -4,6 +4,17 @@ if (tg) {
   tg.expand();
 }
 
+// Скрытие лоадера через плавную анимацию
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const loader = document.getElementById('loader');
+    if (loader) {
+      loader.classList.add('hidden');
+      setTimeout(() => loader.style.display = 'none', 400);
+    }
+  }, 900);
+});
+
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡' },
   { id: 'stars', name: 'Stars', icon: '⭐' },
@@ -25,9 +36,9 @@ const products = [
   { id: 8, cat: 'spotify', name: 'Spotify Premium 1 Міс', price: 120, badge: '💎 Найкраща ціна', badgeType: 'badge-deal', sub: 'Індивідуальна підписка' }
 ];
 
-// Корзина: [{ id, name, price, count }]
 let cart = [];
 let currentCategory = 'all';
+let ordersHistory = 0;
 
 function renderCategories() {
   const bar = document.getElementById('categoriesBar');
@@ -88,7 +99,6 @@ function updateCartBadge() {
   document.getElementById('cartCount').innerText = totalCount;
 }
 
-// Управление окном корзины
 function openCartModal() {
   renderCartModal();
   document.getElementById('cartModal').classList.add('active');
@@ -96,6 +106,10 @@ function openCartModal() {
 
 function closeCartModal() {
   document.getElementById('cartModal').classList.remove('active');
+}
+
+function closeReceiptModal() {
+  document.getElementById('receiptModal').classList.remove('active');
 }
 
 function renderCartModal() {
@@ -137,6 +151,15 @@ function clearCart() {
   renderCartModal();
 }
 
+function generateCheckId() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let res = '#';
+  for (let i = 0; i < 6; i++) {
+    res += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return res;
+}
+
 function checkoutOrder() {
   if (cart.length === 0) {
     if (tg) tg.showAlert("Додайте хоча б один товар до кошика!");
@@ -144,38 +167,71 @@ function checkoutOrder() {
     return;
   }
 
+  const checkId = generateCheckId();
   const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
+  const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
 
-  const payload = {
-    action: "order",
-    items: cart,
-    total: total
+  closeCartModal();
+
+  document.getElementById('receiptNumber').innerText = checkId;
+  document.getElementById('receiptSummary').innerText = `${itemsText}\n\nРазом: ${total} гривны`;
+  
+  const msgForManager = `Привіт! Мій чек на замовлення в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} гривны`;
+  
+  document.getElementById('btnSendManager').onclick = function() {
+    const url = `https://t.me/Fambod?text=${encodeURIComponent(msgForManager)}`;
+    if (tg) tg.openTelegramLink(url);
+    else window.open(url, '_blank');
   };
 
-  if (tg) {
-    tg.sendData(JSON.stringify(payload));
-  } else {
-    alert("Замовлення надіслано боту!");
-    clearCart();
-    closeCartModal();
+  document.getElementById('receiptModal').classList.add('active');
+
+  try {
+    tg.sendData(JSON.stringify({ checkId, items: cart, total }));
+  } catch (e) {}
+
+  ordersHistory += 1;
+  document.getElementById('userOrdersCount').innerText = ordersHistory;
+  cart = [];
+  updateCartBadge();
+}
+
+function switchTab(tab) {
+  const catalog = document.getElementById('catalogView');
+  const profile = document.getElementById('profileView');
+  const menuBtn = document.getElementById('navMenuBtn');
+  const profBtn = document.getElementById('navProfileBtn');
+
+  if (tab === 'menu') {
+    catalog.style.display = 'block';
+    profile.style.display = 'none';
+    menuBtn.classList.add('active');
+    profBtn.classList.remove('active');
+  } else if (tab === 'profile') {
+    catalog.style.display = 'none';
+    profile.style.display = 'block';
+    profBtn.classList.add('active');
+    menuBtn.classList.remove('active');
+    loadProfileData();
   }
 }
 
-function openManagerDirect() {
-  if (tg) tg.openTelegramLink('https://t.me/Fambod');
-  else window.open('https://t.me/Fambod', '_blank');
+function loadProfileData() {
+  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
+    const u = tg.initDataUnsafe.user;
+    document.getElementById('userName').innerText = `${u.first_name || ''} ${u.last_name || ''}`.trim() || 'Користувач';
+    document.getElementById('userUsername').innerText = u.username ? `@${u.username}` : 'Без юзернейму';
+    document.getElementById('userId').innerText = u.id || 'Невідомо';
+    if (u.first_name) {
+      document.getElementById('userAvatar').innerText = u.first_name.charAt(0).toUpperCase();
+    }
+  }
 }
 
 function scrollToCatalog() {
   document.getElementById('productsGrid').scrollIntoView({ behavior: 'smooth' });
 }
 
-function switchTab(tab) {
-  if (tab === 'menu') {
-    selectCategory('all');
-    closeCartModal();
-  }
-}
-
 renderCategories();
 renderProducts();
+loadProfileData();
