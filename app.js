@@ -3,6 +3,9 @@ const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
   tg.expand();
+  if (tg.enableClosingConfirmation) {
+    tg.enableClosingConfirmation();
+  }
 }
 
 // Приховування екрану завантаження
@@ -12,21 +15,21 @@ function hideLoader() {
     loader.classList.add('hidden');
     setTimeout(() => {
       loader.style.display = 'none';
-    }, 500);
+    }, 450);
   }
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(hideLoader, 1500);
+  setTimeout(hideLoader, 1000);
 });
 
-// Live Feed (Імітація покупок у реальному часі)
+// Live Feed
 const fakePurchases = [
   "Користувач @and*** щойно купив Discord Nitro 1 Місяць",
   "Користувач @vla*** поповнив 1000 підписників TikTok",
   "Користувач @nik*** придбав 100 Telegram Stars",
   "Користувач @dan*** оформив 10 000 переглядів TikTok",
-  "Користувач @art*** поповнив баланс Steam на 200 гривен"
+  "Користувач @art*** поповнив баланс Steam на 200 гривны"
 ];
 
 let feedIdx = 0;
@@ -38,22 +41,22 @@ setInterval(() => {
     setTimeout(() => {
       el.innerText = fakePurchases[feedIdx];
       el.style.opacity = '1';
-    }, 300);
+    }, 250);
   }
-}, 5000);
+}, 4500);
 
 // Категорії
 const categories = [
-  { id: 'all', name: 'Все', icon: '⚡', img: '' },
-  { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
-  { id: 'stars', name: 'Stars', icon: '⭐', img: '' },
-  { id: 'discord', name: 'Discord', icon: '🟣', img: '' },
-  { id: 'steam', name: 'Steam', icon: '🎮', img: '' },
-  { id: 'standoff', name: 'Standoff', icon: '🔫', img: '' },
-  { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
+  { id: 'all', name: 'Все', icon: '⚡' },
+  { id: 'tiktok', name: 'TikTok', icon: '📱' },
+  { id: 'stars', name: 'Stars', icon: '⭐' },
+  { id: 'discord', name: 'Discord', icon: '🟣' },
+  { id: 'steam', name: 'Steam', icon: '🎮' },
+  { id: 'standoff', name: 'Standoff', icon: '🔫' },
+  { id: 'spotify', name: 'Spotify', icon: '🎵' }
 ];
 
-// Список товарів
+// Товари
 const products = [
   { 
     id: 101, 
@@ -63,8 +66,7 @@ const products = [
     badge: '🔥 Хіт продажів', 
     badgeType: 'badge-fire', 
     sub: '1000 якісних фоловерів',
-    icon: '👥',
-    img: '' 
+    icon: '👥'
   },
   { 
     id: 102, 
@@ -74,8 +76,7 @@ const products = [
     badge: '⚡ Швидка доставка', 
     badgeType: 'badge-fast', 
     sub: '10 000 переглядів у рекомендації',
-    icon: '👀',
-    img: '' 
+    icon: '👀'
   },
   { 
     id: 103, 
@@ -85,8 +86,7 @@ const products = [
     badge: '💬 Активність', 
     badgeType: 'badge-deal', 
     sub: '50 позитивних коментарів',
-    icon: '💬',
-    img: '' 
+    icon: '💬'
   },
   { 
     id: 104, 
@@ -96,19 +96,17 @@ const products = [
     badge: '🚀 ТОП алгоритми', 
     badgeType: 'badge-fast', 
     sub: '500 репостів/поділів',
-    icon: '🔁',
-    img: '' 
+    icon: '🔁'
   },
   { 
     id: 1, 
     cat: 'stars', 
     name: '50 Telegram Stars', 
     price: 50, 
-    badge: '🔥 Хіт продажів', 
+    badge: '🔥 Топ', 
     badgeType: 'badge-fire', 
     sub: 'Офіційні зірки Telegram',
-    icon: '⭐',
-    img: '' 
+    icon: '⭐'
   },
   { 
     id: 2, 
@@ -118,30 +116,27 @@ const products = [
     badge: '⚡ Миттєво', 
     badgeType: 'badge-fast', 
     sub: 'Офіційні зірки Telegram',
-    icon: '⭐',
-    img: '' 
+    icon: '⭐'
   },
   { 
     id: 3, 
     cat: 'discord', 
     name: 'Discord Nitro 1 Місяць', 
     price: 300, 
-    badge: '🔥 Хіт продажів', 
+    badge: '🔥 Хіт', 
     badgeType: 'badge-fire', 
     sub: 'Full Nitro з 2 бустами',
-    icon: '🟣',
-    img: '' 
+    icon: '🟣'
   },
   { 
     id: 4, 
     cat: 'discord', 
     name: 'Discord Nitro 3 Місяці', 
     price: 1150, 
-    badge: '💎 Вигідна ціна', 
+    badge: '💎 Вигідно', 
     badgeType: 'badge-deal', 
     sub: 'Full Nitro гарантія',
-    icon: '💎',
-    img: '' 
+    icon: '💎'
   },
   { 
     id: 5, 
@@ -151,8 +146,7 @@ const products = [
     badge: '⚡ Авто-видача', 
     badgeType: 'badge-fast', 
     sub: 'Поповнення балансу акаунту',
-    icon: '🎮',
-    img: '' 
+    icon: '🎮'
   },
   { 
     id: 6, 
@@ -162,8 +156,7 @@ const products = [
     badge: '🔥 Топ ціна', 
     badgeType: 'badge-fire', 
     sub: 'Голда по ринку з комісією',
-    icon: '🔫',
-    img: '' 
+    icon: '🔫'
   },
   { 
     id: 7, 
@@ -173,36 +166,32 @@ const products = [
     badge: '🎵 Без реклами', 
     badgeType: 'badge-deal', 
     sub: 'Індивідуальна підписка',
-    icon: '🎵',
-    img: '' 
+    icon: '🎵'
   }
 ];
 
 let cart = [];
 let currentCategory = 'all';
-let ordersHistory = 0;
+let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
 
 // Відображення категорій
 function renderCategories() {
   const bar = document.getElementById('categoriesBar');
   if (!bar) return;
 
-  bar.innerHTML = categories.map(c => {
-    const iconContent = c.img 
-      ? `<img src="${c.img}" class="cat-custom-img" alt="${c.name}">` 
-      : `<span>${c.icon}</span>`;
-    
-    return `
-      <div class="cat-item ${c.id === currentCategory ? 'active' : ''}" onclick="selectCategory('${c.id}')">
-        <div class="cat-icon-box">${iconContent}</div>
-        <span class="cat-label">${c.name}</span>
+  bar.innerHTML = categories.map(c => `
+    <div class="cat-item ${c.id === currentCategory ? 'active' : ''}" onclick="selectCategory('${c.id}')">
+      <div class="cat-icon-box">
+        <span>${c.icon}</span>
       </div>
-    `;
-  }).join('');
+      <span class="cat-label">${c.name}</span>
+    </div>
+  `).join('');
 }
 
 function selectCategory(catId) {
   currentCategory = catId;
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
   renderCategories();
   renderProducts();
 }
@@ -216,33 +205,27 @@ function renderProducts() {
     ? products 
     : products.filter(p => p.cat === currentCategory);
 
-  grid.innerHTML = filtered.map(item => {
-    const bannerMedia = item.img 
-      ? `<img src="${item.img}" class="card-custom-img" alt="${item.name}">` 
-      : `<div class="card-center-glow-icon">${item.icon || '⚡'}</div>`;
-
-    return `
-      <div class="product-card">
-        <div class="card-banner">
-          <div class="badge-row">
-            <span class="badge ${item.badgeType}">${item.badge}</span>
-          </div>
-          ${bannerMedia}
+  grid.innerHTML = filtered.map(item => `
+    <div class="product-card">
+      <div class="card-banner">
+        <div class="badge-row">
+          <span class="badge ${item.badgeType}">${item.badge}</span>
         </div>
-        <div class="card-info">
-          <div class="card-title-bottom">${item.name}</div>
-          <div class="card-sub-info">${item.sub}</div>
-          <div class="card-price-row">
-            <span class="card-price">${item.price} грн</span>
-            <button class="btn-card" onclick="addToCart(${item.id})">+ В кошик</button>
-          </div>
+        <div class="card-center-glow-icon">${item.icon || '⚡'}</div>
+      </div>
+      <div class="card-info">
+        <div class="card-title-bottom">${item.name}</div>
+        <div class="card-sub-info">${item.sub}</div>
+        <div class="card-price-row">
+          <span class="card-price">${item.price} <small>гривны</small></span>
+          <button class="btn-card" onclick="addToCart(${item.id})">+ Купити</button>
         </div>
       </div>
-    `;
-  }).join('');
+    </div>
+  `).join('');
 }
 
-// Робота з кошиком
+// Кошик
 function addToCart(id) {
   const item = products.find(p => p.id === id);
   if (!item) return;
@@ -271,7 +254,7 @@ function updateCartState() {
       const fCount = document.getElementById('floatingCartCount');
       const fTotal = document.getElementById('floatingCartTotal');
       if (fCount) fCount.innerText = totalCount;
-      if (fTotal) fTotal.innerText = `${totalPrice} грн`;
+      if (fTotal) fTotal.innerText = `${totalPrice} гривны`;
       floatingBar.classList.add('visible');
     } else {
       floatingBar.classList.remove('visible');
@@ -282,6 +265,7 @@ function updateCartState() {
 function openCartModal() {
   renderCartModal();
   document.getElementById('cartModal')?.classList.add('active');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
 function closeCartModal() {
@@ -299,7 +283,7 @@ function renderCartModal() {
 
   if (cart.length === 0) {
     listContainer.innerHTML = '<div class="empty-cart-msg">Ваш кошик порожній 🛒</div>';
-    totalDisplay.innerText = '0 грн';
+    totalDisplay.innerText = '0 гривны';
     return;
   }
 
@@ -307,14 +291,14 @@ function renderCartModal() {
     <div class="cart-item-row">
       <div class="cart-item-details">
         <span class="cart-item-title">${item.name}</span>
-        <span class="cart-item-sub">${item.price} грн × ${item.count} шт. = ${item.price * item.count} грн</span>
+        <span class="cart-item-sub">${item.price} грн × ${item.count} шт. = ${item.price * item.count} гривны</span>
       </div>
-      <button class="btn-remove-item" onclick="removeFromCart(${index})">Видалити</button>
+      <button class="btn-remove-item" onclick="removeFromCart(${index})">✕</button>
     </div>
   `).join('');
 
   const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
-  totalDisplay.innerText = `${total} грн`;
+  totalDisplay.innerText = `${total} гривны`;
 }
 
 function removeFromCart(index) {
@@ -339,6 +323,13 @@ function generateCheckId() {
   return res;
 }
 
+// Надежное UTF-8 Base64 кодирование
+function utf8ToBase64(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+    return String.fromCharCode(parseInt(p1, 16));
+  }));
+}
+
 // Оформлення замовлення
 function checkoutOrder() {
   if (cart.length === 0) {
@@ -349,14 +340,14 @@ function checkoutOrder() {
 
   const checkId = generateCheckId();
   const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
-  const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} грн`).join('\n');
+  const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
 
   closeCartModal();
 
   const receiptNumEl = document.getElementById('receiptNumber');
   const receiptSumEl = document.getElementById('receiptSummary');
   if (receiptNumEl) receiptNumEl.innerText = checkId;
-  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом: ${total} грн`;
+  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом до сплати: ${total} гривны`;
   
   const orderData = {
     id: checkId,
@@ -364,8 +355,11 @@ function checkoutOrder() {
     total: total
   };
   
-  const encodedPayload = btoa(encodeURIComponent(JSON.stringify(orderData)));
-  const msgForManager = `Привіт! Мій чек на замовлення в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} грн\n\n(Посилання для реєстрації чека в базі: https://t.me/garavityshop_bot?start=order_${encodedPayload})`;
+  const encodedPayload = utf8ToBase64(JSON.stringify(orderData));
+  
+  // Правильная ссылка на вашего бота
+  const botLink = `https://t.me/gravityshopbot?start=order_${encodedPayload}`;
+  const msgForManager = `Привіт! Мій чек на замовлення в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} гривны\n\n(Посилання для реєстрації чека в базі: ${botLink})`;
 
   const sendBtn = document.getElementById('btnSendManager');
   if (sendBtn) {
@@ -377,6 +371,7 @@ function checkoutOrder() {
   }
 
   document.getElementById('receiptModal')?.classList.add('active');
+  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
   try {
     tg?.sendData(JSON.stringify({ checkId, items: cart, total }));
@@ -385,6 +380,7 @@ function checkoutOrder() {
   }
 
   ordersHistory += 1;
+  localStorage.setItem('gravity_orders_count', ordersHistory.toString());
   const ordersCountEl = document.getElementById('userOrdersCount');
   if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
   
@@ -392,12 +388,23 @@ function checkoutOrder() {
   updateCartState();
 }
 
-// Навігація між вкладками
+function copyCheckId() {
+  const checkId = document.getElementById('receiptNumber')?.innerText;
+  if (checkId && navigator.clipboard) {
+    navigator.clipboard.writeText(checkId);
+    if (tg?.showAlert) tg.showAlert(`Номер чека ${checkId} скопійовано!`);
+    else alert(`Номер чека ${checkId} скопійовано!`);
+  }
+}
+
+// Навігація
 function switchTab(tab) {
   const catalog = document.getElementById('catalogView');
   const profile = document.getElementById('profileView');
   const menuBtn = document.getElementById('navMenuBtn');
   const profBtn = document.getElementById('navProfileBtn');
+
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
   if (tab === 'menu') {
     if (catalog) catalog.style.display = 'block';
@@ -413,8 +420,10 @@ function switchTab(tab) {
   }
 }
 
-// Завантаження профілю
 function loadProfileData() {
+  const ordersCountEl = document.getElementById('userOrdersCount');
+  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
+
   if (tg?.initDataUnsafe?.user) {
     const u = tg.initDataUnsafe.user;
     const nameEl = document.getElementById('userName');
@@ -436,7 +445,7 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Старт додатку
+// Старт
 renderCategories();
 renderProducts();
 loadProfileData();
