@@ -26,7 +26,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Конфигурация API сервера (укажите адрес хостинга бота)
+// Конфігурація API сервера бота
 const API_BASE_URL = "https://gravityshopbot.onrender.com";
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -62,7 +62,7 @@ function updateBalanceDisplays() {
   localStorage.setItem('gravity_balance', userBalance.toString());
 }
 
-// Живая синхронизация с сервером без перезагрузки страницы
+// Фонове оновлення балансу та історії транзакцій у реальному часі
 async function fetchLiveUserData() {
   if (!currentUserId) return;
   try {
@@ -80,11 +80,11 @@ async function fetchLiveUserData() {
       }
     }
   } catch (e) {
-    // Тихое подавление ошибок при оффлайн режиме
+    // Тихо ігноруємо збої зв'язку при оффлайн-режимі
   }
 }
 
-// Автообновление каждые 3 секунды
+// Авто-опитування бекенду кожні 3 секунди
 setInterval(fetchLiveUserData, 3000);
 
 function addTransaction(title, amount, isNegative = true) {
@@ -385,7 +385,6 @@ async function checkoutOrder() {
     return;
   }
 
-  // Мгновенное списание на бэкенде
   if (useBalance) {
     try {
       const resp = await fetch(`${API_BASE_URL}/api/pay`, {
