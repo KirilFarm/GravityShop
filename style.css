@@ -1,22 +1,22 @@
 :root {
-  --bg-main: #060907;
-  --bg-card: #0c120e;
-  --surface-glass: rgba(14, 22, 17, 0.85);
-  
+  --bg-main: #050806;
+  --bg-card: rgba(13, 20, 15, 0.75);
+  --surface-glass: rgba(10, 16, 12, 0.88);
+
   --neon-green: #00ff88;
   --emerald-main: #10b981;
   --neon-glow: rgba(0, 255, 136, 0.45);
   --neon-subtle: rgba(0, 255, 136, 0.12);
-  
+
   --text-pure: #ffffff;
   --text-muted: #8b9c91;
-  
-  --border-neon: rgba(0, 255, 136, 0.2);
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  
+
+  --border-neon: rgba(0, 255, 136, 0.25);
+  --border-subtle: rgba(255, 255, 255, 0.07);
+
   --grad-emerald: linear-gradient(135deg, #00ff88 0%, #059669 100%);
-  --grad-card: linear-gradient(180deg, rgba(16, 26, 20, 0.95) 0%, rgba(8, 13, 10, 0.98) 100%);
-  --grad-banner: linear-gradient(135deg, #062e1e 0%, #04140d 100%);
+  --grad-card: linear-gradient(180deg, rgba(16, 26, 20, 0.88) 0%, rgba(7, 12, 9, 0.96) 100%);
+  --grad-banner: linear-gradient(135deg, #063421 0%, #03120b 100%);
 }
 
 /* Полное скрытие полос прокрутки */
@@ -50,22 +50,22 @@ body {
 /* Фоновые неоновые пятна */
 .ambient-glow {
   position: fixed;
-  width: 250px;
-  height: 250px;
+  width: 280px;
+  height: 280px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 0;
-  filter: blur(80px);
+  filter: blur(85px);
 }
 .ambient-glow.top-left {
-  top: -80px;
-  left: -80px;
-  background: radial-gradient(circle, rgba(0, 255, 136, 0.15) 0%, transparent 70%);
+  top: -90px;
+  left: -90px;
+  background: radial-gradient(circle, rgba(0, 255, 136, 0.16) 0%, transparent 70%);
 }
 .ambient-glow.bottom-right {
   bottom: 80px;
-  right: -80px;
-  background: radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, transparent 70%);
+  right: -90px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.14) 0%, transparent 70%);
 }
 
 /* LOADER SCREEN */
@@ -77,7 +77,7 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  transition: opacity 0.5s ease, visibility 0.5s ease;
+  transition: opacity 0.45s ease, visibility 0.45s ease;
 }
 
 .loader-overlay.hidden {
@@ -194,7 +194,7 @@ body {
   box-shadow: 0 0 10px var(--neon-green);
   border-radius: 10px;
   transform: translateX(-100%);
-  animation: fillProgress 4s ease-out forwards;
+  animation: fillProgress 3s ease-out forwards;
 }
 
 @keyframes fillProgress {
@@ -209,8 +209,9 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
-  background: rgba(6, 9, 7, 0.85);
-  backdrop-filter: blur(14px);
+  background: rgba(6, 9, 7, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border-neon);
   position: sticky;
   top: 0;
@@ -224,8 +225,8 @@ body {
 }
 
 .brand-icon-box {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   background: var(--grad-emerald);
   color: #04140d;
   font-size: 16px;
@@ -234,7 +235,7 @@ body {
   align-items: center;
   justify-content: center;
   border-radius: 10px;
-  box-shadow: 0 0 12px var(--neon-glow);
+  box-shadow: 0 0 14px var(--neon-glow);
 }
 
 .brand-text {
@@ -270,10 +271,13 @@ body {
   align-items: center;
   gap: 6px;
   box-shadow: 0 0 10px var(--neon-subtle);
-  transition: transform 0.15s;
+  transition: transform 0.15s ease, background 0.2s ease;
 }
 
-.btn-manager:active { transform: scale(0.96); }
+.btn-manager:active {
+  transform: scale(0.96);
+  background: rgba(0, 255, 136, 0.2);
+}
 
 .btn-dot {
   width: 6px;
@@ -309,7 +313,7 @@ body {
 
 /* BANNER */
 .banner-section {
-  padding: 12px 16px;
+  padding: 14px 16px;
 }
 
 .banner {
@@ -362,11 +366,14 @@ body {
   font-size: 12px;
   font-weight: 900;
   cursor: pointer;
-  box-shadow: 0 4px 15px var(--neon-glow);
-  transition: transform 0.15s;
+  box-shadow: 0 4px 16px var(--neon-glow);
+  transition: transform 0.15s ease, filter 0.2s ease;
 }
 
-.banner-btn:active { transform: scale(0.96); }
+.banner-btn:active {
+  transform: scale(0.96);
+  filter: brightness(1.1);
+}
 
 /* MARQUEE TICKER */
 .ticker-wrap {
@@ -453,8 +460,8 @@ body {
 }
 
 .cat-icon-box {
-  width: 56px;
-  height: 56px;
+  width: 58px;
+  height: 58px;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
@@ -463,7 +470,7 @@ body {
   justify-content: center;
   font-size: 22px;
   overflow: hidden;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .cat-custom-img {
@@ -475,7 +482,7 @@ body {
 
 .cat-item.active .cat-icon-box {
   border-color: var(--neon-green);
-  background: #0f1c14;
+  background: rgba(0, 255, 136, 0.12);
   box-shadow: 0 0 16px var(--neon-glow);
   transform: translateY(-2px);
 }
@@ -491,7 +498,7 @@ body {
   font-weight: 800;
 }
 
-/* PRODUCTS GRID (CYBER DARK CARDS) */
+/* PRODUCTS GRID */
 .products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -501,14 +508,16 @@ body {
 
 .product-card {
   background: var(--grad-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-subtle);
   border-radius: 20px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: all 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   position: relative;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
 }
 
 .product-card:active {
@@ -517,7 +526,7 @@ body {
 }
 
 .card-banner {
-  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.1) 0%, #060907 100%);
+  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.12) 0%, #060907 100%);
   padding: 12px;
   min-height: 115px;
   display: flex;
@@ -557,10 +566,10 @@ body {
 .badge-deal { background: linear-gradient(135deg, #00ff88, #059669); color: #02140a; }
 
 .card-center-glow-icon {
-  font-size: 32px;
+  font-size: 34px;
   text-align: center;
   margin: auto 0;
-  filter: drop-shadow(0 0 10px var(--neon-glow));
+  filter: drop-shadow(0 0 12px var(--neon-glow));
 }
 
 .card-info {
@@ -591,10 +600,16 @@ body {
 }
 
 .card-price {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   color: var(--neon-green);
   text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.card-price small {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
 }
 
 .btn-card {
@@ -607,7 +622,7 @@ body {
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 2px 10px var(--neon-subtle);
-  transition: transform 0.15s;
+  transition: transform 0.15s ease;
 }
 
 .btn-card:active { transform: scale(0.94); }
@@ -619,10 +634,11 @@ body {
   bottom: 80px;
   left: 16px;
   right: 16px;
-  background: rgba(12, 22, 16, 0.95);
+  background: rgba(10, 18, 13, 0.94);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--neon-green);
-  box-shadow: 0 8px 25px rgba(0, 255, 136, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 255, 136, 0.35);
   padding: 10px 14px;
   border-radius: 16px;
   z-index: 90;
@@ -679,7 +695,7 @@ body {
   color: #02140a;
   font-size: 12px;
   font-weight: 900;
-  padding: 6px 12px;
+  padding: 7px 14px;
   border-radius: 10px;
 }
 
@@ -691,6 +707,8 @@ body {
 
 .profile-card {
   background: var(--grad-card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--border-neon);
   border-radius: 22px;
   padding: 24px 16px;
@@ -720,7 +738,7 @@ body {
 
 .profile-id-box {
   margin-top: 4px;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   border: 1px solid var(--border-neon);
   padding: 4px 14px;
   border-radius: 12px;
@@ -799,7 +817,8 @@ body {
   position: fixed;
   top: 0; left: 0; width: 100%; height: 100%;
   background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   z-index: 200;
   justify-content: center;
   align-items: flex-end;
@@ -814,7 +833,7 @@ body {
   border-top-left-radius: 26px;
   border-top-right-radius: 26px;
   border: 1px solid var(--border-neon);
-  box-shadow: 0 -10px 40px rgba(0, 255, 136, 0.2);
+  box-shadow: 0 -10px 40px rgba(0, 255, 136, 0.25);
   display: flex;
   flex-direction: column;
   animation: slideUp 0.25s ease-out;
@@ -850,7 +869,7 @@ body {
 .cart-header h2 { font-size: 17px; font-weight: 900; }
 
 .btn-close-modal {
-  background: rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.08);
   color: #fff;
   border: none;
   width: 32px;
@@ -923,7 +942,7 @@ body {
 }
 
 .receipt-number {
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 900;
   color: var(--neon-green);
   letter-spacing: 2px;
@@ -932,6 +951,12 @@ body {
   border-radius: 12px;
   border: 1px dashed var(--neon-green);
   box-shadow: 0 0 15px var(--neon-subtle);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.receipt-number:active {
+  transform: scale(0.96);
 }
 
 .receipt-text {
@@ -977,7 +1002,7 @@ body {
 
 .btn-clear-cart {
   flex: 1;
-  background: rgba(255,255,255,0.06);
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-muted);
   border: none;
   padding: 12px;
@@ -999,6 +1024,11 @@ body {
   font-weight: 900;
   cursor: pointer;
   box-shadow: 0 4px 15px var(--neon-glow);
+  transition: transform 0.15s ease;
+}
+
+.btn-checkout:active {
+  transform: scale(0.97);
 }
 
 /* FOOTER */
@@ -1028,6 +1058,7 @@ body {
   bottom: 0; left: 0; width: 100%;
   background: rgba(6, 10, 8, 0.92);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--border-neon);
   display: flex; justify-content: space-around;
   padding: 10px 0; z-index: 100;
