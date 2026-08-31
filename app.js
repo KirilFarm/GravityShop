@@ -26,19 +26,21 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Баланс та синхронізація транзакцій з сервером
+// Конфигурация API сервера (укажите адрес хостинга бота)
+const API_BASE_URL = "https://gravityshopbot.onrender.com";
+
 const urlParams = new URLSearchParams(window.location.search);
 let urlBalParam = urlParams.get('bal');
 let userBalance = urlBalParam !== null ? parseInt(urlBalParam, 10) : parseInt(localStorage.getItem('gravity_balance') || '0', 10);
 if (isNaN(userBalance)) userBalance = 0;
 
+let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
 
 let isCardFocused = false;
 let userCardFullNumber = "4412 0000 0000 0000";
 let userCardMaskedNumber = "4412 **** **** 0000";
 
-// Отримання історії транзакцій з URL або з локальної пам'яті
 let transactions = [];
 const txParam = urlParams.get('tx');
 if (txParam) {
@@ -59,6 +61,31 @@ function updateBalanceDisplays() {
   if (cartBal) cartBal.innerText = userBalance;
   localStorage.setItem('gravity_balance', userBalance.toString());
 }
+
+// Живая синхронизация с сервером без перезагрузки страницы
+async function fetchLiveUserData() {
+  if (!currentUserId) return;
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/user?uid=${currentUserId}`);
+    if (res.ok) {
+      const data = await res.json();
+      if (typeof data.balance === 'number' && data.balance !== userBalance) {
+        userBalance = data.balance;
+        updateBalanceDisplays();
+      }
+      if (Array.isArray(data.transactions)) {
+        transactions = data.transactions;
+        localStorage.setItem('gravity_transactions', JSON.stringify(transactions));
+        renderTransactions();
+      }
+    }
+  } catch (e) {
+    // Тихое подавление ошибок при оффлайн режиме
+  }
+}
+
+// Автообновление каждые 3 секунды
+setInterval(fetchLiveUserData, 3000);
 
 function addTransaction(title, amount, isNegative = true) {
   const now = new Date();
@@ -114,7 +141,6 @@ function generateCardNumber(userId) {
   return `${part1} ${part2} ${part3} ${part4}`;
 }
 
-// 3D Анімація кліку по картці (підйом/випрямлення)
 function toggleCardFocus() {
   const card = document.getElementById('monoBankCard');
   const numEl = document.getElementById('monoCardNumber');
@@ -159,7 +185,6 @@ setInterval(() => {
   }
 }, 4500);
 
-// Категорії
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
   { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
@@ -170,7 +195,6 @@ const categories = [
   { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
 ];
 
-// Товари
 const products = [
   { id: 101, cat: 'tiktok', name: 'Накрутка підписників TikTok', price: 90, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: '1000 якісних фоловерів', icon: '👥', img: '' },
   { id: 102, cat: 'tiktok', name: 'Накрутка переглядів TikTok', price: 35, badge: '⚡ Швидка доставка', badgeType: 'badge-fast', sub: '10 000 переглядів у рек', icon: '👀', img: '' },
@@ -344,7 +368,7 @@ function utf8ToBase64(str) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => String.fromCharCode(parseInt(p1, 16))));
 }
 
-function checkoutOrder() {
+async function checkoutOrder() {
   if (cart.length === 0) {
     if (tg) tg.showAlert("Додайте хоча б один товар до кошика!");
     else alert("Додайте хоча б один товар до кошика!");
@@ -359,6 +383,27 @@ function checkoutOrder() {
     if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на картці! Ваш баланс: ${userBalance} гривны, а сума: ${total} гривны.`);
     else alert(`Недостатньо коштів на картці! Поповніть її через менеджера.`);
     return;
+  }
+
+  // Мгновенное списание на бэкенде
+  if (useBalance) {
+    try {
+      const resp = await fetch(`${API_BASE_URL}/api/pay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: currentUserId, amount: total, check_id: checkId })
+      });
+      const resJson = await resp.json();
+      if (resJson.success) {
+        userBalance = resJson.new_balance;
+        updateBalanceDisplays();
+        addTransaction(`Оплата замовлення ${checkId}`, total, true);
+      }
+    } catch (e) {
+      userBalance -= total;
+      updateBalanceDisplays();
+      addTransaction(`Оплата замовлення ${checkId}`, total, true);
+    }
   }
 
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
@@ -399,12 +444,6 @@ function checkoutOrder() {
     console.error("tg.sendData error:", e);
   }
 
-  if (useBalance) {
-    userBalance -= total;
-    updateBalanceDisplays();
-    addTransaction(`Оплата замовлення ${checkId}`, total, true);
-  }
-
   ordersHistory += 1;
   localStorage.setItem('gravity_orders_count', ordersHistory.toString());
   const ordersCountEl = document.getElementById('userOrdersCount');
@@ -436,15 +475,12 @@ function copyCardNumber() {
 }
 
 function topUpBalance() {
-  const u = tg?.initDataUnsafe?.user;
-  const uid = u?.id || urlParams.get('uid') || '0';
-  const msg = `Привіт! Хочу поповнити картку Gravity Black.\n💳 Номер картки: ${userCardFullNumber}\n👤 ID: ${uid}\nСума:`;
+  const msg = `Привіт! Хочу поповнити картку Gravity Black.\n💳 Номер картки: ${userCardFullNumber}\n👤 ID: ${currentUserId}\nСума:`;
   const url = `https://t.me/Fambod?text=${encodeURIComponent(msg)}`;
   if (tg) tg.openTelegramLink(url);
   else window.open(url, '_blank');
 }
 
-// Промокоди
 function openPromoModal() {
   document.getElementById('promoModal')?.classList.add('active');
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
@@ -468,7 +504,6 @@ function submitPromoCode() {
   }
 }
 
-// Перемикання між 4 розділами
 function switchTab(tab) {
   const views = {
     catalog: document.getElementById('viewCatalog'),
@@ -492,7 +527,10 @@ function switchTab(tab) {
 
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-  if (tab === 'card') renderTransactions();
+  if (tab === 'card') {
+    fetchLiveUserData();
+    renderTransactions();
+  }
   if (tab === 'cart') renderCartScreen();
   if (tab === 'profile') loadProfileData();
 }
@@ -502,10 +540,7 @@ function loadProfileData() {
   const ordersCountEl = document.getElementById('userOrdersCount');
   if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
 
-  const u = tg?.initDataUnsafe?.user;
-  const uid = u?.id || urlParams.get('uid') || 5188484100;
-  
-  userCardFullNumber = generateCardNumber(uid);
+  userCardFullNumber = generateCardNumber(currentUserId);
   const parts = userCardFullNumber.split(' ');
   userCardMaskedNumber = `${parts[0]} **** **** ${parts[3] || '0000'}`;
 
@@ -514,6 +549,7 @@ function loadProfileData() {
     cardNumEl.innerText = isCardFocused ? userCardFullNumber : userCardMaskedNumber;
   }
 
+  const u = tg?.initDataUnsafe?.user;
   const fullName = `${u?.first_name || ''} ${u?.last_name || ''}`.trim() || 'GRAVITY CLIENT';
   const cardHolderEl = document.getElementById('cardHolderName');
   if (cardHolderEl) cardHolderEl.innerText = fullName.toUpperCase();
@@ -525,7 +561,7 @@ function loadProfileData() {
 
   if (nameEl) nameEl.innerText = fullName || 'Користувач';
   if (userEl) userEl.innerText = u?.username ? `@${u.username}` : 'Без юзернейму';
-  if (idEl) idEl.innerText = uid;
+  if (idEl) idEl.innerText = currentUserId;
   if (avatarEl && u?.first_name) {
     avatarEl.innerText = u.first_name.charAt(0).toUpperCase();
   }
@@ -536,8 +572,8 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Старт додатку
 renderCategories();
 renderProducts();
 loadProfileData();
 renderTransactions();
+fetchLiveUserData();
