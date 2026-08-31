@@ -1,3 +1,9 @@
+// Очистка всех видов локального кэша
+try {
+  localStorage.clear();
+  sessionStorage.clear();
+} catch (e) {}
+
 // Ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
@@ -26,21 +32,13 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Зчитування параметрів переданих ботом
+// Данные считываются ТОЛЬКО из URL переданного ботом
 const urlParams = new URLSearchParams(window.location.search);
-let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || localStorage.getItem('gravity_user_id') || '5188484100', 10);
-localStorage.setItem('gravity_user_id', currentUserId.toString());
+let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 
 let urlBalParam = urlParams.get('bal');
-let userBalance = 0;
-if (urlBalParam !== null && !isNaN(parseInt(urlBalParam, 10))) {
-  userBalance = parseInt(urlBalParam, 10);
-} else {
-  userBalance = parseInt(localStorage.getItem('gravity_balance') || '0', 10);
-}
-if (isNaN(userBalance)) userBalance = 0;
-
-let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
+let userBalance = urlBalParam !== null && !isNaN(parseInt(urlBalParam, 10)) ? parseInt(urlBalParam, 10) : 0;
+let ordersHistory = 0;
 
 let isCardFocused = false;
 let userCardFullNumber = "4412 0000 0000 0000";
@@ -51,12 +49,9 @@ const txParam = urlParams.get('tx');
 if (txParam) {
   try {
     transactions = JSON.parse(decodeURIComponent(txParam));
-    localStorage.setItem('gravity_transactions', JSON.stringify(transactions));
   } catch (e) {
-    transactions = JSON.parse(localStorage.getItem('gravity_transactions') || '[]');
+    transactions = [];
   }
-} else {
-  transactions = JSON.parse(localStorage.getItem('gravity_transactions') || '[]');
 }
 
 function updateBalanceDisplays() {
@@ -64,25 +59,6 @@ function updateBalanceDisplays() {
   const cartBal = document.getElementById('cartUserBalance');
   if (cardBal) cardBal.innerText = userBalance;
   if (cartBal) cartBal.innerText = userBalance;
-  localStorage.setItem('gravity_balance', userBalance.toString());
-}
-
-function addTransaction(title, amount, isNegative = true) {
-  const now = new Date();
-  const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-  const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}`;
-  
-  transactions.unshift({
-    id: Date.now(),
-    title: title,
-    amount: amount,
-    isNegative: isNegative,
-    time: `${dateStr} о ${timeStr}`
-  });
-
-  if (transactions.length > 25) transactions.pop();
-  localStorage.setItem('gravity_transactions', JSON.stringify(transactions));
-  renderTransactions();
 }
 
 function renderTransactions() {
@@ -369,7 +345,6 @@ function checkoutOrder() {
   if (useBalance) {
     userBalance = currentNumericBalance - total;
     updateBalanceDisplays();
-    addTransaction(`Оплата замовлення ${checkId}`, total, true);
   }
 
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
@@ -405,15 +380,6 @@ function checkoutOrder() {
   document.getElementById('receiptModal')?.classList.add('active');
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-  try {
-    tg?.sendData(JSON.stringify(orderData));
-  } catch (e) {}
-
-  ordersHistory += 1;
-  localStorage.setItem('gravity_orders_count', ordersHistory.toString());
-  const ordersCountEl = document.getElementById('userOrdersCount');
-  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
-  
   cart = [];
   updateCartState();
 }
@@ -462,11 +428,7 @@ function submitPromoCode() {
     return;
   }
   closePromoModal();
-  if (tg?.sendData) {
-    tg.sendData(JSON.stringify({ action: "activate_promo", code: code }));
-  } else {
-    window.location.href = `https://t.me/gravityshopbot?start=promo_${code}`;
-  }
+  window.location.href = `https://t.me/gravityshopbot?start=promo_${code}`;
 }
 
 function switchTab(tab) {
