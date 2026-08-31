@@ -69,11 +69,19 @@ function updateBalanceDisplays() {
   localStorage.setItem('gravity_balance', userBalance.toString());
 }
 
-// Автоматична синхронізація з ботом у реальному часі
+// Фонова синхронізація з ботом
 async function syncWithServer() {
   if (!currentUserId) return;
   try {
-    const res = await fetch(`${API_BASE_URL}/api/user?uid=${currentUserId}`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+    const res = await fetch(`${API_BASE_URL}/api/user?uid=${currentUserId}`, {
+      signal: controller.signal,
+      headers: { 'Accept': 'application/json' }
+    });
+    clearTimeout(timeoutId);
+
     if (res.ok) {
       const data = await res.json();
       if (typeof data.balance === 'number') {
@@ -395,7 +403,7 @@ async function checkoutOrder() {
     updateBalanceDisplays();
     addTransaction(`Оплата замовлення ${checkId}`, total, true);
     
-    // Відправляємо списання у фоновому режимі
+    // Відправляємо списання у фоні на сервер
     fetch(`${API_BASE_URL}/api/pay`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
