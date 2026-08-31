@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=10">
+  <link rel="stylesheet" href="style.css?v=12">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 
-  <!-- Loading Splash Screen (Cyber Emerald) -->
+  <!-- Loading Splash Screen -->
   <div id="loader" class="loader-overlay">
     <div class="loader-card">
       <div class="manager-avatar-wrapper">
         <div class="manager-glow"></div>
         <div class="manager-ring"></div>
-        <img src="manager.png" id="managerPhoto" class="manager-avatar" alt="Manager">
+        <img src="image-Photoroom (3).png" id="managerPhoto" class="manager-avatar" alt="Manager">
         <div class="manager-badge">ONLINE ⚡</div>
       </div>
       
@@ -32,6 +32,9 @@
   <div class="ambient-glow top-left"></div>
   <div class="ambient-glow bottom-right"></div>
 
+  <!-- Toast Notification Container -->
+  <div id="toast" class="toast-popup"></div>
+
   <!-- Header -->
   <header class="header">
     <div class="brand">
@@ -42,6 +45,9 @@
       </div>
     </div>
     <div class="header-actions">
+      <div class="header-balance-chip" onclick="switchTab('profile')">
+        <span>💰</span> <b id="headerBalance">0</b> <small>гривны</small>
+      </div>
       <a href="https://t.me/Fambod" target="_blank" class="btn-manager">
         <span class="btn-dot"></span> Менеджер
       </a>
@@ -63,7 +69,7 @@
         <div class="banner-content">
           <div class="banner-badge-top">CYBER EDITION • 2026</div>
           <h2 class="banner-title">TIKTOK, STARS & NITRO</h2>
-          <p class="banner-subtitle">Миттєва автоматична доставка та гарантія</p>
+          <p class="banner-subtitle">Миттєва автоматична доставка та гарантія якості</p>
           <button class="banner-btn" onclick="scrollToCatalog()">Переглянути каталог</button>
         </div>
       </div>
@@ -107,6 +113,15 @@
       <div class="profile-id-box">ID: <span id="userId">00000000</span></div>
     </div>
 
+    <!-- Balance Banner -->
+    <div class="balance-card">
+      <div class="balance-info-left">
+        <span class="balance-title">Ваш баланс:</span>
+        <div class="balance-amount"><span id="profileBalance">0</span> <small>гривны</small></div>
+      </div>
+      <button class="btn-topup" onclick="topUpBalance()">+ Поповнити</button>
+    </div>
+
     <div class="profile-stats">
       <div class="stat-box">
         <span class="stat-value" id="userOrdersCount">0</span>
@@ -119,6 +134,13 @@
     </div>
 
     <div class="profile-menu">
+      <div class="profile-menu-item promo-item" onclick="openPromoModal()">
+        <div class="p-item-left">
+          <span class="p-icon">🎟️</span>
+          <span class="neon-text">Ввести промокод на знижку/баланс</span>
+        </div>
+        <span class="p-arrow">›</span>
+      </div>
       <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
         <div class="p-item-left">
           <span class="p-icon">💬</span>
@@ -136,13 +158,31 @@
     </div>
   </div>
 
-  <!-- Floating Sticky Cart Button (появляется при добавлении товара) -->
+  <!-- Promo Modal -->
+  <div class="cart-modal-overlay" id="promoModal">
+    <div class="cart-modal promo-modal-box">
+      <div class="cart-header">
+        <div class="cart-header-title">
+          <span class="neon-dot"></span>
+          <h2>Активація промокоду</h2>
+        </div>
+        <button class="btn-close-modal" onclick="closePromoModal()">✕</button>
+      </div>
+      <div class="promo-content">
+        <p class="promo-desc">Введіть промокод з нашого каналу або розсилки бота, щоб отримати бонус на баланс:</p>
+        <input type="text" id="promoInput" class="promo-input-field" placeholder="Наприклад: SPRING50" uppercase>
+        <button class="btn-checkout" onclick="submitPromoCode()">⚡ Активувати код</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Sticky Cart Button -->
   <div class="floating-cart-bar" id="floatingCartBar" onclick="openCartModal()">
     <div class="floating-cart-left">
       <span class="floating-cart-badge" id="floatingCartCount">0</span>
       <div class="floating-cart-info">
         <span class="floating-cart-title">Товарів у кошику</span>
-        <span class="floating-cart-price" id="floatingCartTotal">0 грн</span>
+        <span class="floating-cart-price" id="floatingCartTotal">0 гривны</span>
       </div>
     </div>
     <div class="floating-cart-btn">Оформити чек →</div>
@@ -161,10 +201,19 @@
 
       <div class="cart-items-list" id="cartItemsList"></div>
 
+      <!-- Payment Method Toggle in Cart -->
+      <div class="cart-payment-option" id="balancePaymentRow">
+        <label class="checkbox-container">
+          <input type="checkbox" id="useBalanceCheckbox">
+          <span class="checkmark"></span>
+          <span class="checkbox-label">Списати з мого балансу (<b id="cartUserBalance">0</b> гривны)</span>
+        </label>
+      </div>
+
       <div class="cart-footer">
         <div class="cart-total-row">
           <span>Разом до сплати:</span>
-          <span class="cart-total-price" id="cartTotalDisplay">0 грн</span>
+          <span class="cart-total-price" id="cartTotalDisplay">0 гривны</span>
         </div>
         <div class="cart-actions">
           <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
@@ -186,8 +235,11 @@
       </div>
       <div class="receipt-content">
         <div class="receipt-icon-pulse">⚡</div>
-        <div class="receipt-number" id="receiptNumber">#000000</div>
-        <p class="receipt-text">Чек збережено! Натисніть кнопку, щоб надіслати чек менеджеру в ЛС та отримати товар:</p>
+        <div class="receipt-number-wrap" onclick="copyCheckId()">
+          <div class="receipt-number" id="receiptNumber">#000000</div>
+          <span class="copy-hint">📋 Натисніть, щоб скопіювати номер чека</span>
+        </div>
+        <p class="receipt-text">Чек збережено в системі! Натисніть кнопку нижче, щоб відкрити бота або надіслати чек менеджеру:</p>
         <div class="receipt-summary" id="receiptSummary"></div>
       </div>
       <div class="cart-footer">
@@ -195,27 +247,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="footer-columns">
-      <div class="footer-col">
-        <h4>GRAVITY SERVICE</h4>
-        <ul>
-          <li>⚡ Миттєва обробка</li>
-          <li>🛡️ 100% Гарантія якості</li>
-          <li><a href="https://t.me/Fambod" target="_blank" style="color: inherit; text-decoration: none;">📞 Підтримка @Fambod</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>СОЦМЕРЕЖІ</h4>
-        <div class="social-icons">
-          <a href="https://t.me/Fambod" target="_blank" class="social-btn">✈️</a>
-          <a href="https://instagram.com" target="_blank" class="social-btn">📸</a>
-        </div>
-      </div>
-    </div>
-  </footer>
 
   <!-- Bottom Navigation -->
   <nav class="bottom-nav">
@@ -233,6 +264,6 @@
     </div>
   </nav>
 
-  <script src="app.js?v=10"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
