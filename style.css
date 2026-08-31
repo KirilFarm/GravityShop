@@ -17,7 +17,7 @@
   --grad-emerald: linear-gradient(135deg, #00ff88 0%, #059669 100%);
   --grad-card: linear-gradient(180deg, rgba(16, 26, 20, 0.88) 0%, rgba(7, 12, 9, 0.96) 100%);
   --grad-banner: linear-gradient(135deg, #063421 0%, #03120b 100%);
-  --grad-bank-card: linear-gradient(135deg, #0f2619 0%, #07130b 45%, #020804 100%);
+  --grad-bank-card: linear-gradient(135deg, #11291b 0%, #0a170e 50%, #030805 100%);
 }
 
 /* Полное скрытие полос прокрутки */
@@ -634,17 +634,17 @@ body {
    MONOBANK 3D PERSPECTIVE & FLAT FOCUS STYLES
    ======================================================== */
 .bank-card-stage {
-  padding: 18px 16px 6px;
+  padding: 20px 16px 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .mono-card-perspective {
-  perspective: 900px;
+  perspective: 1000px;
   width: 100%;
   max-width: 340px;
-  height: 220px;
+  height: 230px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -653,37 +653,40 @@ body {
 .mono-card {
   position: relative;
   width: 100%;
-  height: 200px;
-  border-radius: 18px;
+  height: 205px;
+  border-radius: 20px;
   cursor: pointer;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease;
   transform-style: preserve-3d;
+  transform-origin: center center;
+  transition: transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.65s ease;
 }
 
-/* 1. СОСТОЯНИЕ 3D НАКЛОНА (ПО УМОЛЧАНИЮ) */
+/* 1. СОСТОЯНИЕ ПО УМОЛЧАНИЮ (3D НАКЛОН) */
 .mono-card.is-tilted {
-  transform: rotateX(46deg) rotateY(0deg) rotateZ(-1deg) scale(0.92);
+  transform: rotateX(50deg) rotateY(0deg) rotateZ(-1deg) translateY(10px) scale(0.92);
 }
 
 .mono-card.is-tilted .card-neon-backglow {
-  opacity: 1;
-  transform: scale(1.06);
+  opacity: 0.95;
+  transform: scale(1.08);
+  filter: blur(16px);
 }
 
 .mono-card.is-tilted .mono-sim-chip,
 .mono-card.is-tilted .mono-exp-date {
-  opacity: 0;
-  transform: scale(0.8);
+  opacity: 0.1;
+  transform: scale(0.85);
 }
 
-/* 2. СОСТОЯНИЕ ВЫПРЯМЛЕННОЙ КАРТЫ */
+/* 2. СОСТОЯНИЕ ПРИ НАЖАТИИ (ВЫПРЯМЛЯЕТСЯ ПРЯМО НА ЗРИТЕЛЯ) */
 .mono-card.is-focused {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(-8px) scale(1.02);
 }
 
 .mono-card.is-focused .card-neon-backglow {
-  opacity: 0.35;
-  filter: blur(18px);
+  opacity: 0.45;
+  transform: scale(1);
+  filter: blur(20px);
 }
 
 .mono-card.is-focused .mono-sim-chip,
@@ -692,16 +695,14 @@ body {
   transform: scale(1);
 }
 
-/* Неоновый переливающийся ореол */
+/* Розово-фиолетово-синий неоновый ореол по краям */
 .card-neon-backglow {
   position: absolute;
-  top: -6px; left: -6px; right: -6px; bottom: -6px;
-  border-radius: 24px;
-  background: linear-gradient(135deg, #ec4899 0%, #a855f7 35%, #00ff88 70%, #3b82f6 100%);
-  filter: blur(16px);
+  top: -8px; left: -8px; right: -8px; bottom: -8px;
+  border-radius: 26px;
+  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 40%, #00ff88 75%, #3b82f6 100%);
   z-index: 1;
-  opacity: 0.85;
-  transition: all 0.6s ease;
+  transition: all 0.65s ease;
   pointer-events: none;
 }
 
@@ -710,24 +711,16 @@ body {
   position: relative;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 75% 25%, #181c19 0%, #0c0e0d 60%, #050605 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 18px 22px;
+  background: radial-gradient(circle at 75% 25%, #18221c 0%, #0b140e 60%, #040805 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   z-index: 2;
-  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 12px 30px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.06), 0 16px 35px rgba(0, 0, 0, 0.85);
   overflow: hidden;
-}
-
-.card-inner-surface::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
-  pointer-events: none;
 }
 
 .mono-top-row {
@@ -744,7 +737,7 @@ body {
 }
 
 .mono-logo {
-  font-size: 19px;
+  font-size: 20px;
   font-weight: 900;
   letter-spacing: -0.5px;
   color: #ffffff;
@@ -753,13 +746,13 @@ body {
 .mono-sublogo {
   font-size: 8px;
   font-weight: 700;
-  color: #6b7280;
+  color: #8b9c91;
   letter-spacing: 0.5px;
   margin-top: 1px;
 }
 
 .mono-nfc-icon {
-  color: #4b5563;
+  color: #8b9c91;
   font-weight: 900;
   font-size: 13px;
   letter-spacing: 2px;
@@ -773,11 +766,11 @@ body {
 .mono-sim-chip {
   width: 38px;
   height: 28px;
-  background: linear-gradient(135deg, #c9a96e 0%, #9e7d3b 50%, #68501e 100%);
+  background: linear-gradient(135deg, #e6c86e 0%, #aa820a 50%, #7d5e03 100%);
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .mono-card-number {
@@ -786,14 +779,14 @@ body {
   font-weight: 800;
   letter-spacing: 3.5px;
   color: #d1d5db;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
   z-index: 3;
   transition: color 0.3s ease;
 }
 
 .mono-card.is-focused .mono-card-number {
   color: #ffffff;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
 }
 
 .mono-bottom-row {
@@ -812,16 +805,16 @@ body {
 .mono-exp-date {
   font-family: monospace;
   font-size: 11px;
-  color: #6b7280;
+  color: #8b9c91;
   font-weight: 700;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
 .mono-holder-name {
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 1.5px;
-  color: #9ca3af;
+  color: #d1d5db;
   text-transform: uppercase;
 }
 
@@ -830,11 +823,11 @@ body {
   font-weight: 900;
   font-style: italic;
   letter-spacing: 1px;
-  color: #e5e7eb;
+  color: #ffffff;
 }
 
 .card-tap-hint {
-  margin-top: 8px;
+  margin-top: 10px;
   font-size: 11px;
   color: var(--text-muted);
   text-align: center;
