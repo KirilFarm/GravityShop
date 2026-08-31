@@ -26,13 +26,20 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Баланс та транзакції
+// Баланс та ініціалізація
 const urlParams = new URLSearchParams(window.location.search);
+let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || localStorage.getItem('gravity_user_id') || '5188484100', 10);
+localStorage.setItem('gravity_user_id', currentUserId.toString());
+
 let urlBalParam = urlParams.get('bal');
-let userBalance = urlBalParam !== null ? parseInt(urlBalParam, 10) : parseInt(localStorage.getItem('gravity_balance') || '0', 10);
+let userBalance = 0;
+if (urlBalParam !== null && !isNaN(parseInt(urlBalParam, 10))) {
+  userBalance = parseInt(urlBalParam, 10);
+} else {
+  userBalance = parseInt(localStorage.getItem('gravity_balance') || '0', 10);
+}
 if (isNaN(userBalance)) userBalance = 0;
 
-let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
 
 let isCardFocused = false;
@@ -343,23 +350,24 @@ function utf8ToBase64(str) {
 
 function checkoutOrder() {
   if (cart.length === 0) {
-    if (tg) tg.showAlert("Додайте хоча б один товар до кошика!");
+    if (tg?.showAlert) tg.showAlert("Додайте хоча б один товар до кошика!");
     else alert("Додайте хоча б один товар до кошика!");
     return;
   }
 
   const checkId = generateCheckId();
-  const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
-  const useBalance = document.getElementById('useBalanceCheckbox')?.checked || false;
+  const total = Number(cart.reduce((sum, i) => sum + (i.price * i.count), 0));
+  const useBalance = Boolean(document.getElementById('useBalanceCheckbox')?.checked);
+  const currentNumericBalance = Number(userBalance) || 0;
 
-  if (useBalance && userBalance < total) {
-    if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на картці! Ваш баланс: ${userBalance} гривны, а сума: ${total} гривны.`);
+  if (useBalance && currentNumericBalance < total) {
+    if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на картці! Ваш баланс: ${currentNumericBalance} гривны, а сума: ${total} гривны.`);
     else alert(`Недостатньо коштів на картці! Поповніть її через менеджера.`);
     return;
   }
 
   if (useBalance) {
-    userBalance -= total;
+    userBalance = currentNumericBalance - total;
     updateBalanceDisplays();
     addTransaction(`Оплата замовлення ${checkId}`, total, true);
   }
@@ -399,9 +407,7 @@ function checkoutOrder() {
 
   try {
     tg?.sendData(JSON.stringify(orderData));
-  } catch (e) {
-    console.error("tg.sendData error:", e);
-  }
+  } catch (e) {}
 
   ordersHistory += 1;
   localStorage.setItem('gravity_orders_count', ordersHistory.toString());
