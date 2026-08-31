@@ -20,10 +20,38 @@ function hideLoader() {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(hideLoader, 1000);
+  setTimeout(hideLoader, 800);
 });
 
-// Live Feed
+// Toast Сповіщення
+function showToast(text) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.innerText = text;
+  toast.classList.add('show');
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2300);
+}
+
+// Управління балансом та історією
+const urlParams = new URLSearchParams(window.location.search);
+let userBalance = parseInt(urlParams.get('bal') || localStorage.getItem('gravity_balance') || '0', 10);
+let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
+
+function updateBalanceDisplays() {
+  const headerBal = document.getElementById('headerBalance');
+  const profBal = document.getElementById('profileBalance');
+  const cartBal = document.getElementById('cartUserBalance');
+  
+  if (headerBal) headerBal.innerText = userBalance;
+  if (profBal) profBal.innerText = userBalance;
+  if (cartBal) cartBal.innerText = userBalance;
+  
+  localStorage.setItem('gravity_balance', userBalance.toString());
+}
+
+// Live Feed (Імітація покупок у реальному часі)
 const fakePurchases = [
   "Користувач @and*** щойно купив Discord Nitro 1 Місяць",
   "Користувач @vla*** поповнив 1000 підписників TikTok",
@@ -66,7 +94,7 @@ const products = [
     badge: '🔥 Хіт продажів', 
     badgeType: 'badge-fire', 
     sub: '1000 якісних фоловерів',
-    icon: '👥'
+    icon: '👥' 
   },
   { 
     id: 102, 
@@ -76,7 +104,7 @@ const products = [
     badge: '⚡ Швидка доставка', 
     badgeType: 'badge-fast', 
     sub: '10 000 переглядів у рекомендації',
-    icon: '👀'
+    icon: '👀' 
   },
   { 
     id: 103, 
@@ -86,7 +114,7 @@ const products = [
     badge: '💬 Активність', 
     badgeType: 'badge-deal', 
     sub: '50 позитивних коментарів',
-    icon: '💬'
+    icon: '💬' 
   },
   { 
     id: 104, 
@@ -96,7 +124,7 @@ const products = [
     badge: '🚀 ТОП алгоритми', 
     badgeType: 'badge-fast', 
     sub: '500 репостів/поділів',
-    icon: '🔁'
+    icon: '🔁' 
   },
   { 
     id: 1, 
@@ -106,7 +134,7 @@ const products = [
     badge: '🔥 Топ', 
     badgeType: 'badge-fire', 
     sub: 'Офіційні зірки Telegram',
-    icon: '⭐'
+    icon: '⭐' 
   },
   { 
     id: 2, 
@@ -116,7 +144,7 @@ const products = [
     badge: '⚡ Миттєво', 
     badgeType: 'badge-fast', 
     sub: 'Офіційні зірки Telegram',
-    icon: '⭐'
+    icon: '⭐' 
   },
   { 
     id: 3, 
@@ -126,7 +154,7 @@ const products = [
     badge: '🔥 Хіт', 
     badgeType: 'badge-fire', 
     sub: 'Full Nitro з 2 бустами',
-    icon: '🟣'
+    icon: '🟣' 
   },
   { 
     id: 4, 
@@ -136,7 +164,7 @@ const products = [
     badge: '💎 Вигідно', 
     badgeType: 'badge-deal', 
     sub: 'Full Nitro гарантія',
-    icon: '💎'
+    icon: '💎' 
   },
   { 
     id: 5, 
@@ -146,7 +174,7 @@ const products = [
     badge: '⚡ Авто-видача', 
     badgeType: 'badge-fast', 
     sub: 'Поповнення балансу акаунту',
-    icon: '🎮'
+    icon: '🎮' 
   },
   { 
     id: 6, 
@@ -156,7 +184,7 @@ const products = [
     badge: '🔥 Топ ціна', 
     badgeType: 'badge-fire', 
     sub: 'Голда по ринку з комісією',
-    icon: '🔫'
+    icon: '🔫' 
   },
   { 
     id: 7, 
@@ -166,13 +194,12 @@ const products = [
     badge: '🎵 Без реклами', 
     badgeType: 'badge-deal', 
     sub: 'Індивідуальна підписка',
-    icon: '🎵'
+    icon: '🎵' 
   }
 ];
 
 let cart = [];
 let currentCategory = 'all';
-let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
 
 // Відображення категорій
 function renderCategories() {
@@ -225,7 +252,7 @@ function renderProducts() {
   `).join('');
 }
 
-// Кошик
+// Робота з кошиком
 function addToCart(id) {
   const item = products.find(p => p.id === id);
   if (!item) return;
@@ -238,7 +265,21 @@ function addToCart(id) {
   }
 
   updateCartState();
+  showToast(`✅ "${item.name}" додано до кошика!`);
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+}
+
+function changeQty(id, delta) {
+  const item = cart.find(i => i.id === id);
+  if (!item) return;
+
+  item.count += delta;
+  if (item.count <= 0) {
+    cart = cart.filter(i => i.id !== id);
+  }
+  updateCartState();
+  renderCartModal();
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 }
 
 function updateCartState() {
@@ -287,25 +328,23 @@ function renderCartModal() {
     return;
   }
 
-  listContainer.innerHTML = cart.map((item, index) => `
+  listContainer.innerHTML = cart.map((item) => `
     <div class="cart-item-row">
       <div class="cart-item-details">
         <span class="cart-item-title">${item.name}</span>
-        <span class="cart-item-sub">${item.price} грн × ${item.count} шт. = ${item.price * item.count} гривны</span>
+        <span class="cart-item-sub">${item.price * item.count} гривны (${item.price} × ${item.count})</span>
       </div>
-      <button class="btn-remove-item" onclick="removeFromCart(${index})">✕</button>
+      <div class="cart-qty-control">
+        <button class="btn-qty" onclick="changeQty(${item.id}, -1)">−</button>
+        <span class="qty-val">${item.count}</span>
+        <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
+      </div>
     </div>
   `).join('');
 
   const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
   totalDisplay.innerText = `${total} гривны`;
-}
-
-function removeFromCart(index) {
-  cart.splice(index, 1);
-  updateCartState();
-  renderCartModal();
-  if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('warning');
+  updateBalanceDisplays();
 }
 
 function clearCart() {
@@ -323,7 +362,7 @@ function generateCheckId() {
   return res;
 }
 
-// Надежное UTF-8 Base64 кодирование
+// Надійне UTF-8 Base64 кодування
 function utf8ToBase64(str) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
     return String.fromCharCode(parseInt(p1, 16));
@@ -340,26 +379,34 @@ function checkoutOrder() {
 
   const checkId = generateCheckId();
   const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
-  const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
+  const useBalance = document.getElementById('useBalanceCheckbox')?.checked || false;
 
+  if (useBalance && userBalance < total) {
+    if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на балансі! Ваш баланс: ${userBalance} гривны, а сума замовлення: ${total} гривны.`);
+    else alert(`Недостатньо коштів на балансі! Поповніть баланс через менеджера.`);
+    return;
+  }
+
+  const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
   closeCartModal();
 
   const receiptNumEl = document.getElementById('receiptNumber');
   const receiptSumEl = document.getElementById('receiptSummary');
   if (receiptNumEl) receiptNumEl.innerText = checkId;
-  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом до сплати: ${total} гривны`;
+
+  const paymentText = useBalance ? "🟢 Оплата: Списання з балансу профілю" : "🟡 Оплата: Переказ на картку менеджеру";
+  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом: ${total} гривны\n${paymentText}`;
   
   const orderData = {
     id: checkId,
     items: cart.map(i => ({ id: i.id, name: i.name, count: i.count, price: i.price })),
-    total: total
+    total: total,
+    use_balance: useBalance
   };
   
   const encodedPayload = utf8ToBase64(JSON.stringify(orderData));
-  
-  // Правильная ссылка на вашего бота
   const botLink = `https://t.me/gravityshopbot?start=order_${encodedPayload}`;
-  const msgForManager = `Привіт! Мій чек на замовлення в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} гривны\n\n(Посилання для реєстрації чека в базі: ${botLink})`;
+  const msgForManager = `Привіт! Мій чек в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} гривны\n${paymentText}\n\n(Посилання для реєстрації чека: ${botLink})`;
 
   const sendBtn = document.getElementById('btnSendManager');
   if (sendBtn) {
@@ -374,9 +421,14 @@ function checkoutOrder() {
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
   try {
-    tg?.sendData(JSON.stringify({ checkId, items: cart, total }));
+    tg?.sendData(JSON.stringify(orderData));
   } catch (e) {
     console.error("Помилка відправки tg.sendData:", e);
+  }
+
+  if (useBalance) {
+    userBalance -= total;
+    updateBalanceDisplays();
   }
 
   ordersHistory += 1;
@@ -390,14 +442,45 @@ function checkoutOrder() {
 
 function copyCheckId() {
   const checkId = document.getElementById('receiptNumber')?.innerText;
-  if (checkId && navigator.clipboard) {
-    navigator.clipboard.writeText(checkId);
-    if (tg?.showAlert) tg.showAlert(`Номер чека ${checkId} скопійовано!`);
-    else alert(`Номер чека ${checkId} скопійовано!`);
+  if (checkId) {
+    navigator.clipboard?.writeText(checkId);
+    showToast(`📋 Номер ${checkId} скопійовано!`);
+    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   }
 }
 
-// Навігація
+// Промокоди
+function openPromoModal() {
+  document.getElementById('promoModal')?.classList.add('active');
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function closePromoModal() {
+  document.getElementById('promoModal')?.classList.remove('active');
+}
+
+function submitPromoCode() {
+  const code = document.getElementById('promoInput')?.value.trim().toUpperCase();
+  if (!code) {
+    showToast("⚠️ Введіть промокод!");
+    return;
+  }
+
+  closePromoModal();
+  if (tg?.sendData) {
+    tg.sendData(JSON.stringify({ action: "activate_promo", code: code }));
+  } else {
+    window.location.href = `https://t.me/gravityshopbot?start=promo_${code}`;
+  }
+}
+
+function topUpBalance() {
+  const url = `https://t.me/Fambod?text=${encodeURIComponent("Привіт! Хочу поповнити баланс у Gravity Shop на суму:")}`;
+  if (tg) tg.openTelegramLink(url);
+  else window.open(url, '_blank');
+}
+
+// Навігація між вкладками
 function switchTab(tab) {
   const catalog = document.getElementById('catalogView');
   const profile = document.getElementById('profileView');
@@ -420,7 +503,9 @@ function switchTab(tab) {
   }
 }
 
+// Завантаження профілю
 function loadProfileData() {
+  updateBalanceDisplays();
   const ordersCountEl = document.getElementById('userOrdersCount');
   if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
 
@@ -445,7 +530,8 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Старт
+// Старт додатку
 renderCategories();
 renderProducts();
+updateBalanceDisplays();
 loadProfileData();
