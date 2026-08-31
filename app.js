@@ -1,4 +1,4 @@
-// Очистка всех видов локального кэша
+// Очистка локального мусора
 try {
   localStorage.clear();
   sessionStorage.clear();
@@ -32,7 +32,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Данные считываются ТОЛЬКО из URL переданного ботом
+// Данные строго из URL Telegram-бота
 const urlParams = new URLSearchParams(window.location.search);
 let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 
@@ -57,8 +57,19 @@ if (txParam) {
 function updateBalanceDisplays() {
   const cardBal = document.getElementById('cardBalanceVal');
   const cartBal = document.getElementById('cartUserBalance');
+  const balanceCheckbox = document.getElementById('useBalanceCheckbox');
+
   if (cardBal) cardBal.innerText = userBalance;
   if (cartBal) cartBal.innerText = userBalance;
+
+  if (balanceCheckbox) {
+    if (userBalance <= 0) {
+      balanceCheckbox.checked = false;
+      balanceCheckbox.disabled = true;
+    } else {
+      balanceCheckbox.disabled = false;
+    }
+  }
 }
 
 function renderTransactions() {
@@ -333,18 +344,13 @@ function checkoutOrder() {
 
   const checkId = generateCheckId();
   const total = Number(cart.reduce((sum, i) => sum + (i.price * i.count), 0));
-  const useBalance = Boolean(document.getElementById('useBalanceCheckbox')?.checked);
-  const currentNumericBalance = Number(userBalance) || 0;
+  const useBalanceCheckbox = document.getElementById('useBalanceCheckbox');
+  const useBalance = Boolean(useBalanceCheckbox && useBalanceCheckbox.checked && !useBalanceCheckbox.disabled);
 
-  if (useBalance && currentNumericBalance < total) {
-    if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на картці! Ваш баланс: ${currentNumericBalance} гривны, а сума: ${total} гривны.`);
+  if (useBalance && userBalance < total) {
+    if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на картці! Ваш баланс: ${userBalance} гривны, а сума: ${total} гривны.`);
     else alert(`Недостатньо коштів на картці! Поповніть її через менеджера.`);
     return;
-  }
-
-  if (useBalance) {
-    userBalance = currentNumericBalance - total;
-    updateBalanceDisplays();
   }
 
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
@@ -380,6 +386,17 @@ function checkoutOrder() {
   document.getElementById('receiptModal')?.classList.add('active');
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
+  // Прямая передача данных боту (для мгновенного списания в shop.db)
+  try {
+    if (tg && tg.sendData) {
+      tg.sendData(JSON.stringify(orderData));
+    }
+  } catch (e) {}
+
+  ordersHistory += 1;
+  const ordersCountEl = document.getElementById('userOrdersCount');
+  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
+  
   cart = [];
   updateCartState();
 }
