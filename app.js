@@ -1,19 +1,11 @@
-// 1. Підключення до Firebase Realtime Database
-const firebaseConfig = {
-  databaseURL: "https://gravity-shop-default-rtdb.europe-west1.firebasedatabase.app/"
-};
-
-if (!firebase.apps.length) {
-  firebase.initializeApp(firebaseConfig);
-}
-const db = firebase.database();
-
-// 2. Ініціалізація Telegram WebApp
+// 1. Ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
-  tg.ready();
-  tg.expand();
-  if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+  try {
+    tg.ready();
+    tg.expand();
+    if (tg.enableClosingConfirmation) tg.enableClosingConfirmation();
+  } catch (e) {}
 }
 
 function hideLoader() {
@@ -24,9 +16,11 @@ function hideLoader() {
   }
 }
 
+// Гарантоване приховування екрана завантаження
 window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(hideLoader, 800);
+  setTimeout(hideLoader, 400);
 });
+setTimeout(hideLoader, 1000);
 
 function showToast(text) {
   const toast = document.getElementById('toast');
@@ -36,7 +30,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// 3. Зчитування ID користувача Telegram
+// 2. Отримання ID користувача
 const urlParams = new URLSearchParams(window.location.search);
 let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 
@@ -48,33 +42,51 @@ let isCardFocused = false;
 let userCardFullNumber = "4412 0000 0000 0000";
 let userCardMaskedNumber = "4412 **** **** 0000";
 
-// 4. Синхронізація з Firebase у реальному часі
-const userRef = db.ref('users/' + currentUserId);
+let db = null;
+let userRef = null;
 
-userRef.on('value', (snapshot) => {
-  const data = snapshot.val();
-  if (data) {
-    userBalance = typeof data.balance === 'number' ? data.balance : 0;
-    ordersHistory = data.ordersCount || 0;
-    if (data.transactions) {
-      transactions = Object.values(data.transactions).reverse();
-    } else {
-      transactions = [];
+// 3. Підключення до Firebase Realtime Database
+try {
+  const firebaseConfig = {
+    databaseURL: "https://gravity-shop-default-rtdb.europe-west1.firebasedatabase.app/"
+  };
+
+  if (typeof firebase !== 'undefined') {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
     }
-  } else {
-    userBalance = 0;
-    transactions = [];
-    userRef.set({
-      userId: currentUserId,
-      balance: 0,
-      ordersCount: 0
+    db = firebase.database();
+    userRef = db.ref('users/' + currentUserId);
+
+    // Синхронізація балансу та транзакцій у реальному часі між пристроями
+    userRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+        userBalance = typeof data.balance === 'number' ? data.balance : 0;
+        ordersHistory = data.ordersCount || 0;
+        if (data.transactions) {
+          transactions = Object.values(data.transactions).reverse();
+        } else {
+          transactions = [];
+        }
+      } else {
+        userBalance = 0;
+        transactions = [];
+        userRef.set({
+          userId: currentUserId,
+          balance: 0,
+          ordersCount: 0
+        });
+      }
+      updateBalanceDisplays();
+      renderTransactions();
+      const ordersCountEl = document.getElementById('userOrdersCount');
+      if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
     });
   }
-  updateBalanceDisplays();
-  renderTransactions();
-  const ordersCountEl = document.getElementById('userOrdersCount');
-  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
-});
+} catch (err) {
+  console.error("Firebase connection error:", err);
+}
 
 function updateBalanceDisplays() {
   const cardBal = document.getElementById('cardBalanceVal');
@@ -376,7 +388,7 @@ function checkoutOrder() {
   }
 
   // Миттєве списання в базі Firebase
-  if (useBalance) {
+  if (useBalance && userRef) {
     const newBal = userBalance - total;
     const now = new Date();
     const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
