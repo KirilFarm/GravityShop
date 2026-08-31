@@ -26,7 +26,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Баланс: зчитування з URL (?bal=0) або з localStorage
+// Баланс та синхронізація транзакцій з сервером
 const urlParams = new URLSearchParams(window.location.search);
 let urlBalParam = urlParams.get('bal');
 let userBalance = urlBalParam !== null ? parseInt(urlBalParam, 10) : parseInt(localStorage.getItem('gravity_balance') || '0', 10);
@@ -38,7 +38,19 @@ let isCardFocused = false;
 let userCardFullNumber = "4412 0000 0000 0000";
 let userCardMaskedNumber = "4412 **** **** 0000";
 
-let transactions = JSON.parse(localStorage.getItem('gravity_transactions') || '[]');
+// Отримання історії транзакцій з URL або з локальної пам'яті
+let transactions = [];
+const txParam = urlParams.get('tx');
+if (txParam) {
+  try {
+    transactions = JSON.parse(decodeURIComponent(txParam));
+    localStorage.setItem('gravity_transactions', JSON.stringify(transactions));
+  } catch (e) {
+    transactions = JSON.parse(localStorage.getItem('gravity_transactions') || '[]');
+  }
+} else {
+  transactions = JSON.parse(localStorage.getItem('gravity_transactions') || '[]');
+}
 
 function updateBalanceDisplays() {
   const cardBal = document.getElementById('cardBalanceVal');
