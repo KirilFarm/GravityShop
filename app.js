@@ -1,10 +1,14 @@
-// Очистка локального мусора
-try {
-  localStorage.clear();
-  sessionStorage.clear();
-} catch (e) {}
+// 1. Підключення до Firebase Realtime Database
+const firebaseConfig = {
+  databaseURL: "https://gravity-shop-default-rtdb.europe-west1.firebasedatabase.app/"
+};
 
-// Ініціалізація Telegram WebApp
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.database();
+
+// 2. Ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
   tg.ready();
@@ -32,27 +36,45 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Данные строго из URL Telegram-бота
+// 3. Зчитування ID користувача Telegram
 const urlParams = new URLSearchParams(window.location.search);
 let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 
-let urlBalParam = urlParams.get('bal');
-let userBalance = urlBalParam !== null && !isNaN(parseInt(urlBalParam, 10)) ? parseInt(urlBalParam, 10) : 0;
+let userBalance = 0;
+let transactions = [];
 let ordersHistory = 0;
 
 let isCardFocused = false;
 let userCardFullNumber = "4412 0000 0000 0000";
 let userCardMaskedNumber = "4412 **** **** 0000";
 
-let transactions = [];
-const txParam = urlParams.get('tx');
-if (txParam) {
-  try {
-    transactions = JSON.parse(decodeURIComponent(txParam));
-  } catch (e) {
+// 4. Синхронізація з Firebase у реальному часі
+const userRef = db.ref('users/' + currentUserId);
+
+userRef.on('value', (snapshot) => {
+  const data = snapshot.val();
+  if (data) {
+    userBalance = typeof data.balance === 'number' ? data.balance : 0;
+    ordersHistory = data.ordersCount || 0;
+    if (data.transactions) {
+      transactions = Object.values(data.transactions).reverse();
+    } else {
+      transactions = [];
+    }
+  } else {
+    userBalance = 0;
     transactions = [];
+    userRef.set({
+      userId: currentUserId,
+      balance: 0,
+      ordersCount: 0
+    });
   }
-}
+  updateBalanceDisplays();
+  renderTransactions();
+  const ordersCountEl = document.getElementById('userOrdersCount');
+  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
+});
 
 function updateBalanceDisplays() {
   const cardBal = document.getElementById('cardBalanceVal');
@@ -353,6 +375,26 @@ function checkoutOrder() {
     return;
   }
 
+  // Миттєве списання в базі Firebase
+  if (useBalance) {
+    const newBal = userBalance - total;
+    const now = new Date();
+    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}`;
+
+    userRef.update({
+      balance: newBal,
+      ordersCount: (ordersHistory || 0) + 1
+    });
+
+    userRef.child('transactions').push({
+      title: `Оплата замовлення ${checkId}`,
+      amount: total,
+      isNegative: true,
+      time: `${dateStr} о ${timeStr}`
+    });
+  }
+
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
 
   const receiptNumEl = document.getElementById('receiptNumber');
@@ -386,17 +428,6 @@ function checkoutOrder() {
   document.getElementById('receiptModal')?.classList.add('active');
   if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
 
-  // Прямая передача данных боту (для мгновенного списания в shop.db)
-  try {
-    if (tg && tg.sendData) {
-      tg.sendData(JSON.stringify(orderData));
-    }
-  } catch (e) {}
-
-  ordersHistory += 1;
-  const ordersCountEl = document.getElementById('userOrdersCount');
-  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
-  
   cart = [];
   updateCartState();
 }
@@ -478,9 +509,6 @@ function switchTab(tab) {
 
 function loadProfileData() {
   updateBalanceDisplays();
-  const ordersCountEl = document.getElementById('userOrdersCount');
-  if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
-
   userCardFullNumber = generateCardNumber(currentUserId);
   const parts = userCardFullNumber.split(' ');
   userCardMaskedNumber = `${parts[0]} **** **** ${parts[3] || '0000'}`;
@@ -516,4 +544,3 @@ function scrollToCatalog() {
 renderCategories();
 renderProducts();
 loadProfileData();
-renderTransactions();
