@@ -1407,7 +1407,9 @@ body {
 .floating-cart-bar {
   display: none;
   position: fixed;
-  bottom: 80px; left: 16px; right: 16px;
+  bottom: 90px;
+  left: 16px;
+  right: 16px;
   background: rgba(10, 18, 13, 0.94);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -1451,34 +1453,119 @@ body {
   border-radius: 10px;
 }
 
-/* 4-BUTTON BOTTOM NAV */
-.bottom-nav {
+/* ========================================================
+   FLOATING CAPSULE BOTTOM NAVIGATION BAR
+   ======================================================== */
+.bottom-nav-container {
   position: fixed;
-  bottom: 0; left: 0; width: 100%;
-  background: rgba(6, 10, 8, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid var(--border-neon);
+  bottom: 14px;
+  left: 0;
+  right: 0;
   display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
+  justify-content: center;
+  align-items: center;
+  padding: 0 14px;
   z-index: 100;
+  pointer-events: none;
 }
+
+.bottom-nav {
+  pointer-events: auto;
+  width: 100%;
+  max-width: 440px;
+  height: 64px;
+  background: rgba(14, 18, 26, 0.88);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+}
+
 .nav-btn {
+  position: relative;
+  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 3px;
-  color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 700;
+  color: #717a8c;
   cursor: pointer;
+  border-radius: 26px;
+  transition: all 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  user-select: none;
 }
+
+.nav-icon-wrap {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-svg {
+  width: 20px;
+  height: 20px;
+  transition: transform 0.25s ease, stroke 0.25s ease;
+}
+
+.nav-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+/* Бейджик количества корзины над иконкой */
+.nav-badge {
+  position: absolute;
+  top: -5px;
+  right: -8px;
+  background: var(--neon-green);
+  color: #04140d;
+  font-size: 9px;
+  font-weight: 900;
+  min-width: 15px;
+  height: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  box-shadow: 0 0 8px var(--neon-green);
+}
+
+/* АКТИВНАЯ КНОПКА (Стиль выбранной капсулы как на фото) */
 .nav-btn.active {
-  color: var(--neon-green);
-  text-shadow: 0 0 8px var(--neon-glow);
+  background: linear-gradient(135deg, rgba(67, 56, 202, 0.38) 0%, rgba(124, 58, 237, 0.28) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  box-shadow: 0 0 16px rgba(124, 58, 237, 0.35), inset 0 0 8px rgba(139, 92, 246, 0.2);
+  color: #ffffff;
 }
-.nav-icon { font-size: 18px; }
+
+.nav-btn.active .nav-svg {
+  stroke: #a78bfa;
+  transform: translateY(-1px);
+  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.8));
+}
+
+.nav-btn.active .nav-label {
+  color: #ffffff;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
 
 @keyframes fadeIn {
   from { opacity: 0; }
