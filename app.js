@@ -26,9 +26,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Конфігурація API
-const API_BASE_URL = "https://gravityshopbot.onrender.com";
-
+// Зчитування параметрів переданих ботом
 const urlParams = new URLSearchParams(window.location.search);
 let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || localStorage.getItem('gravity_user_id') || '5188484100', 10);
 localStorage.setItem('gravity_user_id', currentUserId.toString());
@@ -68,36 +66,6 @@ function updateBalanceDisplays() {
   if (cartBal) cartBal.innerText = userBalance;
   localStorage.setItem('gravity_balance', userBalance.toString());
 }
-
-// Фонова синхронізація з сервером без блокувань
-async function syncWithServer() {
-  if (!currentUserId) return;
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 2000);
-
-    const res = await fetch(`${API_BASE_URL}/api/user?uid=${currentUserId}`, {
-      signal: controller.signal,
-      headers: { 'Accept': 'application/json' }
-    });
-    clearTimeout(timeoutId);
-
-    if (res.ok) {
-      const data = await res.json();
-      if (typeof data.balance === 'number') {
-        userBalance = data.balance;
-        updateBalanceDisplays();
-      }
-      if (Array.isArray(data.transactions) && data.transactions.length > 0) {
-        transactions = data.transactions;
-        localStorage.setItem('gravity_transactions', JSON.stringify(transactions));
-        renderTransactions();
-      }
-    }
-  } catch (e) {}
-}
-
-setInterval(syncWithServer, 3000);
 
 function addTransaction(title, amount, isNegative = true) {
   const now = new Date();
@@ -380,7 +348,7 @@ function utf8ToBase64(str) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => String.fromCharCode(parseInt(p1, 16))));
 }
 
-async function checkoutOrder() {
+function checkoutOrder() {
   if (cart.length === 0) {
     if (tg?.showAlert) tg.showAlert("Додайте хоча б один товар до кошика!");
     else alert("Додайте хоча б один товар до кошика!");
@@ -402,13 +370,6 @@ async function checkoutOrder() {
     userBalance = currentNumericBalance - total;
     updateBalanceDisplays();
     addTransaction(`Оплата замовлення ${checkId}`, total, true);
-    
-    // Синхронний виклик списування на сервері
-    fetch(`${API_BASE_URL}/api/pay`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: currentUserId, amount: total, check_id: checkId })
-    }).catch(() => {});
   }
 
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
@@ -531,10 +492,7 @@ function switchTab(tab) {
 
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-  if (tab === 'card') {
-    syncWithServer();
-    renderTransactions();
-  }
+  if (tab === 'card') renderTransactions();
   if (tab === 'cart') renderCartScreen();
   if (tab === 'profile') loadProfileData();
 }
@@ -580,4 +538,3 @@ renderCategories();
 renderProducts();
 loadProfileData();
 renderTransactions();
-syncWithServer();
