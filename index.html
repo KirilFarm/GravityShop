@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=14">
+  <link rel="stylesheet" href="style.css?v=15">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -15,7 +15,7 @@
       <div class="manager-avatar-wrapper">
         <div class="manager-glow"></div>
         <div class="manager-ring"></div>
-        <img src="image-Photoroom (3).png" id="managerPhoto" class="manager-avatar" alt="Manager">
+        <img src="manager.png" id="managerPhoto" class="manager-avatar" alt="Manager">
         <div class="manager-badge">ONLINE ⚡</div>
       </div>
       <div class="loader-title">GRAVITY <span class="neon-text">SHOP</span></div>
@@ -85,48 +85,65 @@
     <main class="products-grid" id="productsGrid"></main>
   </div>
 
-  <!-- 2. Вкладка: КАРТКА ТА ТРАНЗАКЦІЇ -->
+  <!-- 2. Вкладка: КАРТКА ТА ТРАНЗАКЦІЇ (MONOBANK 3D STYLE) -->
   <div id="viewCard" class="app-view" style="display: none;">
-    <div class="bank-card-wrap">
-      <div class="bank-card" onclick="copyCardNumber()">
-        <div class="card-glass-shine"></div>
-        <div class="card-top-row">
-          <div class="card-brand-logo">
-            <span class="card-logo-icon">⚡</span>
-            <span class="card-logo-text">GRAVITY <b>BLACK</b></span>
-          </div>
-          <div class="card-pay-system">
-            <div class="circle c-green"></div>
-            <div class="circle c-emerald"></div>
-          </div>
-        </div>
+    <div class="bank-card-stage">
+      <!-- 3D Контейнер карты -->
+      <div class="mono-card-perspective">
+        <div class="mono-card is-tilted" id="monoBankCard" onclick="toggleCardFocus()">
+          <!-- Неоновое фоновое свечение (розово-синее как на 1 фото) -->
+          <div class="card-neon-backglow"></div>
+          <div class="card-inner-surface">
+            <!-- Верхняя строка -->
+            <div class="mono-top-row">
+              <div class="mono-brand">
+                <span class="mono-logo">gravity</span>
+                <span class="mono-sublogo">Digital Bank</span>
+              </div>
+              <div class="mono-nfc-icon">))))</div>
+            </div>
 
-        <div class="card-chip-box">
-          <div class="sim-chip"></div>
-          <span class="nfc-icon">))))</span>
-        </div>
+            <!-- Чип (появляется при выпрямлении) -->
+            <div class="mono-chip-wrap">
+              <div class="mono-sim-chip"></div>
+            </div>
 
-        <div class="card-number" id="userCardNumber">4412 •••• •••• 0000</div>
+            <!-- Номер карты (в 3D скрыт звездочками, при фокусе полный) -->
+            <div class="mono-card-number" id="monoCardNumber">4412 **** **** 0000</div>
 
-        <div class="card-bottom-row">
-          <div class="card-holder-info">
-            <span class="card-label">ВЛАСНИК КАРТКИ</span>
-            <span class="card-holder-name" id="cardHolderName">CLIENT NAME</span>
-          </div>
-          <div class="card-balance-info">
-            <span class="card-label">БАЛАНС</span>
-            <span class="card-balance-val"><span id="cardBalanceVal">0</span> <small>гривны</small></span>
+            <!-- Дата и имя -->
+            <div class="mono-bottom-row">
+              <div class="mono-holder-data">
+                <div class="mono-exp-date">12/30</div>
+                <div class="mono-holder-name" id="cardHolderName">CLIENT NAME</div>
+              </div>
+              <div class="mono-pay-logo">VISA</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="card-actions-row">
-        <button class="btn-card-action" onclick="copyCardNumber()">
-          <span>📋</span> Номер картки
-        </button>
-        <button class="btn-card-action primary" onclick="topUpBalance()">
-          <span>💬</span> Написати менеджеру
-        </button>
+      <div class="card-tap-hint" id="cardTapHint">
+        <span>👆 Натисніть на картку, щоб переглянути номер та баланс</span>
+      </div>
+
+      <!-- Панель баланса и действий (выезжает при клике) -->
+      <div class="mono-card-details-panel" id="monoCardDetailsPanel">
+        <div class="mono-balance-banner">
+          <div class="mono-balance-left">
+            <span class="mono-bal-label">Доступний баланс картки</span>
+            <div class="mono-bal-value"><span id="cardBalanceVal">0</span> <small>гривны</small></div>
+          </div>
+          <button class="btn-copy-card-num" onclick="copyCardNumber()">
+            <span>📋</span> Скопіювати
+          </button>
+        </div>
+
+        <div class="card-actions-row">
+          <button class="btn-card-action primary" onclick="topUpBalance()">
+            <span>💳</span> Написати менеджеру (Поповнити)
+          </button>
+        </div>
       </div>
     </div>
 
@@ -136,9 +153,7 @@
         <h3>Історія транзакцій</h3>
         <span class="trans-badge">Live</span>
       </div>
-      <div class="trans-list" id="transactionsList">
-        <!-- Генерируется из JS -->
-      </div>
+      <div class="trans-list" id="transactionsList"></div>
     </div>
   </div>
 
@@ -285,6 +300,6 @@
     </div>
   </nav>
 
-  <script src="app.js?v=14"></script>
+  <script src="app.js?v=15"></script>
 </body>
 </html>
