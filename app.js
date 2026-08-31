@@ -1,4 +1,17 @@
-// 1. Ініціалізація Telegram WebApp
+// 1. Безпечне приховування лоадера
+function hideLoader() {
+  const loader = document.getElementById('loader');
+  if (loader && !loader.classList.contains('hidden')) {
+    loader.classList.add('hidden');
+    setTimeout(() => { loader.style.display = 'none'; }, 450);
+  }
+}
+
+window.addEventListener('load', () => setTimeout(hideLoader, 300));
+window.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 500));
+setTimeout(hideLoader, 1000);
+
+// 2. Ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
   try {
@@ -8,20 +21,6 @@ if (tg) {
   } catch (e) {}
 }
 
-function hideLoader() {
-  const loader = document.getElementById('loader');
-  if (loader && !loader.classList.contains('hidden')) {
-    loader.classList.add('hidden');
-    setTimeout(() => { loader.style.display = 'none'; }, 450);
-  }
-}
-
-// Гарантоване приховування екрана завантаження
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(hideLoader, 400);
-});
-setTimeout(hideLoader, 1000);
-
 function showToast(text) {
   const toast = document.getElementById('toast');
   if (!toast) return;
@@ -30,7 +29,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// 2. Отримання ID користувача
+// 3. Зчитування даних користувача
 const urlParams = new URLSearchParams(window.location.search);
 let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
 
@@ -45,47 +44,48 @@ let userCardMaskedNumber = "4412 **** **** 0000";
 let db = null;
 let userRef = null;
 
-// 3. Підключення до Firebase Realtime Database
-try {
-  const firebaseConfig = {
-    databaseURL: "https://gravity-shop-default-rtdb.europe-west1.firebasedatabase.app/"
-  };
+// 4. Безпечна ініціалізація Firebase для ПК та Телефону
+function initFirebase() {
+  try {
+    const firebaseConfig = {
+      databaseURL: "https://gravity-shop-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
 
-  if (typeof firebase !== 'undefined') {
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    db = firebase.database();
-    userRef = db.ref('users/' + currentUserId);
-
-    // Синхронізація балансу та транзакцій у реальному часі між пристроями
-    userRef.on('value', (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        userBalance = typeof data.balance === 'number' ? data.balance : 0;
-        ordersHistory = data.ordersCount || 0;
-        if (data.transactions) {
-          transactions = Object.values(data.transactions).reverse();
-        } else {
-          transactions = [];
-        }
-      } else {
-        userBalance = 0;
-        transactions = [];
-        userRef.set({
-          userId: currentUserId,
-          balance: 0,
-          ordersCount: 0
-        });
+    if (window.firebase) {
+      if (!firebase.apps || !firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
       }
-      updateBalanceDisplays();
-      renderTransactions();
-      const ordersCountEl = document.getElementById('userOrdersCount');
-      if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
-    });
+      db = firebase.database();
+      userRef = db.ref('users/' + currentUserId);
+
+      userRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          userBalance = typeof data.balance === 'number' ? data.balance : 0;
+          ordersHistory = data.ordersCount || 0;
+          if (data.transactions) {
+            transactions = Object.values(data.transactions).reverse();
+          } else {
+            transactions = [];
+          }
+        } else {
+          userBalance = 0;
+          transactions = [];
+          userRef.set({
+            userId: currentUserId,
+            balance: 0,
+            ordersCount: 0
+          });
+        }
+        updateBalanceDisplays();
+        renderTransactions();
+        const ordersCountEl = document.getElementById('userOrdersCount');
+        if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
+      });
+    }
+  } catch (err) {
+    console.error("Firebase connection error:", err);
   }
-} catch (err) {
-  console.error("Firebase connection error:", err);
 }
 
 function updateBalanceDisplays() {
@@ -387,7 +387,6 @@ function checkoutOrder() {
     return;
   }
 
-  // Миттєве списання в базі Firebase
   if (useBalance && userRef) {
     const newBal = userBalance - total;
     const now = new Date();
@@ -553,6 +552,8 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
+// Запуск інтерфейсу
 renderCategories();
 renderProducts();
 loadProfileData();
+initFirebase();
