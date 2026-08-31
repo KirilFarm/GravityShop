@@ -26,7 +26,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Баланс: считывание из URL бота (?bal=0) либо из сохраненного
+// Баланс: зчитування з URL (?bal=0) або з localStorage
 const urlParams = new URLSearchParams(window.location.search);
 let urlBalParam = urlParams.get('bal');
 let userBalance = urlBalParam !== null ? parseInt(urlBalParam, 10) : parseInt(localStorage.getItem('gravity_balance') || '0', 10);
@@ -102,7 +102,7 @@ function generateCardNumber(userId) {
   return `${part1} ${part2} ${part3} ${part4}`;
 }
 
-// 3D АНИМАЦИЯ ПОДЪЕМА И ПОВОРОТА КАРТЫ
+// 3D Анімація кліку по картці (підйом/випрямлення)
 function toggleCardFocus() {
   const card = document.getElementById('monoBankCard');
   const numEl = document.getElementById('monoCardNumber');
@@ -147,7 +147,7 @@ setInterval(() => {
   }
 }, 4500);
 
-// Категории
+// Категорії
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
   { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
@@ -158,7 +158,7 @@ const categories = [
   { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
 ];
 
-// Товары
+// Товари
 const products = [
   { id: 101, cat: 'tiktok', name: 'Накрутка підписників TikTok', price: 90, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: '1000 якісних фоловерів', icon: '👥', img: '' },
   { id: 102, cat: 'tiktok', name: 'Накрутка переглядів TikTok', price: 35, badge: '⚡ Швидка доставка', badgeType: 'badge-fast', sub: '10 000 переглядів у рек', icon: '👀', img: '' },
@@ -261,8 +261,15 @@ function updateCartState() {
   const totalCount = cart.reduce((sum, i) => sum + i.count, 0);
   const totalPrice = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
   
-  const cartCountEl = document.getElementById('cartCount');
-  if (cartCountEl) cartCountEl.innerText = totalCount;
+  const cartBadge = document.getElementById('navCartBadge');
+  if (cartBadge) {
+    if (totalCount > 0) {
+      cartBadge.innerText = totalCount;
+      cartBadge.style.display = 'flex';
+    } else {
+      cartBadge.style.display = 'none';
+    }
+  }
 
   const floatingBar = document.getElementById('floatingCartBar');
   if (floatingBar) {
