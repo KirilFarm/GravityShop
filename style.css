@@ -631,200 +631,281 @@ body {
 .btn-card:active { transform: scale(0.94); }
 
 /* ========================================================
-   ВИРТУАЛЬНАЯ БАНКОВСКАЯ КАРТА (АНИМАЦИИ, ГОЛОГРАММА, НЕОН)
+   MONOBANK 3D PERSPECTIVE & FLAT FOCUS STYLES
    ======================================================== */
-.bank-card-wrap {
-  padding: 16px 16px 0;
+.bank-card-stage {
+  padding: 18px 16px 6px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  align-items: center;
 }
 
-.bank-card {
+.mono-card-perspective {
+  perspective: 900px;
+  width: 100%;
+  max-width: 340px;
+  height: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mono-card {
   position: relative;
   width: 100%;
-  height: 210px;
-  background: var(--grad-bank-card);
-  border: 1px solid var(--border-neon);
+  height: 200px;
+  border-radius: 18px;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.6s ease;
+  transform-style: preserve-3d;
+}
+
+/* 1. СОСТОЯНИЕ 3D НАКЛОНА (ПО УМОЛЧАНИЮ) */
+.mono-card.is-tilted {
+  transform: rotateX(46deg) rotateY(0deg) rotateZ(-1deg) scale(0.92);
+}
+
+.mono-card.is-tilted .card-neon-backglow {
+  opacity: 1;
+  transform: scale(1.06);
+}
+
+.mono-card.is-tilted .mono-sim-chip,
+.mono-card.is-tilted .mono-exp-date {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+/* 2. СОСТОЯНИЕ ВЫПРЯМЛЕННОЙ КАРТЫ */
+.mono-card.is-focused {
+  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1);
+}
+
+.mono-card.is-focused .card-neon-backglow {
+  opacity: 0.35;
+  filter: blur(18px);
+}
+
+.mono-card.is-focused .mono-sim-chip,
+.mono-card.is-focused .mono-exp-date {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Неоновый переливающийся ореол */
+.card-neon-backglow {
+  position: absolute;
+  top: -6px; left: -6px; right: -6px; bottom: -6px;
   border-radius: 24px;
-  padding: 22px 24px;
-  box-shadow: 0 14px 40px rgba(0, 255, 136, 0.22), inset 0 0 25px rgba(0, 255, 136, 0.06);
+  background: linear-gradient(135deg, #ec4899 0%, #a855f7 35%, #00ff88 70%, #3b82f6 100%);
+  filter: blur(16px);
+  z-index: 1;
+  opacity: 0.85;
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+
+/* Поверхность карты */
+.card-inner-surface {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 75% 25%, #181c19 0%, #0c0e0d 60%, #050605 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 18px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  z-index: 2;
+  box-shadow: inset 0 0 12px rgba(255, 255, 255, 0.05), 0 12px 30px rgba(0, 0, 0, 0.8);
   overflow: hidden;
-  cursor: pointer;
-  animation: cardFloating 4.5s ease-in-out infinite alternate;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease;
 }
 
-.bank-card:active {
-  transform: scale(0.97) translateY(0);
-}
-
-/* Живая переливающаяся голографическая линия через карту */
-.bank-card::after {
+.card-inner-surface::before {
   content: "";
   position: absolute;
-  top: 0; left: -150%;
-  width: 80%; height: 100%;
-  background: linear-gradient(
-    90deg, 
-    transparent 0%, 
-    rgba(0, 255, 136, 0.04) 20%, 
-    rgba(255, 255, 255, 0.18) 50%, 
-    rgba(0, 255, 136, 0.04) 80%, 
-    transparent 100%
-  );
-  transform: skewX(-25deg);
-  animation: cardShimmer 5s infinite ease-in-out;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.06) 0%, transparent 50%);
   pointer-events: none;
+}
+
+.mono-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
   z-index: 3;
 }
 
-.card-glass-shine {
-  position: absolute;
-  top: -60px; right: -60px;
-  width: 170px; height: 170px;
-  background: radial-gradient(circle, var(--neon-glow) 0%, rgba(16, 185, 129, 0.15) 50%, transparent 75%);
-  border-radius: 50%;
-  pointer-events: none;
-  animation: pulseCardGlow 3.5s infinite ease-in-out;
-}
-
-.card-top-row {
+.mono-brand {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 2;
+  flex-direction: column;
+  line-height: 1.1;
 }
 
-.card-brand-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.mono-logo {
+  font-size: 19px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: #ffffff;
 }
 
-.card-logo-icon {
-  color: var(--neon-green);
-  font-size: 18px;
-  filter: drop-shadow(0 0 8px var(--neon-green));
+.mono-sublogo {
+  font-size: 8px;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.5px;
+  margin-top: 1px;
 }
 
-.card-logo-text {
+.mono-nfc-icon {
+  color: #4b5563;
+  font-weight: 900;
   font-size: 13px;
-  letter-spacing: 1.5px;
-  font-weight: 900;
+  letter-spacing: 2px;
 }
 
-.card-logo-text b {
-  color: var(--neon-green);
+.mono-chip-wrap {
+  z-index: 3;
+  margin-top: -2px;
 }
 
-.card-pay-system {
-  display: flex;
-}
-
-.card-pay-system .circle {
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  opacity: 0.9;
-}
-
-.card-pay-system .c-green {
-  background: #00ff88;
-  margin-right: -8px;
-  box-shadow: 0 0 8px rgba(0, 255, 136, 0.6);
-}
-
-.card-pay-system .c-emerald {
-  background: #059669;
-}
-
-.card-chip-box {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  z-index: 2;
-}
-
-.sim-chip {
-  width: 38px; height: 28px;
-  background: linear-gradient(135deg, #e6c86e 0%, #aa820a 50%, #7d5e03 100%);
+.mono-sim-chip {
+  width: 38px;
+  height: 28px;
+  background: linear-gradient(135deg, #c9a96e 0%, #9e7d3b 50%, #68501e 100%);
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.5);
-  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.sim-chip::after {
-  content: "";
-  position: absolute;
-  top: 50%; left: 0; width: 100%; height: 1px;
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.nfc-icon {
-  font-size: 14px;
-  color: var(--text-muted);
-  font-weight: 900;
-  letter-spacing: 1px;
-}
-
-.card-number {
+.mono-card-number {
   font-family: monospace, monospace;
   font-size: 18px;
   font-weight: 800;
-  letter-spacing: 3px;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
-  z-index: 2;
+  letter-spacing: 3.5px;
+  color: #d1d5db;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+  z-index: 3;
+  transition: color 0.3s ease;
 }
 
-.card-bottom-row {
+.mono-card.is-focused .mono-card-number {
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+.mono-bottom-row {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  z-index: 2;
+  z-index: 3;
 }
 
-.card-holder-info, .card-balance-info {
+.mono-holder-data {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.mono-exp-date {
+  font-family: monospace;
+  font-size: 11px;
+  color: #6b7280;
+  font-weight: 700;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mono-holder-name {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #9ca3af;
+  text-transform: uppercase;
+}
+
+.mono-pay-logo {
+  font-size: 16px;
+  font-weight: 900;
+  font-style: italic;
+  letter-spacing: 1px;
+  color: #e5e7eb;
+}
+
+.card-tap-hint {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+/* Детали карты и баланс */
+.mono-card-details-panel {
+  width: 100%;
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeIn 0.3s ease;
+}
+
+.mono-balance-banner {
+  background: var(--bg-card);
+  border: 1px solid var(--border-neon);
+  border-radius: 18px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.15);
+}
+
+.mono-balance-left {
   display: flex;
   flex-direction: column;
   gap: 2px;
 }
 
-.card-label {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 1px;
+.mono-bal-label {
+  font-size: 10px;
+  font-weight: 700;
   color: var(--text-muted);
 }
 
-.card-holder-name {
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fff;
-}
-
-.card-balance-val {
-  font-size: 21px;
+.mono-bal-value {
+  font-size: 22px;
   font-weight: 900;
   color: var(--neon-green);
-  text-shadow: 0 0 12px var(--neon-glow);
+  text-shadow: 0 0 10px var(--neon-glow);
 }
 
-.card-balance-val small {
-  font-size: 11px;
+.mono-bal-value small {
+  font-size: 12px;
   font-weight: 700;
-  color: var(--text-pure);
+  color: #ffffff;
 }
 
-/* Кнопки под картой */
+.btn-copy-card-num {
+  background: rgba(0, 255, 136, 0.12);
+  color: var(--neon-green);
+  border: 1px solid var(--border-neon);
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-copy-card-num:active { transform: scale(0.95); }
+
 .card-actions-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
@@ -841,7 +922,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: transform 0.15s ease, background 0.2s ease;
+  transition: transform 0.15s ease;
 }
 
 .btn-card-action.primary {
@@ -851,32 +932,7 @@ body {
   box-shadow: 0 4px 15px var(--neon-subtle);
 }
 
-.btn-card-action:active {
-  transform: scale(0.96);
-}
-
-/* АНИМАЦИИ ДЛЯ КАРТЫ */
-@keyframes cardFloating {
-  0% {
-    transform: translateY(0px);
-    box-shadow: 0 12px 35px rgba(0, 255, 136, 0.22);
-  }
-  100% {
-    transform: translateY(-5px);
-    box-shadow: 0 18px 45px rgba(0, 255, 136, 0.35);
-  }
-}
-
-@keyframes cardShimmer {
-  0% { left: -150%; }
-  35% { left: 150%; }
-  100% { left: 150%; }
-}
-
-@keyframes pulseCardGlow {
-  0%, 100% { transform: scale(0.95); opacity: 0.6; }
-  50% { transform: scale(1.15); opacity: 1; }
-}
+.btn-card-action:active { transform: scale(0.96); }
 
 /* ========================================================
    ИСТОРИЯ ТРАНЗАКЦИЙ КАРТЫ
