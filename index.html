@@ -4,38 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=13">
+  <link rel="stylesheet" href="style.css?v=14">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
 
-  <!-- Loading Splash Screen -->
+  <!-- Splash Screen -->
   <div id="loader" class="loader-overlay">
     <div class="loader-card">
       <div class="manager-avatar-wrapper">
         <div class="manager-glow"></div>
         <div class="manager-ring"></div>
-        <img src="manager.png" id="managerPhoto" class="manager-avatar" alt="Manager">
+        <img src="image-Photoroom (3).png" id="managerPhoto" class="manager-avatar" alt="Manager">
         <div class="manager-badge">ONLINE ⚡</div>
       </div>
-      
       <div class="loader-title">GRAVITY <span class="neon-text">SHOP</span></div>
-      <div class="loader-status">Завантаження каталогу...</div>
-      
+      <div class="loader-status">Завантаження сервісів...</div>
       <div class="loader-progress-track">
         <div class="loader-progress-bar"></div>
       </div>
     </div>
   </div>
 
-  <!-- Ambient Glow Backgrounds -->
   <div class="ambient-glow top-left"></div>
   <div class="ambient-glow bottom-right"></div>
-
-  <!-- Toast Notification Container -->
   <div id="toast" class="toast-popup"></div>
 
-  <!-- Чистый Header без лишних кнопок -->
+  <!-- Header -->
   <header class="header">
     <div class="brand">
       <div class="brand-icon-box">⚡</div>
@@ -50,28 +45,26 @@
     </div>
   </header>
 
-  <!-- Live Purchase Feed -->
+  <!-- Live Feed -->
   <div class="live-feed-wrap">
     <div class="live-feed-icon">⚡</div>
     <div class="live-feed-text" id="liveFeedText">Користувач @and*** щойно купив Discord Nitro 1 Місяць</div>
   </div>
 
-  <!-- Main Catalog View -->
-  <div id="catalogView">
-    <!-- Neon Banner -->
+  <!-- 1. Вкладка: МАГАЗИН -->
+  <div id="viewCatalog" class="app-view">
     <section class="banner-section">
       <div class="banner">
         <div class="banner-glass-overlay"></div>
         <div class="banner-content">
           <div class="banner-badge-top">CYBER EDITION • 2026</div>
           <h2 class="banner-title">TIKTOK, STARS & NITRO</h2>
-          <p class="banner-subtitle">Миттєва автоматична доставка та гарантія якості</p>
+          <p class="banner-subtitle">Миттєва автоматична доставка та гарантія</p>
           <button class="banner-btn" onclick="scrollToCatalog()">Переглянути каталог</button>
         </div>
       </div>
     </section>
 
-    <!-- Running Ticker -->
     <div class="ticker-wrap">
       <div class="ticker">
         <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b></span>
@@ -81,29 +74,22 @@
       </div>
     </div>
 
-    <!-- Page Title -->
     <div class="page-header">
       <div class="section-title-wrap">
         <span class="section-indicator"></span>
-        <h1 class="page-title" id="sectionTitle">Категорії товарів</h1>
+        <h1 class="page-title">Категорії послуг</h1>
       </div>
     </div>
 
-    <!-- Categories Horizontal Bar -->
     <nav class="categories-bar" id="categoriesBar"></nav>
-
-    <!-- Products Grid -->
     <main class="products-grid" id="productsGrid"></main>
   </div>
 
-  <!-- Profile & Card View -->
-  <div id="profileView" class="profile-view" style="display: none;">
-    
-    <!-- СТИЛЬНАЯ ВИРТУАЛЬНАЯ БАНКОВСКАЯ КАРТА (MONO STYLE) -->
+  <!-- 2. Вкладка: КАРТКА ТА ТРАНЗАКЦІЇ -->
+  <div id="viewCard" class="app-view" style="display: none;">
     <div class="bank-card-wrap">
-      <div class="bank-card" id="gravityBankCard" onclick="copyCardNumber()">
+      <div class="bank-card" onclick="copyCardNumber()">
         <div class="card-glass-shine"></div>
-        
         <div class="card-top-row">
           <div class="card-brand-logo">
             <span class="card-logo-icon">⚡</span>
@@ -129,22 +115,65 @@
           </div>
           <div class="card-balance-info">
             <span class="card-label">БАЛАНС</span>
-            <span class="card-balance-val"><span id="profileBalance">0</span> <small>гривны</small></span>
+            <span class="card-balance-val"><span id="cardBalanceVal">0</span> <small>гривны</small></span>
           </div>
         </div>
       </div>
 
       <div class="card-actions-row">
         <button class="btn-card-action" onclick="copyCardNumber()">
-          <span>📋</span> Скопіювати номер
+          <span>📋</span> Номер картки
         </button>
         <button class="btn-card-action primary" onclick="topUpBalance()">
-          <span>💳</span> Поповнити картку
+          <span>💬</span> Написати менеджеру
         </button>
       </div>
     </div>
 
-    <!-- User Profile Details Card -->
+    <!-- История транзакций карты -->
+    <div class="transactions-container">
+      <div class="trans-header">
+        <h3>Історія транзакцій</h3>
+        <span class="trans-badge">Live</span>
+      </div>
+      <div class="trans-list" id="transactionsList">
+        <!-- Генерируется из JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Вкладка: КОШИК -->
+  <div id="viewCart" class="app-view" style="display: none;">
+    <div class="cart-screen">
+      <div class="cart-screen-header">
+        <span class="neon-dot"></span>
+        <h2>Ваш кошик</h2>
+      </div>
+
+      <div class="cart-items-list" id="cartScreenItemsList"></div>
+
+      <div class="cart-payment-option">
+        <label class="checkbox-container">
+          <input type="checkbox" id="useBalanceCheckbox">
+          <span class="checkbox-label">Оплатити з картки Gravity (<b id="cartUserBalance">0</b> гривны)</span>
+        </label>
+      </div>
+
+      <div class="cart-footer">
+        <div class="cart-total-row">
+          <span>Разом до сплати:</span>
+          <span class="cart-total-price" id="cartScreenTotalDisplay">0 гривны</span>
+        </div>
+        <div class="cart-actions">
+          <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
+          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Сформувати чек)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Вкладка: ПРОФІЛЬ -->
+  <div id="viewProfile" class="app-view" style="display: none;">
     <div class="profile-card">
       <div class="profile-avatar" id="userAvatar">👤</div>
       <h2 class="profile-name" id="userName">Користувач</h2>
@@ -174,18 +203,23 @@
       <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
         <div class="p-item-left">
           <span class="p-icon">💬</span>
-          <span>Підтримка / Менеджер (@Fambod)</span>
+          <span>Зв'язатися з менеджером (@Fambod)</span>
         </div>
         <span class="p-arrow">›</span>
       </a>
-      <div class="profile-menu-item" onclick="openCartModal()">
-        <div class="p-item-left">
-          <span class="p-icon">🛒</span>
-          <span>Переглянути поточний кошик</span>
-        </div>
-        <span class="p-arrow">›</span>
+    </div>
+  </div>
+
+  <!-- Floating Sticky Bar для быстрого перехода в корзину -->
+  <div class="floating-cart-bar" id="floatingCartBar" onclick="switchTab('cart')">
+    <div class="floating-cart-left">
+      <span class="floating-cart-badge" id="floatingCartCount">0</span>
+      <div class="floating-cart-info">
+        <span class="floating-cart-title">Товарів у кошику</span>
+        <span class="floating-cart-price" id="floatingCartTotal">0 гривны</span>
       </div>
     </div>
+    <div class="floating-cart-btn">До кошика →</div>
   </div>
 
   <!-- Promo Modal -->
@@ -199,60 +233,14 @@
         <button class="btn-close-modal" onclick="closePromoModal()">✕</button>
       </div>
       <div class="promo-content">
-        <p class="promo-desc">Введіть промокод на отримання бонусних коштів на баланс вашої картки:</p>
+        <p class="promo-desc">Введіть промокод на нарахування коштів на баланс картки:</p>
         <input type="text" id="promoInput" class="promo-input-field" placeholder="Наприклад: SPRING50">
         <button class="btn-checkout" onclick="submitPromoCode()">⚡ Активувати код</button>
       </div>
     </div>
   </div>
 
-  <!-- Floating Sticky Cart Button -->
-  <div class="floating-cart-bar" id="floatingCartBar" onclick="openCartModal()">
-    <div class="floating-cart-left">
-      <span class="floating-cart-badge" id="floatingCartCount">0</span>
-      <div class="floating-cart-info">
-        <span class="floating-cart-title">Товарів у кошику</span>
-        <span class="floating-cart-price" id="floatingCartTotal">0 гривны</span>
-      </div>
-    </div>
-    <div class="floating-cart-btn">Оформити чек →</div>
-  </div>
-
-  <!-- Cart Modal Overlay -->
-  <div class="cart-modal-overlay" id="cartModal">
-    <div class="cart-modal">
-      <div class="cart-header">
-        <div class="cart-header-title">
-          <span class="neon-dot"></span>
-          <h2>Ваш кошик</h2>
-        </div>
-        <button class="btn-close-modal" onclick="closeCartModal()">✕</button>
-      </div>
-
-      <div class="cart-items-list" id="cartItemsList"></div>
-
-      <!-- Payment Method Toggle in Cart -->
-      <div class="cart-payment-option" id="balancePaymentRow">
-        <label class="checkbox-container">
-          <input type="checkbox" id="useBalanceCheckbox">
-          <span class="checkbox-label">Списати з картки Gravity (<b id="cartUserBalance">0</b> гривны)</span>
-        </label>
-      </div>
-
-      <div class="cart-footer">
-        <div class="cart-total-row">
-          <span>Разом до сплати:</span>
-          <span class="cart-total-price" id="cartTotalDisplay">0 гривны</span>
-        </div>
-        <div class="cart-actions">
-          <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
-          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Сформувати чек)</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Order Receipt Modal -->
+  <!-- Receipt Modal -->
   <div class="cart-modal-overlay" id="receiptModal">
     <div class="cart-modal receipt-modal">
       <div class="cart-header">
@@ -268,7 +256,7 @@
           <div class="receipt-number" id="receiptNumber">#000000</div>
           <span class="copy-hint">📋 Натисніть, щоб скопіювати номер чека</span>
         </div>
-        <p class="receipt-text">Чек збережено в системі! Надішліть чек менеджеру для отримання товару:</p>
+        <p class="receipt-text">Чек збережено! Надішліть чек менеджеру для отримання товару:</p>
         <div class="receipt-summary" id="receiptSummary"></div>
       </div>
       <div class="cart-footer">
@@ -277,22 +265,26 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation -->
+  <!-- Нижняя панель с 4 разделами -->
   <nav class="bottom-nav">
-    <div class="nav-btn active" id="navMenuBtn" onclick="switchTab('menu')">
+    <div class="nav-btn active" id="tabCatalog" onclick="switchTab('catalog')">
       <span class="nav-icon">🛍️</span>
-      <span class="nav-label">Каталог</span>
+      <span class="nav-label">Магазин</span>
     </div>
-    <div class="nav-btn" onclick="openCartModal()">
+    <div class="nav-btn" id="tabCard" onclick="switchTab('card')">
+      <span class="nav-icon">💳</span>
+      <span class="nav-label">Картка</span>
+    </div>
+    <div class="nav-btn" id="tabCart" onclick="switchTab('cart')">
       <span class="nav-icon">🛒</span>
       <span class="nav-label">Кошик (<span id="cartCount">0</span>)</span>
     </div>
-    <div class="nav-btn" id="navProfileBtn" onclick="switchTab('profile')">
-      <span class="nav-icon">💳</span>
-      <span class="nav-label">Картка / Профіль</span>
+    <div class="nav-btn" id="tabProfile" onclick="switchTab('profile')">
+      <span class="nav-icon">👤</span>
+      <span class="nav-label">Профіль</span>
     </div>
   </nav>
 
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
 </body>
 </html>
