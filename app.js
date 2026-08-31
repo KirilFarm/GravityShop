@@ -26,9 +26,7 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Конфігурація API сервера бота
-const API_BASE_URL = "https://gravityshopbot.onrender.com";
-
+// Баланс та транзакції
 const urlParams = new URLSearchParams(window.location.search);
 let urlBalParam = urlParams.get('bal');
 let userBalance = urlBalParam !== null ? parseInt(urlBalParam, 10) : parseInt(localStorage.getItem('gravity_balance') || '0', 10);
@@ -61,31 +59,6 @@ function updateBalanceDisplays() {
   if (cartBal) cartBal.innerText = userBalance;
   localStorage.setItem('gravity_balance', userBalance.toString());
 }
-
-// Фонове оновлення балансу та історії транзакцій у реальному часі
-async function fetchLiveUserData() {
-  if (!currentUserId) return;
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/user?uid=${currentUserId}`);
-    if (res.ok) {
-      const data = await res.json();
-      if (typeof data.balance === 'number' && data.balance !== userBalance) {
-        userBalance = data.balance;
-        updateBalanceDisplays();
-      }
-      if (Array.isArray(data.transactions)) {
-        transactions = data.transactions;
-        localStorage.setItem('gravity_transactions', JSON.stringify(transactions));
-        renderTransactions();
-      }
-    }
-  } catch (e) {
-    // Тихо ігноруємо збої зв'язку при оффлайн-режимі
-  }
-}
-
-// Авто-опитування бекенду кожні 3 секунди
-setInterval(fetchLiveUserData, 3000);
 
 function addTransaction(title, amount, isNegative = true) {
   const now = new Date();
@@ -368,7 +341,7 @@ function utf8ToBase64(str) {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => String.fromCharCode(parseInt(p1, 16))));
 }
 
-async function checkoutOrder() {
+function checkoutOrder() {
   if (cart.length === 0) {
     if (tg) tg.showAlert("Додайте хоча б один товар до кошика!");
     else alert("Додайте хоча б один товар до кошика!");
@@ -386,23 +359,9 @@ async function checkoutOrder() {
   }
 
   if (useBalance) {
-    try {
-      const resp = await fetch(`${API_BASE_URL}/api/pay`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: currentUserId, amount: total, check_id: checkId })
-      });
-      const resJson = await resp.json();
-      if (resJson.success) {
-        userBalance = resJson.new_balance;
-        updateBalanceDisplays();
-        addTransaction(`Оплата замовлення ${checkId}`, total, true);
-      }
-    } catch (e) {
-      userBalance -= total;
-      updateBalanceDisplays();
-      addTransaction(`Оплата замовлення ${checkId}`, total, true);
-    }
+    userBalance -= total;
+    updateBalanceDisplays();
+    addTransaction(`Оплата замовлення ${checkId}`, total, true);
   }
 
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
@@ -416,6 +375,7 @@ async function checkoutOrder() {
   
   const orderData = {
     id: checkId,
+    user_id: currentUserId,
     items: cart.map(i => ({ id: i.id, name: i.name, count: i.count, price: i.price })),
     total: total,
     use_balance: useBalance
@@ -526,10 +486,7 @@ function switchTab(tab) {
 
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-  if (tab === 'card') {
-    fetchLiveUserData();
-    renderTransactions();
-  }
+  if (tab === 'card') renderTransactions();
   if (tab === 'cart') renderCartScreen();
   if (tab === 'profile') loadProfileData();
 }
@@ -575,4 +532,3 @@ renderCategories();
 renderProducts();
 loadProfileData();
 renderTransactions();
-fetchLiveUserData();
