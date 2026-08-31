@@ -26,11 +26,17 @@ function showToast(text) {
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
 }
 
-// Баланс, історія замовлень та транзакції
+// Баланс: считывание из URL бота (?bal=0) либо из сохраненного
 const urlParams = new URLSearchParams(window.location.search);
-let userBalance = parseInt(urlParams.get('bal') || localStorage.getItem('gravity_balance') || '0', 10);
+let urlBalParam = urlParams.get('bal');
+let userBalance = urlBalParam !== null ? parseInt(urlBalParam, 10) : parseInt(localStorage.getItem('gravity_balance') || '0', 10);
+if (isNaN(userBalance)) userBalance = 0;
+
 let ordersHistory = parseInt(localStorage.getItem('gravity_orders_count') || '0', 10);
-let userCardNumFormatted = "4412 0000 0000 0000";
+
+let isCardFocused = false;
+let userCardFullNumber = "4412 0000 0000 0000";
+let userCardMaskedNumber = "4412 **** **** 0000";
 
 let transactions = JSON.parse(localStorage.getItem('gravity_transactions') || '[]');
 
@@ -96,6 +102,29 @@ function generateCardNumber(userId) {
   return `${part1} ${part2} ${part3} ${part4}`;
 }
 
+// 3D АНИМАЦИЯ ПОДЪЕМА И ПОВОРОТА КАРТЫ
+function toggleCardFocus() {
+  const card = document.getElementById('monoBankCard');
+  const numEl = document.getElementById('monoCardNumber');
+  const hintEl = document.getElementById('cardTapHint');
+
+  isCardFocused = !isCardFocused;
+
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+
+  if (isCardFocused) {
+    card?.classList.remove('is-tilted');
+    card?.classList.add('is-focused');
+    if (numEl) numEl.innerText = userCardFullNumber;
+    if (hintEl) hintEl.innerHTML = '<span>✨ Картка активна. Натисніть знову, щоб покласти в 3D</span>';
+  } else {
+    card?.classList.remove('is-focused');
+    card?.classList.add('is-tilted');
+    if (numEl) numEl.innerText = userCardMaskedNumber;
+    if (hintEl) hintEl.innerHTML = '<span>👆 Натисніть на картку, щоб переглянути номер та баланс</span>';
+  }
+}
+
 // Live Feed
 const fakePurchases = [
   "Користувач @and*** щойно купив Discord Nitro 1 Місяць",
@@ -118,7 +147,7 @@ setInterval(() => {
   }
 }, 4500);
 
-// Категорії (підтримка кастомних картинок img або іконок icon)
+// Категории
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
   { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
@@ -129,7 +158,7 @@ const categories = [
   { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
 ];
 
-// Товари (підтримка власних банерів/аватарок через img)
+// Товары
 const products = [
   { id: 101, cat: 'tiktok', name: 'Накрутка підписників TikTok', price: 90, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: '1000 якісних фоловерів', icon: '👥', img: '' },
   { id: 102, cat: 'tiktok', name: 'Накрутка переглядів TikTok', price: 35, badge: '⚡ Швидка доставка', badgeType: 'badge-fast', sub: '10 000 переглядів у рек', icon: '👀', img: '' },
@@ -319,7 +348,7 @@ function checkoutOrder() {
   const receiptSumEl = document.getElementById('receiptSummary');
   if (receiptNumEl) receiptNumEl.innerText = checkId;
 
-  const paymentText = useBalance ? `🟢 Оплата: Списання з картки Gravity (${userCardNumFormatted})` : "🟡 Оплата: Переказ на картку менеджеру";
+  const paymentText = useBalance ? `🟢 Оплата: Списання з картки Gravity (${userCardFullNumber})` : "🟡 Оплата: Переказ на картку менеджеру";
   if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом: ${total} гривны\n${paymentText}`;
   
   const orderData = {
@@ -380,9 +409,9 @@ function copyCheckId() {
 }
 
 function copyCardNumber() {
-  if (userCardNumFormatted) {
-    navigator.clipboard?.writeText(userCardNumFormatted);
-    showToast(`💳 Номер картки ${userCardNumFormatted} скопійовано!`);
+  if (userCardFullNumber) {
+    navigator.clipboard?.writeText(userCardFullNumber);
+    showToast(`💳 Номер картки ${userCardFullNumber} скопійовано!`);
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   }
 }
@@ -390,7 +419,7 @@ function copyCardNumber() {
 function topUpBalance() {
   const u = tg?.initDataUnsafe?.user;
   const uid = u?.id || urlParams.get('uid') || '0';
-  const msg = `Привіт! Хочу поповнити картку Gravity Black.\n💳 Номер картки: ${userCardNumFormatted}\n👤 ID: ${uid}\nСума:`;
+  const msg = `Привіт! Хочу поповнити картку Gravity Black.\n💳 Номер картки: ${userCardFullNumber}\n👤 ID: ${uid}\nСума:`;
   const url = `https://t.me/Fambod?text=${encodeURIComponent(msg)}`;
   if (tg) tg.openTelegramLink(url);
   else window.open(url, '_blank');
@@ -457,9 +486,14 @@ function loadProfileData() {
   const u = tg?.initDataUnsafe?.user;
   const uid = u?.id || urlParams.get('uid') || 5188484100;
   
-  userCardNumFormatted = generateCardNumber(uid);
-  const cardNumEl = document.getElementById('userCardNumber');
-  if (cardNumEl) cardNumEl.innerText = userCardNumFormatted;
+  userCardFullNumber = generateCardNumber(uid);
+  const parts = userCardFullNumber.split(' ');
+  userCardMaskedNumber = `${parts[0]} **** **** ${parts[3] || '0000'}`;
+
+  const cardNumEl = document.getElementById('monoCardNumber');
+  if (cardNumEl) {
+    cardNumEl.innerText = isCardFocused ? userCardFullNumber : userCardMaskedNumber;
+  }
 
   const fullName = `${u?.first_name || ''} ${u?.last_name || ''}`.trim() || 'GRAVITY CLIENT';
   const cardHolderEl = document.getElementById('cardHolderName');
@@ -483,7 +517,7 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Старт
+// Старт додатку
 renderCategories();
 renderProducts();
 loadProfileData();
