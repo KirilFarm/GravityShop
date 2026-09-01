@@ -248,21 +248,31 @@ body {
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .brand-icon-box {
-  width: 34px;
-  height: 34px;
-  background: var(--grad-emerald);
-  color: #04140d;
-  font-size: 16px;
-  font-weight: 900;
+  width: 52px;
+  height: 52px;
+  background: rgba(0, 255, 136, 0.08);
+  border: 1px solid rgba(0, 255, 136, 0.35);
+  border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
-  box-shadow: 0 0 14px var(--neon-glow);
+  overflow: hidden;
+  box-shadow: 0 0 20px var(--neon-glow);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.header-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transform: scale(1.65) translateY(3px);
+  filter: drop-shadow(0 0 10px var(--neon-glow));
+  pointer-events: none;
 }
 
 .brand-text {
@@ -448,13 +458,14 @@ body {
 /* CATEGORIES BAR */
 .categories-bar {
   display: flex;
-  gap: 12px;
+  gap: 14px;
   overflow-x: auto;
-  padding: 4px 16px 16px;
+  padding: 6px 16px 16px;
+  align-items: center;
 }
 
 .cat-item {
-  flex: 0 0 66px;
+  flex: 0 0 60px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -465,40 +476,64 @@ body {
 .cat-icon-box {
   width: 58px;
   height: 58px;
-  background: var(--bg-card);
+  background: rgba(13, 20, 15, 0.85);
   border: 1px solid var(--border-subtle);
   border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
   overflow: hidden;
+  padding: 0; /* Прибираємо відступи, щоб фото було на весь квадрат */
+  position: relative;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
 }
 
+/* Зображення заповнює 100% площі рамки */
 .cat-custom-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 16px;
+  object-fit: cover; /* Розтягує та підганяє картинку без спотворень */
+  border-radius: 17px;
+  display: block;
+  transition: transform 0.25s ease;
 }
 
+/* Емодзі для кнопки "Все", якщо немає картинки */
+.cat-icon-box span {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Анімація натискання */
+.cat-item:active .cat-icon-box {
+  transform: scale(0.93);
+}
+
+/* Активний стан категорії */
 .cat-item.active .cat-icon-box {
   border-color: var(--neon-green);
-  background: rgba(0, 255, 136, 0.12);
-  box-shadow: 0 0 16px var(--neon-glow);
+  box-shadow: 0 0 16px var(--neon-glow), inset 0 0 8px rgba(0, 255, 136, 0.3);
   transform: translateY(-2px);
+}
+
+.cat-item.active .cat-custom-img {
+  transform: scale(1.05);
 }
 
 .cat-label {
   font-size: 11px;
   font-weight: 700;
   color: var(--text-muted);
+  transition: color 0.2s ease;
 }
 
 .cat-item.active .cat-label {
   color: var(--neon-green);
-  font-weight: 800;
+  font-weight: 900;
+  text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
 }
 
 /* PRODUCTS GRID */
@@ -529,24 +564,29 @@ body {
 }
 
 .card-banner {
-  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.12) 0%, #060907 100%);
-  padding: 12px;
-  min-height: 115px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   position: relative;
+  width: 100%;
+  height: 115px;
+  background: radial-gradient(circle at 50% 50%, rgba(0, 255, 136, 0.12) 0%, #060907 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   border-bottom: 1px solid var(--border-subtle);
 }
 
 .card-custom-img {
-  position: absolute;
-  top: 0; left: 0; width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  border-radius: 20px 20px 0 0;
+  display: block;
 }
 
 .badge-row {
+  position: absolute;
+  top: 8px;
+  left: 8px;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -580,6 +620,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  flex-grow: 1;
 }
 
 .card-title-bottom {
@@ -629,412 +670,6 @@ body {
 }
 
 .btn-card:active { transform: scale(0.94); }
-
-/* ========================================================
-   MONOBANK 3D PERSPECTIVE & FLAT FOCUS STYLES
-   ======================================================== */
-.bank-card-stage {
-  padding: 20px 16px 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.mono-card-perspective {
-  perspective: 1000px;
-  width: 100%;
-  max-width: 340px;
-  height: 230px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.mono-card {
-  position: relative;
-  width: 100%;
-  height: 205px;
-  border-radius: 20px;
-  cursor: pointer;
-  transform-style: preserve-3d;
-  transform-origin: center center;
-  transition: transform 0.65s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.65s ease;
-}
-
-/* 1. СОСТОЯНИЕ ПО УМОЛЧАНИЮ (3D НАКЛОН) */
-.mono-card.is-tilted {
-  transform: rotateX(50deg) rotateY(0deg) rotateZ(-1deg) translateY(10px) scale(0.92);
-}
-
-.mono-card.is-tilted .card-neon-backglow {
-  opacity: 0.95;
-  transform: scale(1.08);
-  filter: blur(16px);
-}
-
-.mono-card.is-tilted .mono-sim-chip,
-.mono-card.is-tilted .mono-exp-date {
-  opacity: 0.1;
-  transform: scale(0.85);
-}
-
-/* 2. СОСТОЯНИЕ ПРИ НАЖАТИИ (ВЫПРЯМЛЯЕТСЯ ПРЯМО НА ЗРИТЕЛЯ) */
-.mono-card.is-focused {
-  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) translateY(-8px) scale(1.02);
-}
-
-.mono-card.is-focused .card-neon-backglow {
-  opacity: 0.45;
-  transform: scale(1);
-  filter: blur(20px);
-}
-
-.mono-card.is-focused .mono-sim-chip,
-.mono-card.is-focused .mono-exp-date {
-  opacity: 1;
-  transform: scale(1);
-}
-
-/* Розово-фиолетово-синий неоновый ореол по краям */
-.card-neon-backglow {
-  position: absolute;
-  top: -8px; left: -8px; right: -8px; bottom: -8px;
-  border-radius: 26px;
-  background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 40%, #00ff88 75%, #3b82f6 100%);
-  z-index: 1;
-  transition: all 0.65s ease;
-  pointer-events: none;
-}
-
-/* Поверхность карты */
-.card-inner-surface {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle at 75% 25%, #18221c 0%, #0b140e 60%, #040805 100%);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 20px;
-  padding: 20px 22px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  z-index: 2;
-  box-shadow: inset 0 0 14px rgba(255, 255, 255, 0.06), 0 16px 35px rgba(0, 0, 0, 0.85);
-  overflow: hidden;
-}
-
-.mono-top-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  z-index: 3;
-}
-
-.mono-brand {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.mono-logo {
-  font-size: 20px;
-  font-weight: 900;
-  letter-spacing: -0.5px;
-  color: #ffffff;
-}
-
-.mono-sublogo {
-  font-size: 8px;
-  font-weight: 700;
-  color: #8b9c91;
-  letter-spacing: 0.5px;
-  margin-top: 1px;
-}
-
-.mono-nfc-icon {
-  color: #8b9c91;
-  font-weight: 900;
-  font-size: 13px;
-  letter-spacing: 2px;
-}
-
-.mono-chip-wrap {
-  z-index: 3;
-  margin-top: -2px;
-}
-
-.mono-sim-chip {
-  width: 38px;
-  height: 28px;
-  background: linear-gradient(135deg, #e6c86e 0%, #aa820a 50%, #7d5e03 100%);
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.6);
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.mono-card-number {
-  font-family: monospace, monospace;
-  font-size: 18px;
-  font-weight: 800;
-  letter-spacing: 3.5px;
-  color: #d1d5db;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.9);
-  z-index: 3;
-  transition: color 0.3s ease;
-}
-
-.mono-card.is-focused .mono-card-number {
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
-}
-
-.mono-bottom-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  z-index: 3;
-}
-
-.mono-holder-data {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.mono-exp-date {
-  font-family: monospace;
-  font-size: 11px;
-  color: #8b9c91;
-  font-weight: 700;
-  transition: opacity 0.4s ease, transform 0.4s ease;
-}
-
-.mono-holder-name {
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1.5px;
-  color: #d1d5db;
-  text-transform: uppercase;
-}
-
-.mono-pay-logo {
-  font-size: 16px;
-  font-weight: 900;
-  font-style: italic;
-  letter-spacing: 1px;
-  color: #ffffff;
-}
-
-.card-tap-hint {
-  margin-top: 10px;
-  font-size: 11px;
-  color: var(--text-muted);
-  text-align: center;
-  transition: opacity 0.3s ease;
-}
-
-/* Детали карты и баланс */
-.mono-card-details-panel {
-  width: 100%;
-  margin-top: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  animation: fadeIn 0.3s ease;
-}
-
-.mono-balance-banner {
-  background: var(--bg-card);
-  border: 1px solid var(--border-neon);
-  border-radius: 18px;
-  padding: 14px 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 20px rgba(0, 255, 136, 0.15);
-}
-
-.mono-balance-left {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.mono-bal-label {
-  font-size: 10px;
-  font-weight: 700;
-  color: var(--text-muted);
-}
-
-.mono-bal-value {
-  font-size: 22px;
-  font-weight: 900;
-  color: var(--neon-green);
-  text-shadow: 0 0 10px var(--neon-glow);
-}
-
-.mono-bal-value small {
-  font-size: 12px;
-  font-weight: 700;
-  color: #ffffff;
-}
-
-.btn-copy-card-num {
-  background: rgba(0, 255, 136, 0.12);
-  color: var(--neon-green);
-  border: 1px solid var(--border-neon);
-  padding: 8px 14px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.btn-copy-card-num:active { transform: scale(0.95); }
-
-.card-actions-row {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-}
-
-.btn-card-action {
-  background: var(--bg-card);
-  border: 1px solid var(--border-neon);
-  color: var(--text-pure);
-  padding: 12px;
-  border-radius: 14px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: transform 0.15s ease;
-}
-
-.btn-card-action.primary {
-  background: var(--grad-emerald);
-  color: #03140a;
-  border: none;
-  box-shadow: 0 4px 15px var(--neon-subtle);
-}
-
-.btn-card-action:active { transform: scale(0.96); }
-
-/* ========================================================
-   ИСТОРИЯ ТРАНЗАКЦИЙ КАРТЫ
-   ======================================================== */
-.transactions-container {
-  padding: 18px 16px;
-}
-
-.trans-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.trans-header h3 {
-  font-size: 15px;
-  font-weight: 900;
-  color: var(--text-pure);
-}
-
-.trans-badge {
-  background: rgba(0, 255, 136, 0.1);
-  border: 1px solid var(--border-neon);
-  color: var(--neon-green);
-  font-size: 10px;
-  font-weight: 900;
-  padding: 3px 8px;
-  border-radius: 10px;
-}
-
-.trans-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.trans-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 12px 14px;
-}
-
-.trans-item-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.trans-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-.trans-icon.expense {
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.trans-icon.income {
-  background: rgba(0, 255, 136, 0.15);
-  border: 1px solid var(--border-neon);
-}
-
-.trans-details {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.trans-title {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-pure);
-}
-
-.trans-time {
-  font-size: 10px;
-  color: var(--text-muted);
-}
-
-.trans-amount {
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.trans-amount.expense {
-  color: #f87171;
-}
-
-.trans-amount.income {
-  color: var(--neon-green);
-}
-
-.empty-trans-msg {
-  text-align: center;
-  padding: 30px 0;
-  color: var(--text-muted);
-  font-size: 12px;
-}
 
 /* ========================================================
    РАЗДЕЛ КОШИКА (ЭКРАН)
@@ -1100,27 +735,6 @@ body {
   color: var(--neon-green);
 }
 
-.profile-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 14px 16px 0;
-}
-
-.stat-box {
-  background: var(--bg-card);
-  border: 1px solid var(--border-subtle);
-  border-radius: 16px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.stat-value { font-size: 16px; font-weight: 900; }
-.stat-value.neon-green { color: var(--neon-green); text-shadow: 0 0 8px var(--neon-glow); }
-.stat-label { font-size: 11px; color: var(--text-muted); }
-
 .profile-menu {
   padding: 14px 16px;
   display: flex;
@@ -1144,11 +758,6 @@ body {
   transition: transform 0.15s ease;
 }
 .profile-menu-item:active { transform: scale(0.98); }
-
-.promo-item {
-  border-color: rgba(0, 255, 136, 0.3) !important;
-  background: rgba(0, 255, 136, 0.05) !important;
-}
 
 .p-item-left { display: flex; align-items: center; gap: 10px; }
 .p-arrow { color: var(--neon-green); font-size: 18px; }
@@ -1199,31 +808,6 @@ body {
 
 .qty-val { font-size: 13px; font-weight: 800; min-width: 16px; text-align: center; }
 .empty-cart-msg { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 14px; }
-
-.cart-payment-option {
-  padding: 12px 14px;
-  background: rgba(0, 255, 136, 0.04);
-  border: 1px solid var(--border-neon);
-  border-radius: 14px;
-  margin-bottom: 14px;
-}
-
-.checkbox-container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  user-select: none;
-  gap: 8px;
-}
-
-.checkbox-container input {
-  cursor: pointer;
-  width: 16px;
-  height: 16px;
-  accent-color: var(--neon-green);
-}
-
-.checkbox-label { color: var(--text-pure); font-size: 11px; font-weight: 700; }
 
 .cart-footer {
   padding: 16px;
@@ -1333,27 +917,6 @@ body {
   border-radius: 50%;
   font-size: 14px;
   cursor: pointer;
-}
-
-.promo-modal-box { max-height: 50vh; }
-.promo-content {
-  padding: 20px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.promo-desc { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
-.promo-input-field {
-  background: #050a07;
-  border: 1px solid var(--border-neon);
-  border-radius: 12px;
-  padding: 12px 14px;
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--neon-green);
-  letter-spacing: 1.5px;
-  outline: none;
-  text-transform: uppercase;
 }
 
 .receipt-content {
@@ -1524,7 +1087,6 @@ body {
   transition: color 0.25s ease, transform 0.25s ease;
 }
 
-/* Бейджик количества корзины над иконкой */
 .nav-badge {
   position: absolute;
   top: -5px;
@@ -1543,7 +1105,6 @@ body {
   box-shadow: 0 0 8px var(--neon-green);
 }
 
-/* АКТИВНАЯ КНОПКА (Стиль выбранной капсулы как на фото) */
 .nav-btn.active {
   background: linear-gradient(135deg, rgba(67, 56, 202, 0.38) 0%, rgba(124, 58, 237, 0.28) 100%);
   border: 1px solid rgba(139, 92, 246, 0.45);
@@ -1570,4 +1131,30 @@ body {
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
+}
+
+/* Бейдж розробки / недоступності */
+.badge-soon {
+  background: rgba(142, 149, 165, 0.25);
+  border: 1px solid rgba(142, 149, 165, 0.4);
+  color: #a0aab8;
+}
+
+/* Неактивна картка */
+.product-card.is-disabled {
+  opacity: 0.65;
+  filter: grayscale(0.2);
+}
+
+.product-card.is-disabled:active {
+  transform: none;
+}
+
+/* Неактивна кнопка */
+.btn-card.disabled {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  box-shadow: none;
 }
