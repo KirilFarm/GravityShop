@@ -1,17 +1,4 @@
-// 1. Безпечне приховування лоадера
-function hideLoader() {
-  const loader = document.getElementById('loader');
-  if (loader && !loader.classList.contains('hidden')) {
-    loader.classList.add('hidden');
-    setTimeout(() => { loader.style.display = 'none'; }, 450);
-  }
-}
-
-window.addEventListener('load', () => setTimeout(hideLoader, 300));
-window.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 500));
-setTimeout(hideLoader, 1000);
-
-// 2. Ініціалізація Telegram WebApp
+// Ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
   try {
@@ -21,147 +8,23 @@ if (tg) {
   } catch (e) {}
 }
 
+function hideLoader() {
+  const loader = document.getElementById('loader');
+  if (loader && !loader.classList.contains('hidden')) {
+    loader.classList.add('hidden');
+    setTimeout(() => { loader.style.display = 'none'; }, 450);
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 300));
+setTimeout(hideLoader, 800);
+
 function showToast(text) {
   const toast = document.getElementById('toast');
   if (!toast) return;
   toast.innerText = text;
   toast.classList.add('show');
   setTimeout(() => { toast.classList.remove('show'); }, 2300);
-}
-
-// 3. Зчитування даних користувача
-const urlParams = new URLSearchParams(window.location.search);
-let currentUserId = tg?.initDataUnsafe?.user?.id || parseInt(urlParams.get('uid') || '5188484100', 10);
-
-let userBalance = 0;
-let transactions = [];
-let ordersHistory = 0;
-
-let isCardFocused = false;
-let userCardFullNumber = "4412 0000 0000 0000";
-let userCardMaskedNumber = "4412 **** **** 0000";
-
-let db = null;
-let userRef = null;
-
-// 4. Безпечна ініціалізація Firebase для ПК та Телефону
-function initFirebase() {
-  try {
-    const firebaseConfig = {
-      databaseURL: "https://gravity-shop-default-rtdb.europe-west1.firebasedatabase.app/"
-    };
-
-    if (window.firebase) {
-      if (!firebase.apps || !firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-      }
-      db = firebase.database();
-      userRef = db.ref('users/' + currentUserId);
-
-      userRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        if (data) {
-          userBalance = typeof data.balance === 'number' ? data.balance : 0;
-          ordersHistory = data.ordersCount || 0;
-          if (data.transactions) {
-            transactions = Object.values(data.transactions).reverse();
-          } else {
-            transactions = [];
-          }
-        } else {
-          userBalance = 0;
-          transactions = [];
-          userRef.set({
-            userId: currentUserId,
-            balance: 0,
-            ordersCount: 0
-          });
-        }
-        updateBalanceDisplays();
-        renderTransactions();
-        const ordersCountEl = document.getElementById('userOrdersCount');
-        if (ordersCountEl) ordersCountEl.innerText = ordersHistory;
-      });
-    }
-  } catch (err) {
-    console.error("Firebase connection error:", err);
-  }
-}
-
-function updateBalanceDisplays() {
-  const cardBal = document.getElementById('cardBalanceVal');
-  const cartBal = document.getElementById('cartUserBalance');
-  const balanceCheckbox = document.getElementById('useBalanceCheckbox');
-
-  if (cardBal) cardBal.innerText = userBalance;
-  if (cartBal) cartBal.innerText = userBalance;
-
-  if (balanceCheckbox) {
-    if (userBalance <= 0) {
-      balanceCheckbox.checked = false;
-      balanceCheckbox.disabled = true;
-    } else {
-      balanceCheckbox.disabled = false;
-    }
-  }
-}
-
-function renderTransactions() {
-  const list = document.getElementById('transactionsList');
-  if (!list) return;
-
-  if (transactions.length === 0) {
-    list.innerHTML = '<div class="empty-trans-msg">Транзакцій по картці ще не було 💳</div>';
-    return;
-  }
-
-  list.innerHTML = transactions.map(t => `
-    <div class="trans-item">
-      <div class="trans-item-left">
-        <div class="trans-icon ${t.isNegative ? 'expense' : 'income'}">
-          ${t.isNegative ? '🛍️' : '💳'}
-        </div>
-        <div class="trans-details">
-          <span class="trans-title">${t.title}</span>
-          <span class="trans-time">${t.time}</span>
-        </div>
-      </div>
-      <span class="trans-amount ${t.isNegative ? 'expense' : 'income'}">
-        ${t.isNegative ? '-' : '+'}${t.amount} гривны
-      </span>
-    </div>
-  `).join('');
-}
-
-function generateCardNumber(userId) {
-  const idStr = String(userId || '5188484100').padStart(10, '0');
-  const part1 = "4412";
-  const part2 = idStr.slice(0, 4);
-  const part3 = idStr.slice(4, 8);
-  const part4 = (idStr.slice(8) + "77").slice(0, 4);
-  return `${part1} ${part2} ${part3} ${part4}`;
-}
-
-function toggleCardFocus() {
-  const card = document.getElementById('monoBankCard');
-  const numEl = document.getElementById('monoCardNumber');
-  const hintEl = document.getElementById('cardTapHint');
-
-  isCardFocused = !isCardFocused;
-
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-
-  if (isCardFocused) {
-    card?.classList.remove('is-tilted');
-    card?.classList.add('is-focused');
-    if (numEl) numEl.innerText = userCardFullNumber;
-    if (hintEl) hintEl.innerHTML = '<span>✨ Картка активна. Натисніть знову, щоб покласти в 3D</span>';
-  } else {
-    card?.classList.remove('is-focused');
-    card?.classList.add('is-tilted');
-    if (numEl) numEl.innerText = userCardMaskedNumber;
-    if (hintEl) hintEl.innerHTML = '<span>👆 Натисніть на картку, щоб переглянути номер та баланс</span>';
-  }
 }
 
 // Live Feed
@@ -350,7 +213,6 @@ function renderCartScreen() {
 
   const total = cart.reduce((sum, i) => sum + (i.price * i.count), 0);
   totalDisplay.innerText = `${total} гривны`;
-  updateBalanceDisplays();
 }
 
 function clearCart() {
@@ -365,10 +227,6 @@ function generateCheckId() {
   return res;
 }
 
-function utf8ToBase64(str) {
-  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => String.fromCharCode(parseInt(p1, 16))));
-}
-
 function checkoutOrder() {
   if (cart.length === 0) {
     if (tg?.showAlert) tg.showAlert("Додайте хоча б один товар до кошика!");
@@ -378,54 +236,14 @@ function checkoutOrder() {
 
   const checkId = generateCheckId();
   const total = Number(cart.reduce((sum, i) => sum + (i.price * i.count), 0));
-  const useBalanceCheckbox = document.getElementById('useBalanceCheckbox');
-  const useBalance = Boolean(useBalanceCheckbox && useBalanceCheckbox.checked && !useBalanceCheckbox.disabled);
-
-  if (useBalance && userBalance < total) {
-    if (tg?.showAlert) tg.showAlert(`Недостатньо коштів на картці! Ваш баланс: ${userBalance} гривны, а сума: ${total} гривны.`);
-    else alert(`Недостатньо коштів на картці! Поповніть її через менеджера.`);
-    return;
-  }
-
-  if (useBalance && userRef) {
-    const newBal = userBalance - total;
-    const now = new Date();
-    const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    const dateStr = `${now.getDate().toString().padStart(2, '0')}.${(now.getMonth() + 1).toString().padStart(2, '0')}`;
-
-    userRef.update({
-      balance: newBal,
-      ordersCount: (ordersHistory || 0) + 1
-    });
-
-    userRef.child('transactions').push({
-      title: `Оплата замовлення ${checkId}`,
-      amount: total,
-      isNegative: true,
-      time: `${dateStr} о ${timeStr}`
-    });
-  }
-
   const itemsText = cart.map(i => `• ${i.name} (${i.count} шт.) — ${i.price * i.count} гривны`).join('\n');
 
   const receiptNumEl = document.getElementById('receiptNumber');
   const receiptSumEl = document.getElementById('receiptSummary');
   if (receiptNumEl) receiptNumEl.innerText = checkId;
+  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом: ${total} гривны`;
 
-  const paymentText = useBalance ? `🟢 Оплата: Списання з картки Gravity (${userCardFullNumber})` : "🟡 Оплата: Переказ на картку менеджеру";
-  if (receiptSumEl) receiptSumEl.innerText = `${itemsText}\n\nРазом: ${total} гривны\n${paymentText}`;
-  
-  const orderData = {
-    id: checkId,
-    user_id: currentUserId,
-    items: cart.map(i => ({ id: i.id, name: i.name, count: i.count, price: i.price })),
-    total: total,
-    use_balance: useBalance
-  };
-  
-  const encodedPayload = utf8ToBase64(JSON.stringify(orderData));
-  const botLink = `https://t.me/gravityshopbot?start=order_${encodedPayload}`;
-  const msgForManager = `Привіт! Мій чек в Gravity Shop:\n🧾 Чек: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом: ${total} гривны\n${paymentText}\n\n(Посилання: ${botLink})`;
+  const msgForManager = `Привіт! Хочу замовити в Gravity Shop:\n🧾 Замовлення: ${checkId}\n\nТовари:\n${itemsText}\n\n💳 Разом до сплати: ${total} гривны`;
 
   const sendBtn = document.getElementById('btnSendManager');
   if (sendBtn) {
@@ -456,51 +274,15 @@ function copyCheckId() {
   }
 }
 
-function copyCardNumber() {
-  if (userCardFullNumber) {
-    navigator.clipboard?.writeText(userCardFullNumber);
-    showToast(`💳 Номер картки ${userCardFullNumber} скопійовано!`);
-    if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-  }
-}
-
-function topUpBalance() {
-  const msg = `Привіт! Хочу поповнити картку Gravity Black.\n💳 Номер картки: ${userCardFullNumber}\n👤 ID: ${currentUserId}\nСума:`;
-  const url = `https://t.me/Fambod?text=${encodeURIComponent(msg)}`;
-  if (tg) tg.openTelegramLink(url);
-  else window.open(url, '_blank');
-}
-
-function openPromoModal() {
-  document.getElementById('promoModal')?.classList.add('active');
-  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
-}
-
-function closePromoModal() {
-  document.getElementById('promoModal')?.classList.remove('active');
-}
-
-function submitPromoCode() {
-  const code = document.getElementById('promoInput')?.value.trim().toUpperCase();
-  if (!code) {
-    showToast("⚠️ Введіть промокод!");
-    return;
-  }
-  closePromoModal();
-  window.location.href = `https://t.me/gravityshopbot?start=promo_${code}`;
-}
-
 function switchTab(tab) {
   const views = {
     catalog: document.getElementById('viewCatalog'),
-    card: document.getElementById('viewCard'),
     cart: document.getElementById('viewCart'),
     profile: document.getElementById('viewProfile')
   };
 
   const tabs = {
     catalog: document.getElementById('tabCatalog'),
-    card: document.getElementById('tabCard'),
     cart: document.getElementById('tabCart'),
     profile: document.getElementById('tabProfile')
   };
@@ -513,35 +295,22 @@ function switchTab(tab) {
 
   if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
 
-  if (tab === 'card') renderTransactions();
   if (tab === 'cart') renderCartScreen();
   if (tab === 'profile') loadProfileData();
 }
 
 function loadProfileData() {
-  updateBalanceDisplays();
-  userCardFullNumber = generateCardNumber(currentUserId);
-  const parts = userCardFullNumber.split(' ');
-  userCardMaskedNumber = `${parts[0]} **** **** ${parts[3] || '0000'}`;
-
-  const cardNumEl = document.getElementById('monoCardNumber');
-  if (cardNumEl) {
-    cardNumEl.innerText = isCardFocused ? userCardFullNumber : userCardMaskedNumber;
-  }
-
   const u = tg?.initDataUnsafe?.user;
-  const fullName = `${u?.first_name || ''} ${u?.last_name || ''}`.trim() || 'GRAVITY CLIENT';
-  const cardHolderEl = document.getElementById('cardHolderName');
-  if (cardHolderEl) cardHolderEl.innerText = fullName.toUpperCase();
+  const fullName = `${u?.first_name || ''} ${u?.last_name || ''}`.trim() || 'Користувач';
 
   const nameEl = document.getElementById('userName');
   const userEl = document.getElementById('userUsername');
   const idEl = document.getElementById('userId');
   const avatarEl = document.getElementById('userAvatar');
 
-  if (nameEl) nameEl.innerText = fullName || 'Користувач';
+  if (nameEl) nameEl.innerText = fullName;
   if (userEl) userEl.innerText = u?.username ? `@${u.username}` : 'Без юзернейму';
-  if (idEl) idEl.innerText = currentUserId;
+  if (idEl) idEl.innerText = u?.id || '5188484100';
   if (avatarEl && u?.first_name) {
     avatarEl.innerText = u.first_name.charAt(0).toUpperCase();
   }
@@ -552,8 +321,6 @@ function scrollToCatalog() {
   if (grid) grid.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Запуск інтерфейсу
 renderCategories();
 renderProducts();
 loadProfileData();
-initFirebase();
