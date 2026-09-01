@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=clear_1">
+  <link rel="stylesheet" href="style.css?v=folder_struct_1">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -15,7 +15,7 @@
       <div class="manager-avatar-wrapper">
         <div class="manager-glow"></div>
         <div class="manager-ring"></div>
-        <img src="manager.png" id="managerPhoto" class="manager-avatar" alt="Manager">
+        <img src="images/image-Photoroom (3).png" id="managerPhoto" class="manager-avatar" alt="Manager" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
         <div class="manager-badge">ONLINE ⚡</div>
       </div>
       <div class="loader-title">GRAVITY <span class="neon-text">SHOP</span></div>
@@ -33,7 +33,10 @@
   <!-- Header -->
   <header class="header">
     <div class="brand">
-      <div class="brand-icon-box">⚡</div>
+      <div class="brand-icon-box">
+        <img src="images/logo.png" alt="Logo" class="header-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <span style="display: none;">⚡</span>
+      </div>
       <div class="brand-text">
         <span class="brand-name">GRAVITY</span>
         <span class="brand-sub">STORE</span>
@@ -48,7 +51,7 @@
   <!-- Live Feed -->
   <div class="live-feed-wrap">
     <div class="live-feed-icon">⚡</div>
-    <div class="live-feed-text" id="liveFeedText">Користувач @and*** щойно купив Discord Nitro 1 Місяць</div>
+    <div class="live-feed-text" id="liveFeedText">Користувач @noy**** щойно купив Discord Nitro 1 Місяць</div>
   </div>
 
   <!-- 1. Вкладка: МАГАЗИН -->
@@ -165,7 +168,7 @@
     </div>
   </div>
 
-  <!-- Bottom Navigation (Каталог, Кошик, Профіль) -->
+  <!-- Bottom Navigation -->
   <div class="bottom-nav-container">
     <nav class="bottom-nav">
       <div class="nav-btn active" id="tabCatalog" onclick="switchTab('catalog')">
@@ -201,6 +204,6 @@
     </nav>
   </div>
 
-  <script src="app.js?v=clear_1"></script>
+  <script src="app.js?v=folder_struct_1"></script>
 </body>
 </html>
