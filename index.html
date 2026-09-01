@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=25">
+  <link rel="stylesheet" href="style.css?v=clear_1">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -19,7 +19,7 @@
         <div class="manager-badge">ONLINE ⚡</div>
       </div>
       <div class="loader-title">GRAVITY <span class="neon-text">SHOP</span></div>
-      <div class="loader-status">Завантаження сервісів...</div>
+      <div class="loader-status">Завантаження каталогу...</div>
       <div class="loader-progress-track">
         <div class="loader-progress-bar"></div>
       </div>
@@ -59,7 +59,7 @@
         <div class="banner-content">
           <div class="banner-badge-top">CYBER EDITION • 2026</div>
           <h2 class="banner-title">TIKTOK, STARS & NITRO</h2>
-          <p class="banner-subtitle">Миттєва автоматична доставка та гарантія</p>
+          <p class="banner-subtitle">Швидка видача та прямий зв'язок з менеджером</p>
           <button class="banner-btn" onclick="scrollToCatalog()">Переглянути каталог</button>
         </div>
       </div>
@@ -85,79 +85,7 @@
     <main class="products-grid" id="productsGrid"></main>
   </div>
 
-  <!-- 2. Вкладка: КАРТКА ТА ТРАНЗАКЦІЇ (MONOBANK 3D STYLE) -->
-  <div id="viewCard" class="app-view" style="display: none;">
-    <div class="bank-card-stage">
-      <!-- 3D Контейнер карты -->
-      <div class="mono-card-perspective">
-        <div class="mono-card is-tilted" id="monoBankCard" onclick="toggleCardFocus()">
-          <!-- Неоновое фоновое свечение (розово-синее) -->
-          <div class="card-neon-backglow"></div>
-          <div class="card-inner-surface">
-            <!-- Верхняя строка -->
-            <div class="mono-top-row">
-              <div class="mono-brand">
-                <span class="mono-logo">gravity</span>
-                <span class="mono-sublogo">Digital Bank</span>
-              </div>
-              <div class="mono-nfc-icon">))))</div>
-            </div>
-
-            <!-- Чип (появляется при выпрямлении) -->
-            <div class="mono-chip-wrap">
-              <div class="mono-sim-chip"></div>
-            </div>
-
-            <!-- Номер карты (в 3D скрыт звездочками, при фокусе полный) -->
-            <div class="mono-card-number" id="monoCardNumber">4412 **** **** 0000</div>
-
-            <!-- Дата и имя -->
-            <div class="mono-bottom-row">
-              <div class="mono-holder-data">
-                <div class="mono-exp-date">12/30</div>
-                <div class="mono-holder-name" id="cardHolderName">CLIENT NAME</div>
-              </div>
-              <div class="mono-pay-logo">VISA</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-tap-hint" id="cardTapHint">
-        <span>👆 Натисніть на картку, щоб переглянути номер та баланс</span>
-      </div>
-
-      <!-- Панель баланса и действий -->
-      <div class="mono-card-details-panel" id="monoCardDetailsPanel">
-        <div class="mono-balance-banner">
-          <div class="mono-balance-left">
-            <span class="mono-bal-label">Доступний баланс картки</span>
-            <div class="mono-bal-value"><span id="cardBalanceVal">0</span> <small>гривны</small></div>
-          </div>
-          <button class="btn-copy-card-num" onclick="copyCardNumber()">
-            <span>📋</span> Скопіювати
-          </button>
-        </div>
-
-        <div class="card-actions-row">
-          <button class="btn-card-action primary" onclick="topUpBalance()">
-            <span>💳</span> Написати менеджеру (Поповнити)
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- История транзакций карты -->
-    <div class="transactions-container">
-      <div class="trans-header">
-        <h3>Історія транзакцій</h3>
-        <span class="trans-badge">Live</span>
-      </div>
-      <div class="trans-list" id="transactionsList"></div>
-    </div>
-  </div>
-
-  <!-- 3. Вкладка: КОШИК -->
+  <!-- 2. Вкладка: КОШИК -->
   <div id="viewCart" class="app-view" style="display: none;">
     <div class="cart-screen">
       <div class="cart-screen-header">
@@ -167,13 +95,6 @@
 
       <div class="cart-items-list" id="cartScreenItemsList"></div>
 
-      <div class="cart-payment-option">
-        <label class="checkbox-container">
-          <input type="checkbox" id="useBalanceCheckbox">
-          <span class="checkbox-label">Оплатити з картки Gravity (<b id="cartUserBalance">0</b> гривны)</span>
-        </label>
-      </div>
-
       <div class="cart-footer">
         <div class="cart-total-row">
           <span>Разом до сплати:</span>
@@ -181,13 +102,13 @@
         </div>
         <div class="cart-actions">
           <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
-          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Сформувати чек)</button>
+          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Написати менеджеру)</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- 4. Вкладка: ПРОФІЛЬ -->
+  <!-- 3. Вкладка: ПРОФІЛЬ -->
   <div id="viewProfile" class="app-view" style="display: none;">
     <div class="profile-card">
       <div class="profile-avatar" id="userAvatar">👤</div>
@@ -196,36 +117,18 @@
       <div class="profile-id-box">Telegram ID: <span id="userId">00000000</span></div>
     </div>
 
-    <div class="profile-stats">
-      <div class="stat-box">
-        <span class="stat-value" id="userOrdersCount">0</span>
-        <span class="stat-label">Замовлень</span>
-      </div>
-      <div class="stat-box">
-        <span class="stat-value neon-green">VIP Клієнт</span>
-        <span class="stat-label">Статус картки</span>
-      </div>
-    </div>
-
-    <div class="profile-menu">
-      <div class="profile-menu-item promo-item" onclick="openPromoModal()">
-        <div class="p-item-left">
-          <span class="p-icon">🎟️</span>
-          <span class="neon-text">Ввести промокод</span>
-        </div>
-        <span class="p-arrow">›</span>
-      </div>
+    <div class="profile-menu" style="margin-top: 20px;">
       <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
         <div class="p-item-left">
           <span class="p-icon">💬</span>
-          <span>Зв'язатися з менеджером (@Fambod)</span>
+          <span>Написати менеджеру (@Fambod)</span>
         </div>
         <span class="p-arrow">›</span>
       </a>
     </div>
   </div>
 
-  <!-- Floating Sticky Bar для быстрого перехода в корзину -->
+  <!-- Floating Sticky Bar -->
   <div class="floating-cart-bar" id="floatingCartBar" onclick="switchTab('cart')">
     <div class="floating-cart-left">
       <span class="floating-cart-badge" id="floatingCartCount">0</span>
@@ -237,31 +140,13 @@
     <div class="floating-cart-btn">До кошика →</div>
   </div>
 
-  <!-- Promo Modal -->
-  <div class="cart-modal-overlay" id="promoModal">
-    <div class="cart-modal promo-modal-box">
-      <div class="cart-header">
-        <div class="cart-header-title">
-          <span class="neon-dot"></span>
-          <h2>Активація промокоду</h2>
-        </div>
-        <button class="btn-close-modal" onclick="closePromoModal()">✕</button>
-      </div>
-      <div class="promo-content">
-        <p class="promo-desc">Введіть промокод на нарахування коштів на баланс картки:</p>
-        <input type="text" id="promoInput" class="promo-input-field" placeholder="Наприклад: SPRING50">
-        <button class="btn-checkout" onclick="submitPromoCode()">⚡ Активувати код</button>
-      </div>
-    </div>
-  </div>
-
   <!-- Receipt Modal -->
   <div class="cart-modal-overlay" id="receiptModal">
     <div class="cart-modal receipt-modal">
       <div class="cart-header">
         <div class="cart-header-title">
           <span class="neon-dot"></span>
-          <h2>Чек замовлення</h2>
+          <h2>Ваше замовлення</h2>
         </div>
         <button class="btn-close-modal" onclick="closeReceiptModal()">✕</button>
       </div>
@@ -269,18 +154,18 @@
         <div class="receipt-icon-pulse">⚡</div>
         <div class="receipt-number-wrap" onclick="copyCheckId()">
           <div class="receipt-number" id="receiptNumber">#000000</div>
-          <span class="copy-hint">📋 Натисніть, щоб скопіювати номер чека</span>
+          <span class="copy-hint">📋 Натисніть, щоб скопіювати номер замовлення</span>
         </div>
-        <p class="receipt-text">Чек збережено! Надішліть чек менеджеру для отримання товару:</p>
+        <p class="receipt-text">Натисніть кнопку нижче, щоб надіслати замовлення менеджеру в Telegram:</p>
         <div class="receipt-summary" id="receiptSummary"></div>
       </div>
       <div class="cart-footer">
-        <button class="btn-checkout" id="btnSendManager">🚀 Надіслати менеджеру @Fambod</button>
+        <button class="btn-checkout" id="btnSendManager">🚀 Надіслати замовлення менеджеру @Fambod</button>
       </div>
     </div>
   </div>
 
-  <!-- Нижняя панель навигации в стиле Capsule Pill -->
+  <!-- Bottom Navigation (Каталог, Кошик, Профіль) -->
   <div class="bottom-nav-container">
     <nav class="bottom-nav">
       <div class="nav-btn active" id="tabCatalog" onclick="switchTab('catalog')">
@@ -290,16 +175,6 @@
           </svg>
         </div>
         <span class="nav-label">Магазин</span>
-      </div>
-
-      <div class="nav-btn" id="tabCard" onclick="switchTab('card')">
-        <div class="nav-icon-wrap">
-          <svg viewBox="0 0 24 24" class="nav-svg">
-            <rect x="2" y="5" width="20" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
-            <line x1="2" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="1.8"/>
-          </svg>
-        </div>
-        <span class="nav-label">Картка</span>
       </div>
 
       <div class="nav-btn" id="tabCart" onclick="switchTab('cart')">
@@ -326,6 +201,6 @@
     </nav>
   </div>
 
-  <script src="app.js?v=25"></script>
+  <script src="app.js?v=clear_1"></script>
 </body>
 </html>
