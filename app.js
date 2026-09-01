@@ -29,7 +29,7 @@ function showToast(text) {
 
 // Live Feed
 const fakePurchases = [
-  "Користувач @and*** щойно купив Discord Nitro 1 Місяць",
+  "Користувач @noy**** щойно купив Discord Nitro 1 Місяць",
   "Користувач @vla*** поповнив 1000 підписників TikTok",
   "Користувач @nik*** придбав 100 Telegram Stars",
   "Користувач @dan*** оформив 10 000 переглядів TikTok",
@@ -49,28 +49,151 @@ setInterval(() => {
   }
 }, 4500);
 
+// КАТЕГОРІЇ
 const categories = [
   { id: 'all', name: 'Все', icon: '⚡', img: '' },
-  { id: 'tiktok', name: 'TikTok', icon: '📱', img: '' },
-  { id: 'stars', name: 'Stars', icon: '⭐', img: '' },
-  { id: 'discord', name: 'Discord', icon: '🟣', img: '' },
-  { id: 'steam', name: 'Steam', icon: '🎮', img: '' },
-  { id: 'standoff', name: 'Standoff', icon: '🔫', img: '' },
-  { id: 'spotify', name: 'Spotify', icon: '🎵', img: '' }
+  { id: 'tiktok', name: 'TikTok', icon: '📱', img: 'images/tiktok.jpg' },
+  { id: 'stars', name: 'Stars', icon: '⭐', img: 'images/telegramstar.png' },
+  { id: 'discord', name: 'Discord', icon: '🟣', img: 'images/discord.jpg' },
+  { id: 'steam', name: 'Steam', icon: '🎮', img: 'images/steam.jpg' },
+  { id: 'standoff', name: 'Standoff', icon: '🔫', img: 'images/standoff.jpg' },
+  { id: 'spotify', name: 'Spotify', icon: '🎵', img: 'images/spotify.jpg' }
 ];
 
+// ТОВАРИ (Підтримка прапорця disabled: true для розробки / відсутності товару)
 const products = [
-  { id: 101, cat: 'tiktok', name: 'Накрутка підписників TikTok', price: 90, badge: '🔥 Хіт продажів', badgeType: 'badge-fire', sub: '1000 якісних фоловерів', icon: '👥', img: '' },
-  { id: 102, cat: 'tiktok', name: 'Накрутка переглядів TikTok', price: 35, badge: '⚡ Швидка доставка', badgeType: 'badge-fast', sub: '10 000 переглядів у рек', icon: '👀', img: '' },
-  { id: 103, cat: 'tiktok', name: 'Накрутка коментарів TikTok', price: 60, badge: '💬 Активність', badgeType: 'badge-deal', sub: '50 позитивних коментарів', icon: '💬', img: '' },
-  { id: 104, cat: 'tiktok', name: 'Накрутка репостів TikTok', price: 45, badge: '🚀 ТОП алгоритми', badgeType: 'badge-fast', sub: '500 репостів/поділів', icon: '🔁', img: '' },
-  { id: 1, cat: 'stars', name: '50 Telegram Stars', price: 50, badge: '🔥 Топ', badgeType: 'badge-fire', sub: 'Офіційні зірки Telegram', icon: '⭐', img: '' },
-  { id: 2, cat: 'stars', name: '100 Telegram Stars', price: 85, badge: '⚡ Миттєво', badgeType: 'badge-fast', sub: 'Офіційні зірки Telegram', icon: '⭐', img: '' },
-  { id: 3, cat: 'discord', name: 'Discord Nitro 1 Місяць', price: 300, badge: '🔥 Хіт', badgeType: 'badge-fire', sub: 'Full Nitro з 2 бустами', icon: '🟣', img: '' },
-  { id: 4, cat: 'discord', name: 'Discord Nitro 3 Місяці', price: 1150, badge: '💎 Вигідно', badgeType: 'badge-deal', sub: 'Full Nitro гарантія', icon: '💎', img: '' },
-  { id: 5, cat: 'steam', name: 'Поповнення Steam (200 грн)', price: 250, badge: '⚡ Авто-видача', badgeType: 'badge-fast', sub: 'Баланс гаманця Steam', icon: '🎮', img: '' },
-  { id: 6, cat: 'standoff', name: '100 Gold Standoff 2', price: 40, badge: '🔥 Топ ціна', badgeType: 'badge-fire', sub: 'Голда по ринку з комісією', icon: '🔫', img: '' },
-  { id: 7, cat: 'spotify', name: 'Spotify Premium 1 Міс', price: 120, badge: '🎵 Без реклами', badgeType: 'badge-deal', sub: 'Індивідуальна підписка', icon: '🎵', img: '' }
+  { 
+    id: 101, 
+    cat: 'tiktok', 
+    name: 'Накрутка підписників TikTok', 
+    price: 90, 
+    badge: 'Немає в наявності', 
+    badgeType: 'badge-fire', 
+    sub: '1000 якісних фоловерів', 
+    icon: '👥', 
+    img: 'images/products/tiktok_subs.png',
+    disabled: true
+  },
+  { 
+    id: 102, 
+    cat: 'tiktok', 
+    name: 'Накрутка переглядів TikTok', 
+    price: 35, 
+    badge: '⚡ ШВИДКА ДОСТАВКА', 
+    badgeType: 'badge-fast', 
+    sub: '10 000 переглядів у рек', 
+    icon: '👀', 
+    img: 'images/products/tiktok_views.png',
+    disabled: false
+  },
+  { 
+    id: 103, 
+    cat: 'tiktok', 
+    name: 'Накрутка коментарів TikTok', 
+    price: 60, 
+    badge: '💬 Активність', 
+    badgeType: 'badge-deal', 
+    sub: '50 позитивних коментарів', 
+    icon: '💬', 
+    img: 'images/products/tiktok_comments.png',
+    disabled: false
+  },
+  { 
+    id: 104, 
+    cat: 'tiktok', 
+    name: 'Накрутка репостів TikTok', 
+    price: 45, 
+    badge: '🚀 ТОП алгоритми', 
+    badgeType: 'badge-fast', 
+    sub: '500 репостів/поділів', 
+    icon: '🔁', 
+    img: 'images/products/tiktok_reposts.png',
+    disabled: false
+  },
+  { 
+    id: 1, 
+    cat: 'stars', 
+    name: '50 Telegram Stars', 
+    price: 50, 
+    badge: '🔥 Топ', 
+    badgeType: 'badge-fire', 
+    sub: 'Офіційні зірки Telegram', 
+    icon: '⭐', 
+    img: 'images/products/stars_50.png',
+    disabled: false
+  },
+  { 
+    id: 2, 
+    cat: 'stars', 
+    name: '100 Telegram Stars', 
+    price: 85, 
+    badge: '⚡ Миттєво', 
+    badgeType: 'badge-fast', 
+    sub: 'Офіційні зірки Telegram', 
+    icon: '⭐', 
+    img: 'images/products/stars_100.png',
+    disabled: false
+  },
+  { 
+    id: 3, 
+    cat: 'discord', 
+    name: 'Discord Nitro 1 Місяць', 
+    price: 300, 
+    badge: '🔥 Хіт', 
+    badgeType: 'badge-fire', 
+    sub: 'Full Nitro з 2 бустами', 
+    icon: '🟣', 
+    img: 'images/products/discord_nitro_1m.png',
+    disabled: false
+  },
+  { 
+    id: 4, 
+    cat: 'discord', 
+    name: 'Discord Nitro 3 Місяці', 
+    price: 1150, 
+    badge: '💎 Вигідно', 
+    badgeType: 'badge-deal', 
+    sub: 'Full Nitro гарантія', 
+    icon: '💎', 
+    img: 'images/products/discord_nitro_3m.png',
+    disabled: false
+  },
+  { 
+    id: 5, 
+    cat: 'steam', 
+    name: 'Поповнення Steam (200 грн)', 
+    price: 250, 
+    badge: '⚡ Авто-видача', 
+    badgeType: 'badge-fast', 
+    sub: 'Баланс гаманця Steam', 
+    icon: '🎮', 
+    img: 'images/products/steam_topup.png',
+    disabled: false
+  },
+  { 
+    id: 6, 
+    cat: 'standoff', 
+    name: '100 Gold Standoff 2', 
+    price: 40, 
+    badge: '🔥 Топ ціна', 
+    badgeType: 'badge-fire', 
+    sub: 'Голда по ринку з комісією', 
+    icon: '🔫', 
+    img: 'images/banner/bannerstandoff100gold.jpg',
+    disabled: false
+  },
+  { 
+    id: 7, 
+    cat: 'spotify', 
+    name: 'Spotify Premium 1 Міс', 
+    price: 120, 
+    badge: '🎵 Без реклами', 
+    badgeType: 'badge-deal', 
+    sub: 'Індивідуальна підписка', 
+    icon: '🎵', 
+    img: 'images/products/spotify_prem.png',
+    disabled: false
+  }
 ];
 
 let cart = [];
@@ -81,7 +204,10 @@ function renderCategories() {
   if (!bar) return;
 
   bar.innerHTML = categories.map(c => {
-    const iconContent = c.img ? `<img src="${c.img}" class="cat-custom-img" alt="${c.name}">` : `<span>${c.icon}</span>`;
+    const iconContent = c.img 
+      ? `<img src="${c.img}" class="cat-custom-img" alt="${c.name}" onerror="this.outerHTML='<span>${c.icon}</span>'">` 
+      : `<span>${c.icon}</span>`;
+      
     return `
       <div class="cat-item ${c.id === currentCategory ? 'active' : ''}" onclick="selectCategory('${c.id}')">
         <div class="cat-icon-box">${iconContent}</div>
@@ -108,14 +234,23 @@ function renderProducts() {
 
   grid.innerHTML = filtered.map(item => {
     const bannerMedia = item.img 
-      ? `<img src="${item.img}" class="card-custom-img" alt="${item.name}">` 
+      ? `<img src="${item.img}" class="card-custom-img" alt="${item.name}" onerror="this.outerHTML='<div class=\\'card-center-glow-icon\\'>${item.icon || '⚡'}</div>'">` 
       : `<div class="card-center-glow-icon">${item.icon || '⚡'}</div>`;
 
+    const isOff = Boolean(item.disabled);
+    const priceDisplay = isOff 
+      ? `<span class="card-price" style="color: var(--text-muted); font-size: 12px;">Уточнюється</span>` 
+      : `<span class="card-price">${item.price} <small>гривны</small></span>`;
+
+    const buttonDisplay = isOff
+      ? `<button class="btn-card disabled" disabled>Недоступно</button>`
+      : `<button class="btn-card" onclick="addToCart(${item.id})">+ Купити</button>`;
+
     return `
-      <div class="product-card">
+      <div class="product-card ${isOff ? 'is-disabled' : ''}">
         <div class="card-banner">
           <div class="badge-row">
-            <span class="badge ${item.badgeType}">${item.badge}</span>
+            <span class="badge ${item.badgeType || 'badge-fast'}">${item.badge || 'ТОП'}</span>
           </div>
           ${bannerMedia}
         </div>
@@ -123,8 +258,8 @@ function renderProducts() {
           <div class="card-title-bottom">${item.name}</div>
           <div class="card-sub-info">${item.sub}</div>
           <div class="card-price-row">
-            <span class="card-price">${item.price} <small>гривны</small></span>
-            <button class="btn-card" onclick="addToCart(${item.id})">+ Купити</button>
+            ${priceDisplay}
+            ${buttonDisplay}
           </div>
         </div>
       </div>
@@ -134,7 +269,7 @@ function renderProducts() {
 
 function addToCart(id) {
   const item = products.find(p => p.id === id);
-  if (!item) return;
+  if (!item || item.disabled) return;
 
   const existing = cart.find(i => i.id === id);
   if (existing) existing.count += 1;
