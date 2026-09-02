@@ -356,7 +356,7 @@ const products = [
     subUA: 'Баланс гаманця Steam', 
     subRU: 'Баланс кошелька Steam',
     icon: '🎮', 
-    img: 'images/products/steam_topup.png',
+    img: 'images/banner/steambalans200.jpg',
     disabled: false,
     speedUA: '5 - 15 хв',
     speedRU: '5 - 15 мин',
