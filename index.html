@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=folder_struct_1">
+  <link rel="stylesheet" href="style.css?v=lang_curr_v2">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </head>
 <body>
@@ -15,11 +15,11 @@
       <div class="manager-avatar-wrapper">
         <div class="manager-glow"></div>
         <div class="manager-ring"></div>
-        <img src="images/image-Photoroom (3).png" id="managerPhoto" class="manager-avatar" alt="Manager" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+        <img src="images/manager.png" id="managerPhoto" class="manager-avatar" alt="Manager" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
         <div class="manager-badge">ONLINE ⚡</div>
       </div>
       <div class="loader-title">GRAVITY <span class="neon-text">SHOP</span></div>
-      <div class="loader-status">Завантаження каталогу...</div>
+      <div class="loader-status" id="loaderStatus">Завантаження каталогу...</div>
       <div class="loader-progress-track">
         <div class="loader-progress-bar"></div>
       </div>
@@ -42,9 +42,10 @@
         <span class="brand-sub">STORE</span>
       </div>
     </div>
-    <div class="lang-selector-header">
-      <span class="flag">🇺🇦</span>
-      <span>UA</span>
+    <!-- Быстрый переключатель в шапке -->
+    <div class="lang-selector-header" onclick="toggleLanguageQuick()">
+      <span class="flag" id="headerFlag">🇺🇦</span>
+      <span id="headerLangText">UA</span>
     </div>
   </header>
 
@@ -60,27 +61,22 @@
       <div class="banner">
         <div class="banner-glass-overlay"></div>
         <div class="banner-content">
-          <div class="banner-badge-top">CYBER EDITION • 2026</div>
-          <h2 class="banner-title">TIKTOK, STARS & NITRO</h2>
-          <p class="banner-subtitle">Швидка видача та прямий зв'язок з менеджером</p>
-          <button class="banner-btn" onclick="scrollToCatalog()">Переглянути каталог</button>
+          <div class="banner-badge-top" id="bannerBadge">CYBER EDITION • 2026</div>
+          <h2 class="banner-title" id="bannerTitle">TIKTOK, STARS & NITRO</h2>
+          <p class="banner-subtitle" id="bannerSubtitle">Швидка видача та прямий зв'язок з менеджером</p>
+          <button class="banner-btn" id="bannerBtn" onclick="scrollToCatalog()">Переглянути каталог</button>
         </div>
       </div>
     </section>
 
     <div class="ticker-wrap">
-      <div class="ticker">
-        <span>🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b></span>
-        <span>⚡ МИТТЄВА НАКРУТКА TIKTOK <b>GRAVITY</b></span>
-        <span>⭐ ОФІЦІЙНІ TELEGRAM STARS <b>GRAVITY</b></span>
-        <span>💎 НАЙНИЖЧІ ЦІНИ НА РИНКУ <b>GRAVITY</b></span>
-      </div>
+      <div class="ticker" id="tickerContainer"></div>
     </div>
 
     <div class="page-header">
       <div class="section-title-wrap">
         <span class="section-indicator"></span>
-        <h1 class="page-title">Категорії послуг</h1>
+        <h1 class="page-title" id="pageTitleCategories">Категорії послуг</h1>
       </div>
     </div>
 
@@ -93,19 +89,19 @@
     <div class="cart-screen">
       <div class="cart-screen-header">
         <span class="neon-dot"></span>
-        <h2>Ваш кошик</h2>
+        <h2 id="cartHeaderTitle">Ваш кошик</h2>
       </div>
 
       <div class="cart-items-list" id="cartScreenItemsList"></div>
 
       <div class="cart-footer">
         <div class="cart-total-row">
-          <span>Разом до сплати:</span>
-          <span class="cart-total-price" id="cartScreenTotalDisplay">0 гривны</span>
+          <span id="cartTotalLabel">Разом до сплати:</span>
+          <span class="cart-total-price" id="cartScreenTotalDisplay">0 ₴</span>
         </div>
         <div class="cart-actions">
-          <button class="btn-clear-cart" onclick="clearCart()">Очистити</button>
-          <button class="btn-checkout" onclick="checkoutOrder()">Купити (Написати менеджеру)</button>
+          <button class="btn-clear-cart" id="btnClearCart" onclick="clearCart()">Очистити</button>
+          <button class="btn-checkout" id="btnCheckout" onclick="checkoutOrder()">Купити (Написати менеджеру)</button>
         </div>
       </div>
     </div>
@@ -120,11 +116,38 @@
       <div class="profile-id-box">Telegram ID: <span id="userId">00000000</span></div>
     </div>
 
-    <div class="profile-menu" style="margin-top: 20px;">
+    <!-- Блок настроек языка и валюты в профиле -->
+    <div class="settings-card">
+      <div class="settings-title" id="settingsTitle">⚙️ Налаштування застосунку</div>
+      
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label" id="labelLang">Мова / Язык</span>
+          <span class="setting-hint" id="hintLang">Оберіть мову інтерфейсу</span>
+        </div>
+        <div class="switch-toggle-group">
+          <button class="toggle-opt-btn active" id="btnLangUA" onclick="setLanguage('ua')">UA 🇺🇦</button>
+          <button class="toggle-opt-btn" id="btnLangRU" onclick="setLanguage('ru')">RU 🌐</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <span class="setting-label" id="labelCurr">Валюта</span>
+          <span class="setting-hint" id="hintCurr">Відображення цін у магазині</span>
+        </div>
+        <div class="switch-toggle-group">
+          <button class="toggle-opt-btn active" id="btnCurrUAH" onclick="setCurrency('UAH')">₴ (UAH)</button>
+          <button class="toggle-opt-btn" id="btnCurrRUB" onclick="setCurrency('RUB')">₽ (RUB)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-menu">
       <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
         <div class="p-item-left">
           <span class="p-icon">💬</span>
-          <span>Написати менеджеру (@Fambod)</span>
+          <span id="labelContactManager">Написати менеджеру (@Fambod)</span>
         </div>
         <span class="p-arrow">›</span>
       </a>
@@ -136,11 +159,66 @@
     <div class="floating-cart-left">
       <span class="floating-cart-badge" id="floatingCartCount">0</span>
       <div class="floating-cart-info">
-        <span class="floating-cart-title">Товарів у кошику</span>
-        <span class="floating-cart-price" id="floatingCartTotal">0 гривны</span>
+        <span class="floating-cart-title" id="floatingCartTitle">Товарів у кошику</span>
+        <span class="floating-cart-price" id="floatingCartTotal">0 ₴</span>
       </div>
     </div>
-    <div class="floating-cart-btn">До кошика →</div>
+    <div class="floating-cart-btn" id="floatingCartBtn">До кошика →</div>
+  </div>
+
+  <!-- Product Details Modal (Деталі послуги) -->
+  <div class="cart-modal-overlay" id="productModal">
+    <div class="cart-modal product-modal-sheet">
+      <div class="cart-header">
+        <div class="cart-header-title">
+          <span class="neon-dot"></span>
+          <h2 id="modalProductTitle">Деталі послуги</h2>
+        </div>
+        <button class="btn-close-modal" onclick="closeProductModal()">✕</button>
+      </div>
+      
+      <div class="product-modal-body">
+        <div class="modal-banner-wrap" id="modalProductBanner"></div>
+
+        <div class="modal-meta-row">
+          <span class="badge" id="modalProductBadge">ТОП</span>
+          <span class="modal-price" id="modalProductPrice">0 ₴</span>
+        </div>
+
+        <p class="modal-short-desc" id="modalProductShortDesc"></p>
+
+        <div class="modal-details-grid">
+          <div class="modal-detail-card">
+            <span class="mdc-icon">⚡</span>
+            <div class="mdc-text">
+              <strong id="labelModalSpeed">Швидкість видачі</strong>
+              <span id="modalProductSpeed">5 - 30 хв</span>
+            </div>
+          </div>
+          <div class="modal-detail-card">
+            <span class="mdc-icon">🛡️</span>
+            <div class="mdc-text">
+              <strong id="labelModalGuarantee">Гарантія</strong>
+              <span id="modalProductGuarantee">100% захист покупки</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-section-box">
+          <h4 id="labelModalTerms">📌 Умови та вимоги</h4>
+          <p id="modalProductTerms"></p>
+        </div>
+
+        <div class="modal-section-box">
+          <h4 id="labelModalInstructions">🚀 Як отримати товар</h4>
+          <p id="modalProductInstructions"></p>
+        </div>
+      </div>
+
+      <div class="cart-footer modal-footer-action" id="modalProductFooterAction">
+        <!-- Кнопка генерується через JS -->
+      </div>
+    </div>
   </div>
 
   <!-- Receipt Modal -->
@@ -149,7 +227,7 @@
       <div class="cart-header">
         <div class="cart-header-title">
           <span class="neon-dot"></span>
-          <h2>Ваше замовлення</h2>
+          <h2 id="receiptModalTitle">Ваше замовлення</h2>
         </div>
         <button class="btn-close-modal" onclick="closeReceiptModal()">✕</button>
       </div>
@@ -157,9 +235,9 @@
         <div class="receipt-icon-pulse">⚡</div>
         <div class="receipt-number-wrap" onclick="copyCheckId()">
           <div class="receipt-number" id="receiptNumber">#000000</div>
-          <span class="copy-hint">📋 Натисніть, щоб скопіювати номер замовлення</span>
+          <span class="copy-hint" id="copyHint">📋 Натисніть, щоб скопіювати номер замовлення</span>
         </div>
-        <p class="receipt-text">Натисніть кнопку нижче, щоб надіслати замовлення менеджеру в Telegram:</p>
+        <p class="receipt-text" id="receiptTextHint">Натисніть кнопку нижче, щоб надіслати замовлення менеджеру в Telegram:</p>
         <div class="receipt-summary" id="receiptSummary"></div>
       </div>
       <div class="cart-footer">
@@ -177,7 +255,7 @@
             <path d="M3 10.25L12 3l9 7.25V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1v-9.75z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
-        <span class="nav-label">Магазин</span>
+        <span class="nav-label" id="navLabelShop">Магазин</span>
       </div>
 
       <div class="nav-btn" id="tabCart" onclick="switchTab('cart')">
@@ -189,7 +267,7 @@
           </svg>
           <span class="nav-badge" id="navCartBadge" style="display: none;">0</span>
         </div>
-        <span class="nav-label">Кошик</span>
+        <span class="nav-label" id="navLabelCart">Кошик</span>
       </div>
 
       <div class="nav-btn" id="tabProfile" onclick="switchTab('profile')">
@@ -199,11 +277,11 @@
             <path d="M4.5 20c0-3.6 3.4-6.5 7.5-6.5s7.5 2.9 7.5 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
         </div>
-        <span class="nav-label">Профіль</span>
+        <span class="nav-label" id="navLabelProfile">Профіль</span>
       </div>
     </nav>
   </div>
 
-  <script src="app.js?v=folder_struct_1"></script>
+  <script src="app.js?v=lang_curr_v2"></script>
 </body>
 </html>
