@@ -104,12 +104,24 @@ body {
   justify-content: center;
   align-items: center;
   z-index: 9999;
-  transition: opacity 0.45s ease, visibility 0.45s ease;
+  transition: opacity 0.2s ease, visibility 0.2s ease; /* було 0.45s */
 }
 
 .loader-overlay.hidden {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
+}
+
+/* Прискорена анімація смужки */
+.loader-progress-bar {
+  width: 100%;
+  height: 100%;
+  background: var(--grad-emerald);
+  box-shadow: 0 0 10px var(--neon-green);
+  border-radius: 10px;
+  transform: translateX(-100%);
+  animation: fillProgress 0.4s ease-out forwards; /* було 3s */
 }
 
 .loader-card {
