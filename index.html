@@ -3,9 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#040705">
+  <meta name="color-scheme" content="dark">
   <title>Gravity Shop</title>
-  <link rel="stylesheet" href="style.css?v=lang_curr_v2">
+  
+  <link rel="stylesheet" href="style.css?v=fast_load_v3">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <!-- Миттєве зафарбовування вікна Telegram та розгортання без сірої затримки -->
+  <script>
+    if (window.Telegram?.WebApp) {
+      try {
+        window.Telegram.WebApp.ready();
+        window.Telegram.WebApp.expand();
+        if (window.Telegram.WebApp.setHeaderColor) {
+          window.Telegram.WebApp.setHeaderColor('#040705');
+        }
+        if (window.Telegram.WebApp.setBackgroundColor) {
+          window.Telegram.WebApp.setBackgroundColor('#040705');
+        }
+      } catch (e) {}
+    }
+  </script>
 </head>
 <body>
 
@@ -42,7 +61,7 @@
         <span class="brand-sub">STORE</span>
       </div>
     </div>
-    <!-- Быстрый переключатель в шапке -->
+    <!-- Швидкий перемикач у шапці -->
     <div class="lang-selector-header" onclick="toggleLanguageQuick()">
       <span class="flag" id="headerFlag">🇺🇦</span>
       <span id="headerLangText">UA</span>
@@ -116,7 +135,7 @@
       <div class="profile-id-box">Telegram ID: <span id="userId">00000000</span></div>
     </div>
 
-    <!-- Блок настроек языка и валюты в профиле -->
+    <!-- Блок налаштувань мови та валюти -->
     <div class="settings-card">
       <div class="settings-title" id="settingsTitle">⚙️ Налаштування застосунку</div>
       
@@ -166,7 +185,7 @@
     <div class="floating-cart-btn" id="floatingCartBtn">До кошика →</div>
   </div>
 
-  <!-- Product Details Modal (Деталі послуги) -->
+  <!-- Product Details Modal -->
   <div class="cart-modal-overlay" id="productModal">
     <div class="cart-modal product-modal-sheet">
       <div class="cart-header">
@@ -215,9 +234,7 @@
         </div>
       </div>
 
-      <div class="cart-footer modal-footer-action" id="modalProductFooterAction">
-        <!-- Кнопка генерується через JS -->
-      </div>
+      <div class="cart-footer modal-footer-action" id="modalProductFooterAction"></div>
     </div>
   </div>
 
@@ -282,6 +299,6 @@
     </nav>
   </div>
 
-  <script src="app.js?v=lang_curr_v2"></script>
+  <script src="app.js?v=fast_load_v3"></script>
 </body>
 </html>
