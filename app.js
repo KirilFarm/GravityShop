@@ -31,8 +31,27 @@ function showToast(text) {
 let currentLang = localStorage.getItem('gravity_lang') || 'ua';
 let currentCurrency = localStorage.getItem('gravity_curr') || 'UAH';
 
-// Курс конвертації: 1 ₴ = 2.45 ₽
-const RATE_UAH_TO_RUB = 2.45;
+// Базовий точний курс із Google Finance (1 ₴ = 1.94 ₽)
+let RATE_UAH_TO_RUB = 1.94;
+
+// Автоматична синхронізація курсу валют у фоновому режимі
+async function syncExchangeRate() {
+  try {
+    const res = await fetch('https://open.er-api.com/v6/latest/UAH');
+    if (!res.ok) return;
+    const data = await res.json();
+    if (data?.rates?.RUB) {
+      RATE_UAH_TO_RUB = Number(data.rates.RUB.toFixed(2));
+      if (currentCurrency === 'RUB') {
+        renderProducts();
+        updateCartState();
+      }
+    }
+  } catch (e) {
+    // У разі відсутності інтернету залишається точний базовий курс 1.94
+  }
+}
+syncExchangeRate();
 
 const i18n = {
   ua: {
@@ -166,7 +185,7 @@ const categories = [
   { id: 'spotify', nameUA: 'Spotify', nameRU: 'Spotify', icon: '🎵', img: 'images/spotify.jpg' }
 ];
 
-// ТОВАРИ (з розширеними даними для модального вікна)
+// ТОВАРИ
 const products = [
   { 
     id: 101, 
