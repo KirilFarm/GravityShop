@@ -158,7 +158,7 @@ function formatPrice(uahAmount) {
     const rub = Math.round(uahAmount * RATE_UAH_TO_RUB);
     return `${rub} ₽`;
   }
-  return `${uahAmount} ₴`;
+  return `${uahAmount} гривны`;
 }
 
 // Live Feed
@@ -166,7 +166,7 @@ const fakePurchases = [
   "Користувач @noy**** щойно купив Discord Nitro 2 Місяці",
   "Користувач @vla*** поповнив 1000 підписників TikTok",
   "Користувач @nik*** придбав 100 Telegram Stars",
-  "Користувач @dan*** оформив 10 000 переглядів TikTok",
+  "Користувач @ole*** купив Steam Акаунт (Регіон Україна)",
   "Користувач @art*** придбав 14 Discord Server Boosts"
 ];
 
@@ -378,13 +378,13 @@ const products = [
     isBoostItem: true,
     nameUA: 'Discord Server Boosts', 
     nameRU: 'Discord Server Boosts',
-    price: 60, // Базова ціна за мінімальні 2 бусти (30 грн за 1 буст)
+    price: 60,
     unitPrice: 30,
     badgeUA: '⚡ ВІД 2 ДО 100 ШТ', 
     badgeRU: '⚡ ОТ 2 ДО 100 ШТ',
     badgeType: 'badge-fast', 
-    subUA: '30 ₴ за 1 буст (вибір кількості)', 
-    subRU: '30 ₴ за 1 буст (выбор количества)',
+    subUA: '30 гривны за 1 буст (вибір кількості)', 
+    subRU: '30 гривны за 1 буст (выбор количества)',
     icon: '🚀', 
     img: 'images/discord.jpg',
     disabled: false,
@@ -399,8 +399,8 @@ const products = [
   { 
     id: 5, 
     cat: 'steam', 
-    nameUA: 'Поповнення Steam (200 ₴)', 
-    nameRU: 'Пополнение Steam (200 ₴)',
+    nameUA: 'Поповнення Steam (200 гривны)', 
+    nameRU: 'Пополнение Steam (200 гривны)',
     price: 250, 
     badgeUA: '⚡ Авто-видача', 
     badgeRU: '⚡ Авто-выдача',
@@ -417,6 +417,28 @@ const products = [
     termsUA: 'Потрібно вказати логін акаунта Steam (той, за яким входите в клієнт, а не видимий нік).',
     termsRU: 'Нужно указать логин аккаунта Steam (тот, по которому входите, а не видимый ник).',
     instUA: 'Надішліть логін менеджеру. Баланс автоматично поповнюється на вказану суму.'
+  },
+  { 
+    id: 9, 
+    cat: 'steam', 
+    nameUA: 'Steam Акаунт (Регіон Україна, новорег)', 
+    nameRU: 'Steam Аккаунт (Регион Украина, новорег)',
+    price: 35, 
+    badgeUA: '🇺🇦 ЧИСТИЙ НОВОРЕГ', 
+    badgeRU: '🇺🇦 ЧИСТЫЙ НОВОРЕГ',
+    badgeType: 'badge-deal', 
+    subUA: 'Рідна пошта в комплекті • 0 годин', 
+    subRU: 'Родная почта в комплекте • 0 часов',
+    icon: '🇺🇦', 
+    img: 'images/steam.jpg',
+    disabled: false,
+    speedUA: '3 - 10 хв',
+    speedRU: '3 - 10 мин',
+    guaranteeUA: '100% гарантія першого входу та безпеки',
+    guaranteeRU: '100% гарантия первого входа и безопасности',
+    termsUA: 'Абсолютно новий акаунт із регіоном Україна (валюта гривні), без прив’язок телефону та без обмежень спільноти. Рідна пошта віддається вам назавжди.',
+    termsRU: 'Абсолютно новый аккаунт с регионом Украина (валюта гривны), без привязок телефона и блокировок. Родная почта передаётся навсегда.',
+    instUA: 'Після оплати менеджер надсилає дані формату: Логін:Пароль від Steam + Пошта:Пароль від пошти.'
   },
   { 
     id: 6, 
