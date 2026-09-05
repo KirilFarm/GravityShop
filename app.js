@@ -1,4 +1,4 @@
-// Ініціалізація Telegram WebApp
+// Миттєва ініціалізація Telegram WebApp
 const tg = window.Telegram?.WebApp;
 if (tg) {
   try {
@@ -12,12 +12,16 @@ function hideLoader() {
   const loader = document.getElementById('loader');
   if (loader && !loader.classList.contains('hidden')) {
     loader.classList.add('hidden');
-    setTimeout(() => { loader.style.display = 'none'; }, 450);
+    setTimeout(() => { loader.style.display = 'none'; }, 180);
   }
 }
 
-window.addEventListener('DOMContentLoaded', () => setTimeout(hideLoader, 300));
-setTimeout(hideLoader, 800);
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', hideLoader);
+} else {
+  hideLoader();
+}
+setTimeout(hideLoader, 350);
 
 function showToast(text) {
   const toast = document.getElementById('toast');
@@ -34,7 +38,6 @@ let currentCurrency = localStorage.getItem('gravity_curr') || 'UAH';
 // Базовий точний курс із Google Finance (1 ₴ = 1.94 ₽)
 let RATE_UAH_TO_RUB = 1.94;
 
-// Автоматична синхронізація курсу валют у фоновому режимі
 async function syncExchangeRate() {
   try {
     const res = await fetch('https://open.er-api.com/v6/latest/UAH');
@@ -47,9 +50,7 @@ async function syncExchangeRate() {
         updateCartState();
       }
     }
-  } catch (e) {
-    // У разі відсутності інтернету залишається точний базовий курс 1.94
-  }
+  } catch (e) {}
 }
 syncExchangeRate();
 
@@ -96,7 +97,11 @@ const i18n = {
     labelModalSpeed: "Швидкість видачі",
     labelModalGuarantee: "Гарантія",
     labelModalTerms: "📌 Умови та вимоги",
-    labelModalInstructions: "🚀 Як отримати товар"
+    labelModalInstructions: "🚀 Як отримати товар",
+    labelBoostTitle: "Кількість серверних бустів:",
+    labelBoostStep: "Мінімум 2 • Крок: 2 • До 100",
+    boostUnit: "Бустів",
+    level: "Рівень"
   },
   ru: {
     loaderStatus: "Загрузка каталога...",
@@ -140,7 +145,11 @@ const i18n = {
     labelModalSpeed: "Скорость выдачи",
     labelModalGuarantee: "Гарантия",
     labelModalTerms: "📌 Условия и требования",
-    labelModalInstructions: "🚀 Как получить товар"
+    labelModalInstructions: "🚀 Как получить товар",
+    labelBoostTitle: "Количество серверных бустов:",
+    labelBoostStep: "Минимум 2 • Шаг: 2 • До 100",
+    boostUnit: "Бустов",
+    level: "Уровень"
   }
 };
 
@@ -154,11 +163,11 @@ function formatPrice(uahAmount) {
 
 // Live Feed
 const fakePurchases = [
-  "Користувач @noy**** щойно купив Discord Nitro 1 Місяць",
+  "Користувач @noy**** щойно купив Discord Nitro 2 Місяці",
   "Користувач @vla*** поповнив 1000 підписників TikTok",
   "Користувач @nik*** придбав 100 Telegram Stars",
   "Користувач @dan*** оформив 10 000 переглядів TikTok",
-  "Користувач @art*** поповнив баланс Steam на 200 ₴"
+  "Користувач @art*** придбав 14 Discord Server Boosts"
 ];
 
 let feedIdx = 0;
@@ -337,8 +346,8 @@ const products = [
     speedRU: '5 - 15 мин',
     guaranteeUA: 'Гарантія на весь термін підписки',
     guaranteeRU: 'Гарантия на весь срок подписки',
-    termsUA: 'Підходить любий аккаунт навіть якщо вже було нітро! На момнет покупки в вас не повіно бути активної підписки.',
-    termsRU: 'Подходит для учетных записей без активной подписки.',
+    termsUA: 'Підходить любий аккаунт навіть якщо вже було нітро! На момент покупки у вас не повинно бути активної підписки.',
+    termsRU: 'Подходит любой аккаунт, даже если уже было нитро! На момент покупки у вас не должно быть активной подписки.',
     instUA: 'Видача здійснюється у вигляді офіційного Gift-посилання або через QR-код менеджера.'
   },
   { 
@@ -362,6 +371,30 @@ const products = [
     termsUA: 'Підходить для облікових записів без активної підписки.',
     termsRU: 'Подходит для учетных записей без активной подписки.',
     instUA: 'Після перевірки оплати менеджер видає активаційний лінк або допомагає з входом.'
+  },
+  { 
+    id: 8, 
+    cat: 'discord', 
+    isBoostItem: true,
+    nameUA: 'Discord Server Boosts', 
+    nameRU: 'Discord Server Boosts',
+    price: 60, // Базова ціна за мінімальні 2 бусти (30 грн за 1 буст)
+    unitPrice: 30,
+    badgeUA: '⚡ ВІД 2 ДО 100 ШТ', 
+    badgeRU: '⚡ ОТ 2 ДО 100 ШТ',
+    badgeType: 'badge-fast', 
+    subUA: '30 ₴ за 1 буст (вибір кількості)', 
+    subRU: '30 ₴ за 1 буст (выбор количества)',
+    icon: '🚀', 
+    img: 'images/discord.jpg',
+    disabled: false,
+    speedUA: '5 - 20 хв',
+    speedRU: '5 - 20 мин',
+    guaranteeUA: 'Гарантія активності бустів 1-3 місяці',
+    guaranteeRU: 'Гарантия активности бустов 1-3 месяца',
+    termsUA: 'Потрібно надати постійне посилання-запрошення на ваш Discord сервер (без обмежень часу).',
+    termsRU: 'Нужно предоставить вечную ссылку-приглашение на ваш Discord сервер.',
+    instUA: 'Оберіть потрібну кількість бустів (від 2 до 100), оформіть замовлення і надішліть інвайт на сервер менеджеру.'
   },
   { 
     id: 5, 
@@ -434,6 +467,7 @@ const products = [
 let cart = [];
 let currentCategory = 'all';
 let currentModalProductId = null;
+let selectedBoostCount = 2;
 
 function setLanguage(lang) {
   currentLang = lang;
@@ -515,6 +549,8 @@ function applyTranslations() {
   setText('copyHint', t.receiptCopyHint);
   setText('receiptTextHint', t.receiptText);
   setText('btnSendManager', t.btnSendMsg);
+  setText('labelBoostSelectTitle', t.labelBoostTitle);
+  setText('labelBoostStepHint', t.labelBoostStep);
 
   const ticker = document.getElementById('tickerContainer');
   if (ticker) {
@@ -569,11 +605,11 @@ function renderProducts() {
     const isOff = Boolean(item.disabled);
     const priceDisplay = isOff 
       ? `<span class="card-price" style="color: var(--text-muted); font-size: 12px;">${t.pricePending}</span>` 
-      : `<span class="card-price">${formatPrice(item.price)}</span>`;
+      : `<span class="card-price">${item.isBoostItem ? 'від ' + formatPrice(item.price) : formatPrice(item.price)}</span>`;
 
     const buttonDisplay = isOff
       ? `<button class="btn-card disabled" disabled onclick="event.stopPropagation();">${t.btnUnavailable}</button>`
-      : `<button class="btn-card" onclick="event.stopPropagation(); addToCart(${item.id})">${t.btnBuy}</button>`;
+      : `<button class="btn-card" onclick="event.stopPropagation(); ${item.isBoostItem ? `openProductModal(${item.id})` : `addToCart(${item.id})`}">${item.isBoostItem ? (currentLang === 'ua' ? 'Обрати' : 'Выбрать') : t.btnBuy}</button>`;
 
     return `
       <div class="product-card ${isOff ? 'is-disabled' : ''}" onclick="openProductModal(${item.id})">
@@ -621,14 +657,13 @@ function openProductModal(id) {
   const termsEl = document.getElementById('modalProductTerms');
   const instEl = document.getElementById('modalProductInstructions');
   const bannerEl = document.getElementById('modalProductBanner');
-  const footerAction = document.getElementById('modalProductFooterAction');
+  const boostSelector = document.getElementById('modalBoostSelectorBlock');
 
   if (titleEl) titleEl.innerText = prodName;
   if (badgeEl) {
     badgeEl.innerText = prodBadge;
     badgeEl.className = `badge ${item.badgeType || 'badge-fast'}`;
   }
-  if (priceEl) priceEl.innerText = item.disabled ? t.pricePending : formatPrice(item.price);
   if (descEl) descEl.innerText = prodSub;
   if (speedEl) speedEl.innerText = speed;
   if (guarEl) guarEl.innerText = guarantee;
@@ -651,16 +686,73 @@ function openProductModal(id) {
       : `<div class="card-center-glow-icon">${item.icon || '⚡'}</div>`;
   }
 
-  if (footerAction) {
-    if (item.disabled) {
-      footerAction.innerHTML = `<button class="btn-checkout" style="background: rgba(255,255,255,0.06); color: var(--text-muted); cursor: not-allowed;" disabled>${t.btnUnavailable}</button>`;
-    } else {
-      footerAction.innerHTML = `<button class="btn-checkout" onclick="addToCart(${item.id}); closeProductModal();">${t.btnBuy} — ${formatPrice(item.price)}</button>`;
-    }
+  if (item.isBoostItem) {
+    selectedBoostCount = 2;
+    if (boostSelector) boostSelector.style.display = 'flex';
+    updateBoostModalView();
+  } else {
+    if (boostSelector) boostSelector.style.display = 'none';
+    if (priceEl) priceEl.innerText = item.disabled ? t.pricePending : formatPrice(item.price);
+    renderModalFooter(item, item.price);
   }
 
   document.getElementById('productModal')?.classList.add('active');
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
+
+function changeBoostCount(delta) {
+  let next = selectedBoostCount + delta;
+  if (next < 2) next = 2;
+  if (next > 100) next = 100;
+  if (next === selectedBoostCount) return;
+
+  selectedBoostCount = next;
+  if (tg?.HapticFeedback) tg.HapticFeedback.selectionChanged();
+  updateBoostModalView();
+}
+
+function getBoostLevelText(count) {
+  const t = i18n[currentLang];
+  if (count >= 14) return `3 ${t.level} (Max)`;
+  if (count >= 7) return `2 ${t.level}`;
+  if (count >= 2) return `1 ${t.level}`;
+  return '';
+}
+
+function updateBoostModalView() {
+  const item = products.find(p => p.id === currentModalProductId);
+  if (!item) return;
+
+  const totalCostUAH = selectedBoostCount * (item.unitPrice || 30);
+  const t = i18n[currentLang];
+
+  const priceEl = document.getElementById('modalProductPrice');
+  const countBadge = document.getElementById('modalBoostCountBadge');
+  const countDisplay = document.getElementById('modalBoostCountDisplay');
+
+  if (priceEl) priceEl.innerText = formatPrice(totalCostUAH);
+  if (countBadge) countBadge.innerText = `${selectedBoostCount} шт.`;
+  if (countDisplay) {
+    countDisplay.innerText = `${selectedBoostCount} ${t.boostUnit} (${getBoostLevelText(selectedBoostCount)})`;
+  }
+
+  renderModalFooter(item, totalCostUAH, selectedBoostCount);
+}
+
+function renderModalFooter(item, costUAH, customQty = null) {
+  const footerAction = document.getElementById('modalProductFooterAction');
+  const t = i18n[currentLang];
+  if (!footerAction) return;
+
+  if (item.disabled) {
+    footerAction.innerHTML = `<button class="btn-checkout" style="background: rgba(255,255,255,0.06); color: var(--text-muted); cursor: not-allowed;" disabled>${t.btnUnavailable}</button>`;
+  } else {
+    if (item.isBoostItem && customQty) {
+      footerAction.innerHTML = `<button class="btn-checkout" onclick="addBoostsToCart(${item.id}, ${customQty}); closeProductModal();">${t.btnBuy} (${customQty} бустів) — ${formatPrice(costUAH)}</button>`;
+    } else {
+      footerAction.innerHTML = `<button class="btn-checkout" onclick="addToCart(${item.id}); closeProductModal();">${t.btnBuy} — ${formatPrice(costUAH)}</button>`;
+    }
+  }
 }
 
 function closeProductModal() {
@@ -668,11 +760,44 @@ function closeProductModal() {
   currentModalProductId = null;
 }
 
+function addBoostsToCart(id, count) {
+  const item = products.find(p => p.id === id);
+  if (!item) return;
+
+  const boostCartId = `boost_${count}`;
+  const unitPrice = item.unitPrice || 30;
+  const itemTotalUAH = count * unitPrice;
+
+  const nameUA = `Discord Boosts (${count} шт.)`;
+  const nameRU = `Discord Boosts (${count} шт.)`;
+
+  const existing = cart.find(i => i.cartItemId === boostCartId);
+  if (existing) {
+    existing.count += 1;
+  } else {
+    cart.push({
+      id: item.id,
+      cartItemId: boostCartId,
+      nameUA: nameUA,
+      nameRU: nameRU,
+      price: itemTotalUAH,
+      count: 1,
+      isCustomBoost: true,
+      boostAmount: count
+    });
+  }
+
+  updateCartState();
+  const prodName = currentLang === 'ua' ? nameUA : nameRU;
+  showToast(`✅ "${prodName}" ${i18n[currentLang].addedToCart}`);
+  if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+}
+
 function addToCart(id) {
   const item = products.find(p => p.id === id);
   if (!item || item.disabled) return;
 
-  const existing = cart.find(i => i.id === id);
+  const existing = cart.find(i => i.id === id && !i.isCustomBoost);
   if (existing) existing.count += 1;
   else cart.push({ ...item, count: 1 });
 
@@ -682,12 +807,14 @@ function addToCart(id) {
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
-function changeQty(id, delta) {
-  const item = cart.find(i => i.id === id);
+function changeQty(cartItemKey, delta) {
+  const item = cart.find(i => (i.cartItemId ? i.cartItemId === cartItemKey : i.id === cartItemKey));
   if (!item) return;
 
   item.count += delta;
-  if (item.count <= 0) cart = cart.filter(i => i.id !== id);
+  if (item.count <= 0) {
+    cart = cart.filter(i => (i.cartItemId ? i.cartItemId !== cartItemKey : i.id !== cartItemKey));
+  }
 
   updateCartState();
   renderCartScreen();
@@ -739,6 +866,8 @@ function renderCartScreen() {
   listContainer.innerHTML = cart.map((item) => {
     const prodName = currentLang === 'ua' ? item.nameUA : item.nameRU;
     const itemTotal = item.price * item.count;
+    const itemKey = item.cartItemId ? `'${item.cartItemId}'` : item.id;
+
     return `
       <div class="cart-item-row">
         <div class="cart-item-details">
@@ -746,9 +875,9 @@ function renderCartScreen() {
           <span class="cart-item-sub">${formatPrice(itemTotal)} (${formatPrice(item.price)} × ${item.count})</span>
         </div>
         <div class="cart-qty-control">
-          <button class="btn-qty" onclick="changeQty(${item.id}, -1)">−</button>
+          <button class="btn-qty" onclick="changeQty(${itemKey}, -1)">−</button>
           <span class="qty-val">${item.count}</span>
-          <button class="btn-qty" onclick="changeQty(${item.id}, 1)">+</button>
+          <button class="btn-qty" onclick="changeQty(${itemKey}, 1)">+</button>
         </div>
       </div>
     `;
