@@ -1367,3 +1367,77 @@ body {
   from { opacity: 0; }
   to { opacity: 1; }
 }
+
+/* ========================================================
+   СЕЛЕКТОР КІЛЬКОСТІ БУСТІВ У МОДАЛЦІ
+   ======================================================== */
+.modal-boost-selector {
+  background: #050a07;
+  border: 1px solid var(--border-neon);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 0 14px var(--neon-subtle);
+}
+
+.boost-sel-title {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-pure);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.boost-sel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 6px 12px;
+}
+
+.btn-boost-step {
+  background: rgba(0, 255, 136, 0.15);
+  border: 1px solid var(--border-neon);
+  color: var(--neon-green);
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: 900;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.btn-boost-step:active {
+  transform: scale(0.92);
+  background: var(--neon-green);
+  color: #03140a;
+}
+
+.boost-val-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.boost-count-text {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--text-pure);
+}
+
+.boost-step-hint {
+  font-size: 9.5px;
+  color: var(--text-muted);
+}
