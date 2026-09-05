@@ -378,13 +378,13 @@ const products = [
     isBoostItem: true,
     nameUA: 'Discord Server Boosts', 
     nameRU: 'Discord Server Boosts',
-    price: 50, // Базова ціна за мінімальні 2 бусти (30 грн за 1 буст)
-    unitPrice: 25,
+    price: 60, // Базова ціна за мінімальні 2 бусти (30 грн за 1 буст)
+    unitPrice: 30,
     badgeUA: '⚡ ВІД 2 ДО 100 ШТ', 
     badgeRU: '⚡ ОТ 2 ДО 100 ШТ',
     badgeType: 'badge-fast', 
-    subUA: '25 ₴ за 1 буст (вибір кількості)', 
-    subRU: '25 ₴ за 1 буст (выбор количества)',
+    subUA: '30 ₴ за 1 буст (вибір кількості)', 
+    subRU: '30 ₴ за 1 буст (выбор количества)',
     icon: '🚀', 
     img: 'images/discord.jpg',
     disabled: false,
