@@ -7,7 +7,7 @@
   <meta name="color-scheme" content="dark">
   <title>Gravity Shop</title>
   
-  <link rel="stylesheet" href="style.css?v=fast_load_v3">
+  <link rel="stylesheet" href="style.css?v=boosts_v1">
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
   <!-- Миттєве зафарбовування вікна Telegram та розгортання без сірої затримки -->
@@ -206,6 +206,22 @@
 
         <p class="modal-short-desc" id="modalProductShortDesc"></p>
 
+        <!-- Інтерактивний вибір кількості бустів -->
+        <div class="modal-boost-selector" id="modalBoostSelectorBlock" style="display: none;">
+          <div class="boost-sel-title">
+            <span id="labelBoostSelectTitle">Кількість серверних бустів:</span>
+            <span class="neon-text" id="modalBoostCountBadge">2 шт.</span>
+          </div>
+          <div class="boost-sel-controls">
+            <button class="btn-boost-step" onclick="changeBoostCount(-2)">−</button>
+            <div class="boost-val-box">
+              <span class="boost-count-text" id="modalBoostCountDisplay">2 Бусти (1 Рівень)</span>
+              <span class="boost-step-hint" id="labelBoostStepHint">Мінімум 2 • Крок: 2 • До 100</span>
+            </div>
+            <button class="btn-boost-step" onclick="changeBoostCount(2)">+</button>
+          </div>
+        </div>
+
         <div class="modal-details-grid">
           <div class="modal-detail-card">
             <span class="mdc-icon">⚡</span>
@@ -299,6 +315,6 @@
     </nav>
   </div>
 
-  <script src="app.js?v=fast_load_v3"></script>
+  <script src="app.js?v=boosts_v1"></script>
 </body>
 </html>
