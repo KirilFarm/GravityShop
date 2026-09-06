@@ -62,20 +62,20 @@ const i18n = {
     bannerSubtitle: "Швидка видача та прямий зв'язок з менеджером",
     bannerBtn: "Переглянути каталог",
     ticker: [
-      "🛡️ ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b>",
-      "⚡ МИТТЄВА НАКРУТКА TIKTOK <b>GRAVITY</b>",
-      "⭐ ОФІЦІЙНІ TELEGRAM STARS <b>GRAVITY</b>",
-      "💎 НАЙНИЖЧІ ЦІНИ НА РИНКУ <b>GRAVITY</b>"
+      "ГАРАНТІЯ ТА ПІДТРИМКА <b>GRAVITY</b>",
+      "МИТТЄВА НАКРУТКА TIKTOK <b>GRAVITY</b>",
+      "ОФІЦІЙНІ TELEGRAM STARS <b>GRAVITY</b>",
+      "НАЙНИЖЧІ ЦІНИ НА РИНКУ <b>GRAVITY</b>"
     ],
     categoriesTitle: "Категорії послуг",
     cartHeader: "Ваш кошик",
-    cartEmpty: "Ваш кошик порожній 🛒",
+    cartEmpty: "Ваш кошик порожній",
     cartTotal: "Разом до сплати:",
     btnClear: "Очистити",
     btnCheckout: "Купити (Написати менеджеру)",
     floatingTitle: "Товарів у кошику",
     floatingBtn: "До кошика →",
-    settingsTitle: "⚙️ Налаштування застосунку",
+    settingsTitle: "Налаштування застосунку",
     labelLang: "Мова / Язык",
     hintLang: "Оберіть мову інтерфейсу",
     labelCurr: "Валюта",
@@ -85,19 +85,19 @@ const i18n = {
     navCart: "Кошик",
     navProfile: "Профіль",
     receiptTitle: "Ваше замовлення",
-    receiptCopyHint: "📋 Натисніть, щоб скопіювати номер замовлення",
+    receiptCopyHint: "Натисніть, щоб скопіювати номер замовлення",
     receiptText: "Натисніть кнопку нижче, щоб надіслати замовлення менеджеру в Telegram:",
-    btnSendMsg: "🚀 Надіслати замовлення менеджеру @Fambod",
-    addedToCart: "додано до кошика!",
+    btnSendMsg: "Надіслати замовлення менеджеру @Fambod",
+    addedToCart: "додано до кошика",
     alertCartEmpty: "Додайте хоча б один товар до кошика!",
     btnBuy: "+ Купити",
     btnUnavailable: "Недоступно",
     pricePending: "Уточнюється",
-    copied: "скопійовано!",
+    copied: "скопійовано",
     labelModalSpeed: "Швидкість видачі",
     labelModalGuarantee: "Гарантія",
-    labelModalTerms: "📌 Умови та вимоги",
-    labelModalInstructions: "🚀 Як отримати товар",
+    labelModalTerms: "Умови та вимоги",
+    labelModalInstructions: "Як отримати товар",
     labelBoostTitle: "Кількість серверних бустів:",
     labelBoostStep: "Мінімум 2 • Крок: 2 • До 100",
     boostUnit: "Бустів",
@@ -110,20 +110,20 @@ const i18n = {
     bannerSubtitle: "Быстрая выдача и прямая связь с менеджером",
     bannerBtn: "Смотреть каталог",
     ticker: [
-      "🛡️ ГАРАНТИЯ И ПОДДЕРЖКА <b>GRAVITY</b>",
-      "⚡ МГНОВЕННАЯ НАКРУТКА TIKTOK <b>GRAVITY</b>",
-      "⭐ ОФИЦИАЛЬНЫЕ TELEGRAM STARS <b>GRAVITY</b>",
-      "💎 ЛУЧШИЕ ЦЕНЫ НА РЫНКЕ <b>GRAVITY</b>"
+      "ГАРАНТИЯ И ПОДДЕРЖКА <b>GRAVITY</b>",
+      "МГНОВЕННАЯ НАКРУТКА TIKTOK <b>GRAVITY</b>",
+      "ОФИЦИАЛЬНЫЕ TELEGRAM STARS <b>GRAVITY</b>",
+      "ЛУЧШИЕ ЦЕНЫ НА РЫНКЕ <b>GRAVITY</b>"
     ],
     categoriesTitle: "Категории услуг",
     cartHeader: "Ваша корзина",
-    cartEmpty: "Ваша корзина пуста 🛒",
+    cartEmpty: "Ваша корзина пуста",
     cartTotal: "Итого к оплате:",
     btnClear: "Очистить",
     btnCheckout: "Купить (Написать менеджеру)",
     floatingTitle: "Товаров в корзине",
     floatingBtn: "В корзину →",
-    settingsTitle: "⚙️ Настройки приложения",
+    settingsTitle: "Настройки приложения",
     labelLang: "Язык / Мова",
     hintLang: "Выберите язык интерфейса",
     labelCurr: "Валюта",
@@ -133,19 +133,19 @@ const i18n = {
     navCart: "Корзина",
     navProfile: "Профиль",
     receiptTitle: "Ваш заказ",
-    receiptCopyHint: "📋 Нажмите, чтобы скопировать номер заказа",
+    receiptCopyHint: "Нажмите, чтобы скопировать номер заказа",
     receiptText: "Нажмите кнопку ниже, чтобы отправить заказ менеджеру в Telegram:",
-    btnSendMsg: "🚀 Отправить заказ менеджеру @Fambod",
-    addedToCart: "добавлено в корзину!",
+    btnSendMsg: "Отправить заказ менеджеру @Fambod",
+    addedToCart: "добавлено в корзину",
     alertCartEmpty: "Добавьте хотя бы один товар в корзину!",
     btnBuy: "+ Купить",
     btnUnavailable: "Недоступно",
     pricePending: "Уточняется",
-    copied: "скопировано!",
+    copied: "скопировано",
     labelModalSpeed: "Скорость выдачи",
     labelModalGuarantee: "Гарантия",
-    labelModalTerms: "📌 Условия и требования",
-    labelModalInstructions: "🚀 Как получить товар",
+    labelModalTerms: "Условия и требования",
+    labelModalInstructions: "Как получить товар",
     labelBoostTitle: "Количество серверных бустов:",
     labelBoostStep: "Минимум 2 • Шаг: 2 • До 100",
     boostUnit: "Бустов",
@@ -185,13 +185,13 @@ setInterval(() => {
 
 // КАТЕГОРІЇ
 const categories = [
-  { id: 'all', nameUA: 'Все', nameRU: 'Все', icon: '⚡', img: 'images/main.png' },
-  { id: 'tiktok', nameUA: 'TikTok', nameRU: 'TikTok', icon: '📱', img: 'images/tiktok.jpg' },
-  { id: 'stars', nameUA: 'Stars', nameRU: 'Stars', icon: '⭐', img: 'images/telegramstar.png' },
-  { id: 'discord', nameUA: 'Discord', nameRU: 'Discord', icon: '🟣', img: 'images/discord.jpg' },
-  { id: 'steam', nameUA: 'Steam', nameRU: 'Steam', icon: '🎮', img: 'images/steam.jpg' },
-  { id: 'standoff', nameUA: 'Standoff', nameRU: 'Standoff', icon: '🔫', img: 'images/standoff.jpg' },
-  { id: 'spotify', nameUA: 'Spotify', nameRU: 'Spotify', icon: '🎵', img: 'images/spotify.jpg' }
+  { id: 'all', nameUA: 'Все', nameRU: 'Все', icon: 'ALL', img: 'images/main.png' },
+  { id: 'tiktok', nameUA: 'TikTok', nameRU: 'TikTok', icon: 'TT', img: 'images/tiktok.jpg' },
+  { id: 'stars', nameUA: 'Stars', nameRU: 'Stars', icon: 'TG', img: 'images/telegramstar.png' },
+  { id: 'discord', nameUA: 'Discord', nameRU: 'Discord', icon: 'DC', img: 'images/discord.jpg' },
+  { id: 'steam', nameUA: 'Steam', nameRU: 'Steam', icon: 'STM', img: 'images/steam.jpg' },
+  { id: 'standoff', nameUA: 'Standoff', nameRU: 'Standoff', icon: 'SO', img: 'images/standoff.jpg' },
+  { id: 'spotify', nameUA: 'Spotify', nameRU: 'Spotify', icon: 'SP', img: 'images/spotify.jpg' }
 ];
 
 // ТОВАРИ
@@ -202,12 +202,12 @@ const products = [
     nameUA: 'Накрутка підписників TikTok', 
     nameRU: 'Накрутка подписчиков TikTok',
     price: 330, 
-    badgeUA: '⚡ ШВИДКА ДОСТАВКА', 
-    badgeRU: '⚡ БЫСТРАЯ ДОСТАВКА',
+    badgeUA: 'ШВИДКА ДОСТАВКА', 
+    badgeRU: 'БЫСТРАЯ ДОСТАВКА',
     badgeType: 'badge-fire', 
     subUA: '1000 якісних фоловерів', 
     subRU: '1000 качественных фолловеров',
-    icon: '👥', 
+    icon: 'TT', 
     img: 'images/banner/tiktok1000folover.jpg',
     disabled: false,
     speedUA: '15 - 60 хв',
@@ -224,12 +224,12 @@ const products = [
     nameUA: 'Накрутка переглядів TikTok', 
     nameRU: 'Накрутка просмотров TikTok',
     price: 35, 
-    badgeUA: '⚡ ШВИДКА ДОСТАВКА', 
-    badgeRU: '⚡ БЫСТРАЯ ДОСТАВКА',
+    badgeUA: 'ШВИДКА ДОСТАВКА', 
+    badgeRU: 'БЫСТРАЯ ДОСТАВКА',
     badgeType: 'badge-fast', 
     subUA: '10 000 переглядів у рек', 
     subRU: '10 000 просмотров в рек',
-    icon: '👀', 
+    icon: 'TT', 
     img: 'images/banner/tiktok10000.jpg',
     disabled: false,
     speedUA: '5 - 20 хв',
@@ -246,12 +246,12 @@ const products = [
     nameUA: 'Накрутка коментарів TikTok', 
     nameRU: 'Накрутка комментариев TikTok',
     price: 60, 
-    badgeUA: '💬 Активність', 
-    badgeRU: '💬 Активность',
+    badgeUA: 'Активність', 
+    badgeRU: 'Активность',
     badgeType: 'badge-deal', 
     subUA: '50 позитивних коментарів', 
     subRU: '50 положительных комментариев',
-    icon: '💬', 
+    icon: 'TT', 
     img: 'images/banner/commenttictok.jpg',
     disabled: false,
     speedUA: '10 - 40 хв',
@@ -268,12 +268,12 @@ const products = [
     nameUA: 'Накрутка репостів TikTok', 
     nameRU: 'Накрутка репостов TikTok',
     price: 45, 
-    badgeUA: '🚀 ТОП алгоритми', 
-    badgeRU: '🚀 ТОП алгоритмы',
+    badgeUA: 'ТОП алгоритми', 
+    badgeRU: 'ТОП алгоритмы',
     badgeType: 'badge-fast', 
     subUA: '500 репостів/поділів', 
     subRU: '500 репостов/поделиться',
-    icon: '🔁', 
+    icon: 'TT', 
     img: 'images/banner/tiktokrepost.jpg',
     disabled: false,
     speedUA: '5 - 30 хв',
@@ -290,12 +290,12 @@ const products = [
     nameUA: '50 Telegram Stars', 
     nameRU: '50 Telegram Stars',
     price: 50, 
-    badgeUA: '🔥 Топ', 
-    badgeRU: '🔥 Топ',
+    badgeUA: 'Топ', 
+    badgeRU: 'Топ',
     badgeType: 'badge-fire', 
     subUA: 'Офіційні зірки Telegram', 
     subRU: 'Официальные звёзды Telegram',
-    icon: '⭐', 
+    icon: 'TG', 
     img: 'images/banner/star50.jpg',
     disabled: false,
     speedUA: '3 - 10 хв',
@@ -312,12 +312,12 @@ const products = [
     nameUA: '100 Telegram Stars', 
     nameRU: '100 Telegram Stars',
     price: 85, 
-    badgeUA: '⚡ Миттєво', 
-    badgeRU: '⚡ Мгновенно',
+    badgeUA: 'Миттєво', 
+    badgeRU: 'Мгновенно',
     badgeType: 'badge-fast', 
     subUA: 'Офіційні зірки Telegram', 
     subRU: 'Официальные звёзды Telegram',
-    icon: '⭐', 
+    icon: 'TG', 
     img: 'images/banner/star100.jpg',
     disabled: false,
     speedUA: '3 - 10 хв',
@@ -334,12 +334,12 @@ const products = [
     nameUA: 'Discord Nitro 2 Місяці', 
     nameRU: 'Discord Nitro 2 Месяца',
     price: 320, 
-    badgeUA: '🔥 Хіт', 
-    badgeRU: '🔥 Хит',
+    badgeUA: 'Хіт', 
+    badgeRU: 'Хит',
     badgeType: 'badge-fire', 
     subUA: 'Full Nitro з 2 бустами', 
     subRU: 'Full Nitro с 2 бустами',
-    icon: '🟣', 
+    icon: 'DC', 
     img: 'images/banner/nitrofull.jpg',
     disabled: false,
     speedUA: '5 - 15 хв',
@@ -361,7 +361,7 @@ const products = [
     badgeType: 'badge-deal', 
     subUA: 'Basic Nitro гарантія', 
     subRU: 'Basic Nitro гарантия',
-    icon: '💎', 
+    icon: 'DC', 
     img: 'images/banner/nitrobasic.jpg',
     disabled: true,
     speedUA: '5 - 20 хв',
@@ -380,12 +380,12 @@ const products = [
     nameRU: 'Discord Server Boosts',
     price: 60,
     unitPrice: 30,
-    badgeUA: '⚡ ВІД 2 ДО 100 ШТ', 
-    badgeRU: '⚡ ОТ 2 ДО 100 ШТ',
+    badgeUA: 'ВІД 2 ДО 100 ШТ', 
+    badgeRU: 'ОТ 2 ДО 100 ШТ',
     badgeType: 'badge-fast', 
     subUA: '30 гривны за 1 буст (вибір кількості)', 
     subRU: '30 гривны за 1 буст (выбор количества)',
-    icon: '🚀', 
+    icon: 'DC', 
     img: 'images/discord.jpg',
     disabled: false,
     speedUA: '5 - 20 хв',
@@ -402,12 +402,12 @@ const products = [
     nameUA: 'Поповнення Steam (200 гривны)', 
     nameRU: 'Пополнение Steam (200 гривны)',
     price: 250, 
-    badgeUA: '⚡ Авто-видача', 
-    badgeRU: '⚡ Авто-выдача',
+    badgeUA: 'Авто-видача', 
+    badgeRU: 'Авто-выдача',
     badgeType: 'badge-fast', 
     subUA: 'Баланс гаманця Steam', 
     subRU: 'Баланс кошелька Steam',
-    icon: '🎮', 
+    icon: 'STM', 
     img: 'images/banner/steambalans200.jpg',
     disabled: false,
     speedUA: '5 - 15 хв',
@@ -424,12 +424,12 @@ const products = [
     nameUA: 'Steam Акаунт (Регіон Україна, новорег)', 
     nameRU: 'Steam Аккаунт (Регион Украина, новорег)',
     price: 35, 
-    badgeUA: '🇺🇦 ЧИСТИЙ НОВОРЕГ', 
-    badgeRU: '🇺🇦 ЧИСТЫЙ НОВОРЕГ',
+    badgeUA: 'ЧИСТИЙ НОВОРЕГ', 
+    badgeRU: 'ЧИСТЫЙ НОВОРЕГ',
     badgeType: 'badge-deal', 
     subUA: 'Рідна пошта в комплекті • 0 годин', 
     subRU: 'Родная почта в комплекте • 0 часов',
-    icon: '🇺🇦', 
+    icon: 'STM', 
     img: 'images/steam.jpg',
     disabled: false,
     speedUA: '3 - 10 хв',
@@ -446,12 +446,12 @@ const products = [
     nameUA: '100 Gold Standoff 2', 
     nameRU: '100 Gold Standoff 2',
     price: 40, 
-    badgeUA: '🔥 Топ ціна', 
-    badgeRU: '🔥 Топ цена',
+    badgeUA: 'Топ ціна', 
+    badgeRU: 'Топ цена',
     badgeType: 'badge-fire', 
     subUA: 'Голда по ринку з комісією', 
     subRU: 'Голда по рынку с комиссией',
-    icon: '🔫', 
+    icon: 'SO', 
     img: 'images/banner/bannerstandoff100gold.jpg',
     disabled: false,
     speedUA: '10 - 30 хв',
@@ -468,12 +468,12 @@ const products = [
     nameUA: 'Spotify Premium 1 Міс', 
     nameRU: 'Spotify Premium 1 Мес',
     price: 120, 
-    badgeUA: '🎵 Без реклами', 
-    badgeRU: '🎵 Без рекламы',
+    badgeUA: 'Без реклами', 
+    badgeRU: 'Без рекламы',
     badgeType: 'badge-deal', 
     subUA: 'Індивідуальна підписка', 
     subRU: 'Индивидуальная подписка',
-    icon: '🎵', 
+    icon: 'SP', 
     img: 'images/banner/spotify.png',
     disabled: false,
     speedUA: '10 - 25 хв',
@@ -508,7 +508,7 @@ function setLanguage(lang) {
 function toggleLanguageQuick() {
   const nextLang = currentLang === 'ua' ? 'ru' : 'ua';
   setLanguage(nextLang);
-  showToast(nextLang === 'ua' ? "🇺🇦 Мову змінено на Українську" : "🌐 Язык изменён на Русский");
+  showToast(nextLang === 'ua' ? "Мову змінено на Українську" : "Язык изменён на Русский");
 }
 
 function setCurrency(curr) {
@@ -521,7 +521,7 @@ function setCurrency(curr) {
   if (currentModalProductId) {
     openProductModal(currentModalProductId);
   }
-  showToast(curr === 'UAH' ? "₴ Валюта: Гривня (UAH)" : "₽ Валюта: Рубль (RUB)");
+  showToast(curr === 'UAH' ? "Валюта: Гривня (UAH)" : "Валюта: Рубль (RUB)");
 }
 
 function updateProfileButtons() {
@@ -530,10 +530,8 @@ function updateProfileButtons() {
   document.getElementById('btnCurrUAH')?.classList.toggle('active', currentCurrency === 'UAH');
   document.getElementById('btnCurrRUB')?.classList.toggle('active', currentCurrency === 'RUB');
 
-  const headerFlag = document.getElementById('headerFlag');
   const headerText = document.getElementById('headerLangText');
-  if (headerFlag && headerText) {
-    headerFlag.innerText = currentLang === 'ua' ? '🇺🇦' : '🌐';
+  if (headerText) {
     headerText.innerText = currentLang === 'ua' ? 'UA' : 'RU';
   }
 }
@@ -621,8 +619,8 @@ function renderProducts() {
     const prodBadge = currentLang === 'ua' ? item.badgeUA : item.badgeRU;
 
     const bannerMedia = item.img 
-      ? `<img src="${item.img}" class="card-custom-img" alt="${prodName}" onerror="this.outerHTML='<div class=\\'card-center-glow-icon\\'>${item.icon || '⚡'}</div>'">` 
-      : `<div class="card-center-glow-icon">${item.icon || '⚡'}</div>`;
+      ? `<img src="${item.img}" class="card-custom-img" alt="${prodName}" onerror="this.outerHTML='<div class=\\'card-center-glow-icon\\'>${item.icon || 'GS'}</div>'">` 
+      : `<div class="card-center-glow-icon">${item.icon || 'GS'}</div>`;
 
     const isOff = Boolean(item.disabled);
     const priceDisplay = isOff 
@@ -704,8 +702,8 @@ function openProductModal(id) {
 
   if (bannerEl) {
     bannerEl.innerHTML = item.img 
-      ? `<img src="${item.img}" class="modal-banner-img" alt="${prodName}" onerror="this.outerHTML='<div class=\\'card-center-glow-icon\\'>${item.icon || '⚡'}</div>'">` 
-      : `<div class="card-center-glow-icon">${item.icon || '⚡'}</div>`;
+      ? `<img src="${item.img}" class="modal-banner-img" alt="${prodName}" onerror="this.outerHTML='<div class=\\'card-center-glow-icon\\'>${item.icon || 'GS'}</div>'">` 
+      : `<div class="card-center-glow-icon">${item.icon || 'GS'}</div>`;
   }
 
   if (item.isBoostItem) {
@@ -811,7 +809,7 @@ function addBoostsToCart(id, count) {
 
   updateCartState();
   const prodName = currentLang === 'ua' ? nameUA : nameRU;
-  showToast(`✅ "${prodName}" ${i18n[currentLang].addedToCart}`);
+  showToast(`"${prodName}" ${i18n[currentLang].addedToCart}`);
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
@@ -825,7 +823,7 @@ function addToCart(id) {
 
   updateCartState();
   const prodName = currentLang === 'ua' ? item.nameUA : item.nameRU;
-  showToast(`✅ "${prodName}" ${i18n[currentLang].addedToCart}`);
+  showToast(`"${prodName}" ${i18n[currentLang].addedToCart}`);
   if (tg?.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 }
 
@@ -935,7 +933,7 @@ function checkoutOrder() {
 
   const itemsText = cart.map(i => {
     const name = currentLang === 'ua' ? i.nameUA : i.nameRU;
-    return `• ${name} (${i.count} шт.) — ${formatPrice(i.price * i.count)}`;
+    return `- ${name} (${i.count} шт.) — ${formatPrice(i.price * i.count)}`;
   }).join('\n');
 
   const receiptNumEl = document.getElementById('receiptNumber');
@@ -948,7 +946,7 @@ function checkoutOrder() {
   const goodsLabel = currentLang === 'ua' ? 'Товари' : 'Товары';
   const sumLabel = currentLang === 'ua' ? 'Разом до сплати' : 'Итого к оплате';
 
-  const msgForManager = `${greeting}\n🧾 ${orderLabel}: ${checkId}\n\n${goodsLabel}:\n${itemsText}\n\n💳 ${sumLabel}: ${formattedTotal}`;
+  const msgForManager = `${greeting}\n${orderLabel}: ${checkId}\n\n${goodsLabel}:\n${itemsText}\n\n${sumLabel}: ${formattedTotal}`;
 
   const sendBtn = document.getElementById('btnSendManager');
   if (sendBtn) {
@@ -974,7 +972,7 @@ function copyCheckId() {
   const checkId = document.getElementById('receiptNumber')?.innerText;
   if (checkId) {
     navigator.clipboard?.writeText(checkId);
-    showToast(`📋 ${checkId} ${i18n[currentLang].copied}`);
+    showToast(`${checkId} ${i18n[currentLang].copied}`);
     if (tg?.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
   }
 }
