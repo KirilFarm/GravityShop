@@ -35,7 +35,7 @@
         <div class="manager-glow"></div>
         <div class="manager-ring"></div>
         <img src="images/manager.png" id="managerPhoto" class="manager-avatar" alt="Manager" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
-        <div class="manager-badge">ONLINE ⚡</div>
+        <div class="manager-badge">ONLINE</div>
       </div>
       <div class="loader-title">GRAVITY <span class="neon-text">SHOP</span></div>
       <div class="loader-status" id="loaderStatus">Завантаження каталогу...</div>
@@ -54,7 +54,7 @@
     <div class="brand">
       <div class="brand-icon-box">
         <img src="images/logo.png" alt="Logo" class="header-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <span style="display: none;">⚡</span>
+        <span style="display: none;">GS</span>
       </div>
       <div class="brand-text">
         <span class="brand-name">GRAVITY</span>
@@ -63,14 +63,14 @@
     </div>
     <!-- Швидкий перемикач у шапці -->
     <div class="lang-selector-header" onclick="toggleLanguageQuick()">
-      <span class="flag" id="headerFlag">🇺🇦</span>
+      <span class="flag" id="headerFlag">•</span>
       <span id="headerLangText">UA</span>
     </div>
   </header>
 
   <!-- Live Feed -->
   <div class="live-feed-wrap">
-    <div class="live-feed-icon">⚡</div>
+    <div class="live-feed-icon">•</div>
     <div class="live-feed-text" id="liveFeedText">Користувач @noy**** щойно купив Discord Nitro 1 Місяць</div>
   </div>
 
@@ -129,7 +129,7 @@
   <!-- 3. Вкладка: ПРОФІЛЬ -->
   <div id="viewProfile" class="app-view" style="display: none;">
     <div class="profile-card">
-      <div class="profile-avatar" id="userAvatar">👤</div>
+      <div class="profile-avatar" id="userAvatar">?</div>
       <h2 class="profile-name" id="userName">Користувач</h2>
       <span class="profile-username" id="userUsername">@username</span>
       <div class="profile-id-box">Telegram ID: <span id="userId">00000000</span></div>
@@ -137,7 +137,7 @@
 
     <!-- Блок налаштувань мови та валюти -->
     <div class="settings-card">
-      <div class="settings-title" id="settingsTitle">⚙️ Налаштування застосунку</div>
+      <div class="settings-title" id="settingsTitle">Налаштування застосунку</div>
       
       <div class="setting-row">
         <div class="setting-info">
@@ -145,8 +145,8 @@
           <span class="setting-hint" id="hintLang">Оберіть мову інтерфейсу</span>
         </div>
         <div class="switch-toggle-group">
-          <button class="toggle-opt-btn active" id="btnLangUA" onclick="setLanguage('ua')">UA 🇺🇦</button>
-          <button class="toggle-opt-btn" id="btnLangRU" onclick="setLanguage('ru')">RU 🌐</button>
+          <button class="toggle-opt-btn active" id="btnLangUA" onclick="setLanguage('ua')">UA</button>
+          <button class="toggle-opt-btn" id="btnLangRU" onclick="setLanguage('ru')">RU</button>
         </div>
       </div>
 
@@ -165,7 +165,6 @@
     <div class="profile-menu">
       <a href="https://t.me/Fambod" target="_blank" class="profile-menu-item">
         <div class="p-item-left">
-          <span class="p-icon">💬</span>
           <span id="labelContactManager">Написати менеджеру (@Fambod)</span>
         </div>
         <span class="p-arrow">›</span>
@@ -224,14 +223,12 @@
 
         <div class="modal-details-grid">
           <div class="modal-detail-card">
-            <span class="mdc-icon">⚡</span>
             <div class="mdc-text">
               <strong id="labelModalSpeed">Швидкість видачі</strong>
               <span id="modalProductSpeed">5 - 30 хв</span>
             </div>
           </div>
           <div class="modal-detail-card">
-            <span class="mdc-icon">🛡️</span>
             <div class="mdc-text">
               <strong id="labelModalGuarantee">Гарантія</strong>
               <span id="modalProductGuarantee">100% захист покупки</span>
@@ -240,12 +237,12 @@
         </div>
 
         <div class="modal-section-box">
-          <h4 id="labelModalTerms">📌 Умови та вимоги</h4>
+          <h4 id="labelModalTerms">Умови та вимоги</h4>
           <p id="modalProductTerms"></p>
         </div>
 
         <div class="modal-section-box">
-          <h4 id="labelModalInstructions">🚀 Як отримати товар</h4>
+          <h4 id="labelModalInstructions">Як отримати товар</h4>
           <p id="modalProductInstructions"></p>
         </div>
       </div>
@@ -265,16 +262,16 @@
         <button class="btn-close-modal" onclick="closeReceiptModal()">✕</button>
       </div>
       <div class="receipt-content">
-        <div class="receipt-icon-pulse">⚡</div>
+        <div class="receipt-icon-pulse">✓</div>
         <div class="receipt-number-wrap" onclick="copyCheckId()">
           <div class="receipt-number" id="receiptNumber">#000000</div>
-          <span class="copy-hint" id="copyHint">📋 Натисніть, щоб скопіювати номер замовлення</span>
+          <span class="copy-hint" id="copyHint">Натисніть, щоб скопіювати номер замовлення</span>
         </div>
         <p class="receipt-text" id="receiptTextHint">Натисніть кнопку нижче, щоб надіслати замовлення менеджеру в Telegram:</p>
         <div class="receipt-summary" id="receiptSummary"></div>
       </div>
       <div class="cart-footer">
-        <button class="btn-checkout" id="btnSendManager">🚀 Надіслати замовлення менеджеру @Fambod</button>
+        <button class="btn-checkout" id="btnSendManager">Надіслати замовлення менеджеру @Fambod</button>
       </div>
     </div>
   </div>
